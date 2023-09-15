@@ -1,0 +1,7 @@
+@import './reset.css';
+
+.fixedBlock {
+    bottom: 50px;
+    right: 320px;
+    position: fixed;
+}

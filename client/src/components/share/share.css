@@ -1,0 +1,487 @@
+.homePostBlock {
+    border-bottom: 1px solid #EFF3F4;
+    margin-top: 107px;
+    width: 600px;
+}
+
+.homePostBlockContainer {
+    padding: 8px 16px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.homeUserImg,
+.homeUserImgBlock,
+.imgBlockOverlay {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.homeUserImgBlock {
+    position: relative;
+}
+
+.imgBlockOverlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: 0.2s ease;
+    background-color: #1e1e1e;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.homeUserImgBlock:hover .imgBlockOverlay {
+    opacity: 0.1;
+}
+
+.homePostBlockInput {
+    width: calc(100% - 60px);
+    display: flex;
+    outline: none;
+    resize: none;
+    padding: 12px 0px 24px;
+    overflow-y: hidden;
+    position: relative;
+}
+
+.homePostBlockInput::placeholder {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    color: var(--gray);
+}
+
+.homePostBlockIcons {
+    display: flex;
+    gap: 9px;
+    margin-left: calc(10% - 5px);
+}
+
+.homePostBlockIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.homePostBlockIconBlock {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.homePostBlockIconBlock.disabled {
+    cursor: default;
+}
+
+.homePostBlockIconBlock.disabled:hover {
+    background-color: transparent;
+}
+
+.homePostBlockIconBlock:hover {
+    background-color: #E8F5FD;
+}
+
+.tweetBtn {
+    width: 78px;
+    height: 36px;
+    background-color: var(--blue);
+    border-radius: 32px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #fff;
+    transition: 0.2s ease;
+    margin-left: calc(40% - 55px);
+}
+
+.tweetBtn:hover {
+    background-color: #1A8CD8;
+}
+
+.tweetBtn.disabled {
+    background-color: #8ECDF7;
+    cursor: default;
+}
+
+.homePostWhoCanReplyBlock {
+    position: relative;
+    display: none;
+}
+
+.homePostWhoCanReplyBlock.active,
+.homePostWhoCanReplyBlock.activeGreen {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    width: fit-content;
+    height: 24px;
+    border-radius: 32px;
+    padding: 0px 12px;
+    border: 1px solid #d0d9de;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--blue);
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.homePostWhoCanReplyBlock.activeGreen {
+    border-color: #15C087;
+    color: #15C087;
+}
+
+.homePostWhoCanReplyBlock img {
+    position: relative;
+    top: 1px;
+}
+
+.homePostWhoCanReplyBlock:hover {
+    background-color: #E8F5FD;
+}
+
+.homePostWhoCanReplySecondBlock {
+    display: none;
+}
+
+.homePostWhoCanReplySecondBlock.active {
+    position: absolute;
+    left: 65px;
+    bottom: 65px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--blue);
+    transition: 0.2s ease;
+    cursor: pointer;
+    padding: 3px 12px;
+    border-radius: 32px;
+}
+
+.homePostWhoCanReplySecondBlock.disabled {
+    position: absolute;
+    left: 65px;
+    bottom: 65px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: #9BD3F8;
+    transition: 0.2s ease;
+    cursor: default;
+    padding: 3px 12px;
+    border-radius: 32px;
+}
+
+.homePostWhoCanReplySecondBlock.active:hover {
+    background-color: #E8F5FD;
+}
+
+.homePostWhoCanReplySecondBlock img {
+    width: 16px;
+    height: 16px;
+}
+
+.homePostBlockHr {
+    position: absolute;
+    display: none;
+}
+
+.homePostBlockHr.active {
+    background-color: #EFF3F4;
+    display: block;
+    width: calc(100% - 60px);
+    height: 1px;
+    left: 65px;
+    bottom: 55px;
+}
+
+.progressBarBlock {
+    display: none;
+    position: absolute;
+    right: 110px;
+    bottom: 11px;
+    width: 30px;
+    height: 30px;
+}
+
+.progressBarBlock.active {
+    display: flex;
+}
+
+.homePostWhoCanReplyModal {
+    position: absolute;
+    left: -10px;
+    top: 45px;
+    width: 260px;
+    height: 192px;
+    opacity: 0;
+    border-radius: 12px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    overflow: hidden;
+    transition: 0.2s ease;
+    display: none;
+}
+
+.homePostWhoCanReplyModal.active {
+    opacity: 1;
+    background-color: #fff;
+    z-index: 10000;
+    display: block;
+}
+
+.homePostWhoCanReplyModalContainer {
+    padding: 12px 0px;
+}
+
+.homePostWhoCanReplyModalContainer h1 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+    padding: 4px 12px;
+    margin-bottom: 6px;
+}
+
+.homePostWhoCanReplyModalItem {
+    display: none;
+}
+
+.homePostWhoCanReplyModal.active .homePostWhoCanReplyModalItem {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s ease;
+    cursor: pointer;
+    width: 100%;
+    height: 72px;
+}
+
+.leftSideImgBlock {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.leftSideImgBlock img {
+    width: 20px;
+    height: 20px;
+}
+
+.leftSideImgBlock.everyone {
+    background-color: var(--blue);
+}
+
+.leftSideImgBlock.circle {
+    background-color: #00BA7C;
+}
+
+.homePostWhoCanReplyModalItem .homePostWhoCanReplyModalItemTitle {
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 700;
+    color: var(--black);
+}
+
+.homePostWhoCanReplyModalItem .homePostWhoCanReplyModalItemTitle.specialTitle {
+    position: relative;
+}
+
+.homePostWhoCanReplyModalItem:hover {
+    background-color: #F7F9F9;
+}
+
+.bottomBlock {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.people {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.editBlock {
+    padding: 4px 12px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16px;
+    color: var(--black);
+    transition: 0.2s ease;
+    border-radius: 32px;
+    text-align: center;
+    margin-top: 2px;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
+.editBlock:hover {
+    background-color: #E0E2E3;
+}
+
+.textBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkImg {
+    position: absolute;
+    right: 20px;
+}
+
+.secondModal {
+    position: absolute;
+    left: -10px;
+    top: 125px;
+    opacity: 0;
+    overflow: none;
+    background-color: #fff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    z-index: 1000;
+    border-radius: 16px;
+    transition: 0.2s ease;
+    cursor: default;
+    display: none;
+}
+
+.secondModal.active {
+    opacity: 1;
+    width: 320px;
+    height: 284px;
+    display: block;
+}
+
+.secondModal.active .secondModalContainer {
+    padding: 16px 0px 4px;
+}
+
+.secondModal.active .secondModalTitle {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+    padding: 0px 16px;
+}
+.secondModal.active .secondModalText {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+    display: inline-block;
+    width: 280px;
+    padding: 0px 16px;
+}
+
+.secondModal.active .homePostWhoCanReplyModalItem {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s ease;
+    cursor: pointer;
+    width: 100%;
+    height: 72px;
+}
+
+.shareImgContainer {
+    position: relative;
+    left: 55px;
+    top: -35px;
+}
+
+.shareImg {
+    width: 510px;
+    height: 510px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+}
+
+.imgContainerCrossBlock {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #4b4f53;
+    color: #fff;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    right: 7.5px;
+    top: 7.5px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.imgContainerCrossBlock:hover {
+    background-color: #5D6164;
+}
+
+
+.previewImage {
+    display: flex;
+    gap: 2px;
+}
+
+.previewImage.two img {
+    width: 249px;
+    height: 286px;
+}
+
+.previewImage.four {
+    flex-wrap: wrap;
+    width: 510px;
+}
+
+.previewImage.four img {
+    width: 249px;
+    height: 137px;
+}
+
+.previewImage.four img:nth-child(1),
+.previewImage.four img:nth-child(2) {
+    margin-bottom: 0px;
+}
+
+.previewImage.three {
+    display: grid;
+    grid-template-columns: 249px 249px; /* Два столбца: левый и правый */
+    grid-template-rows: 137px 137px; /* Автоматическая высота строк */
+    gap: 10px; /* Расстояние между элементами */
+    margin-bottom: 15px;
+}
+
+.full-height {
+    grid-column: 1 / 2; /* Занимает первый столбец */
+    grid-row: 1 / 3; /* Занимает две строки */
+}
+
+.full-height img {
+    height: 286px;
+}
+
+.half-height {
+    grid-column: 2 / 3; /* Занимает второй столбец */
+}
+
+.half-height img {
+    height: 137px;
+}

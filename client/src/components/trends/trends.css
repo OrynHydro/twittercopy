@@ -1,0 +1,81 @@
+.trendsItem {
+    transition: 0.2s ease;
+    padding: 15px;
+    position: relative;
+}
+
+.trendsItem:hover {
+    background-color: #F7F7F7;
+    cursor: pointer;
+}
+
+.trends.registered .trendsItem:hover,
+.trendsItem.registered.showMore:hover{
+    background-color: #EFF1F1;
+}
+
+.trendsItem.registered.showMore {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    position: relative;
+    top: 3px;
+}
+
+.trendsItemTitle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.trendsPreTitle,
+.trendsActual {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #536471;
+}
+
+.dot {
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    position: relative;
+    top: 1px;
+    background-color: #536471;
+}
+
+.trendsMoreBlock:hover {
+    background-color: #E1EEF6;
+}
+
+.trendsMoreBlock {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+}
+
+.trendsTitle {
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+    color: #0f1419;
+    margin: 3px 0;
+}
+
+.trendsTwittsCounter {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #536471;
+}
+
+.showMore {
+    color: #37A6F1;
+}

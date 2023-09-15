@@ -1,0 +1,437 @@
+.registerForm {
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.registerForm.active {
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+}
+
+.registerForm.active .formBlock {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15%;
+    width: 600px;
+    height: 650px;
+    border-radius: 16px;
+    background-color: #fff;
+    z-index: 10001;
+    overflow: visible;
+}
+
+.registerForm.active .overlay {
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+    opacity: 0.4;
+}
+
+.formBlockTop {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    align-self: flex-end;
+    justify-content: space-between;
+}
+
+.crossBlock {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.crossBlock:hover {
+    background-color: #E7E7E8;
+}
+
+.logoImg {
+    display: block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px !important;
+    height: 24px;
+}   
+
+.registerFormBlockContainer {
+    position: relative;
+    width: 364px;
+    margin: 20px 118px 0;
+    padding: 0px 32px 48px;
+}
+
+.registerForm.active .formTitle {
+    font-size: 31px;
+    font-weight: 700;
+    line-height: 36px;
+    color: var(--black);
+    text-align: center;
+}
+
+.registerForm.active .rightbarTopItem {
+    margin-top: 30px;
+}
+
+.registerForm.active .orBlock {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+    position: relative;
+}
+
+.registerForm.active .orBlock::before,
+.registerForm.active .orBlock::after {
+    content: "";
+    width: 130px;
+    height: 1px;
+    position: absolute;
+    top: 12px;
+    background-color: #CFD9DE;
+}
+
+.registerForm.active .orBlock::before {
+    left: 0;
+}
+
+.registerForm.active .orBlock::after {
+    right: 0;
+}
+
+.registerForm.active .rightbarTopItem.specialItem {
+    background-color: var(--black);
+    color: #fff;
+    transition: 0.2s ease;
+    margin-top: 20px;
+}
+
+.registerForm.active .rightbarTopItem.specialItem:hover {
+    background-color: #272C30;
+}
+
+.formLogin {
+    position: relative;
+    top: 30px;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+    color: var(--gray);
+}
+
+.formLogin a {
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #1d9bf0;
+}
+
+.formLogin a:hover {
+    text-decoration: underline;
+}
+
+.formBlockTopLeft {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.arrowBlock {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.arrowBlock:hover {
+    background-color: #E7E7E8;
+}
+
+.formBlockTopStep {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+    text-align: left;
+}
+
+.registerFormBlockContainerStep {
+    padding: 0px 80px;
+    margin-top: 20px;
+}
+
+.addListLabel.error {
+    color: #F6444F !important;
+}
+
+.errorMessage {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #f4212e;
+}
+
+.registerFormBlockContainerStep .formBottom {
+    margin-top: 40px;
+}
+
+.formBottomTitle {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.formBottomDesc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+    margin-top: 10px;
+}
+
+.formBottomInputBlock {
+    display: flex;
+    gap: 10px;
+}
+
+.formBottomSelectBlock {
+    width: 207px;
+    height: 60px;
+    margin: 16px 0px 0px;
+    padding: 12px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid #CFD9DE;
+    border-radius: 4px;
+}
+
+.formBottomSelectBlock select {
+    width: 207px;
+    height: 60px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    left: -9px;
+    top: 5px;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+    padding: 0 0 0 10px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    z-index: 2;
+}
+
+.formBottomSelectBlock label {
+    position: absolute;
+    top: 7px;
+    left: 10px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+    transition: 0.2s ease;
+}
+
+.selectChevron {
+    position: absolute;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    z-index: 1;
+}
+
+.submitBtn {
+    max-width: 440px;
+    width: 100%;
+    height: 50px;
+    max-height: 50px;
+    background-color: var(--black);
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 16px;
+    color: #fff;
+    border-radius: 9999px;
+    margin-top: 110px;
+    transition: background 0.2s ease;
+}
+
+.submitBtn:hover {
+    background-color: #272C30;
+}
+
+.submitBtn.disabled {
+    background-color: #87898C;
+    cursor: default;
+}
+
+.formPostTitle {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+    margin-top: 30px;
+}
+
+.formCustomizeInputBlock {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.formCustomizeInputBlock label {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+    display: inline-block;
+    width: 400px;
+}
+
+.formCustomizeInputBlock input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.checkboxBlock {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.checkboxBlock:hover {
+    background-color: #EDEFF1;
+}
+
+.checkboxBlock.active:hover {
+    background-color: #E8F5FD;
+}
+
+.formText {
+    margin-top: 30px;
+}
+
+.formText a,
+.formTextSmall a {
+    color: var(--blue);
+}
+
+.formText a:hover,
+.formTextSmall a:hover {
+    text-decoration: underline;
+}
+
+.formTextSmall {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.submitBtn.blue {
+    margin-top: 59px;
+    background-color: var(--blue);
+}
+
+.submitBtn.blue:hover {
+    background-color: #1A8CD8;
+}
+
+.loader {
+    border: 4px solid #f3f3f3; 
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    margin: 275px 0 0 265px;
+    animation: spin 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.formModal {
+    width: 400px;
+    padding: 12px;
+    background-color: var(--blue);
+    font-size: 15px;
+    line-height: 16px;
+    color: #fff;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -120px;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    border-radius: 4px;
+    opacity: 0;
+    transition: 0.3s ease;
+}
+
+.formModal.active {
+    opacity: 1;
+}
+
+.formModal span {
+    width: 350px;
+}
+
+.hindPasswordBlock {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+}
+
+.hindPasswordBlock:hover {
+    background-color: #E7E7E8;
+}
+
+.placeholderText {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #8a9095;
+    position: absolute;
+    left: 6px;
+    top: 20px;
+}
+
+.addListInput.inputWithPlaceholder {
+    padding-left: 30px;
+}

@@ -1,0 +1,26 @@
+.homePostIconBlock {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.2s ease;
+}
+
+.homePostIconCounter {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.homePostIconImgBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+}
+
+.homePostIconImgBlock img {
+    width: 18px;
+    height: 18px;
+}

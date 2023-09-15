@@ -1,0 +1,1226 @@
+.profileMain {
+    margin-left: 270px;
+    width: 600px !important;
+    height: fit-content;
+    border-left: 1px solid #EFF3F4;
+    border-right: 1px solid #EFF3F4;
+}
+
+.profileMainBlock {
+    width: 600px;
+}
+
+.profileContainer {
+    position: relative;
+    width: 100%;
+}
+
+.profileTop {
+    width: 600px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 4px 16px;
+    position: fixed;
+    top: 0;
+    left: 601px;
+    z-index: 2000;
+    border-right: 1px solid #eff3f4;
+}
+
+
+.profileTopTitle {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.profileTopTweetsCounter {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.profilebackgroundBlock {
+    width: 100%;
+    height: 200px;
+    background-color: #CFD9DE;
+    margin-top: 50px;
+}
+
+.profileUserAva {
+    position: absolute;
+    left: 10px;
+    top: 140px;
+    width: 133px;
+    height: 133px;
+}
+
+.profileUserAva img {
+    width: 133px;
+    height: 133px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+}
+
+.profileUserAva:hover .overlay {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.profileUserAva .overlay {
+    width: 123px;
+    height: 123px;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    transition: 0.2s ease;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.profileUserInfo {
+    padding: 12px 16px 0px;
+    margin-bottom: 16px;
+}
+
+.editProfile {
+    position: absolute;
+    right: 16px;
+    padding: 0px 16px;
+    height: 36px;
+    transition: 0.2s ease;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+    border: 1px solid rgb(207, 217, 222);
+    border-radius: 32px;
+}
+
+.editProfile:hover {
+    background-color: #E7E7E8;
+}
+
+.profileUsername {
+    margin-top: 80px;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.profileUserId {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+    margin-bottom: 15px;
+}
+
+.profileUserJoined {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 12px;
+    color: var(--gray);
+}
+
+
+.followsBlock {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.followsBlock span {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.followsBlock span strong {
+    font-weight: 700;
+    color: var(--black);
+}
+
+.followsBlock span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.profileSwitchBlock {
+    display: flex;
+    height: 53px;
+    border-bottom: 1px solid #EFF3F4;
+    top: 0;
+}
+
+.profileSwitchItem {
+    width: 25%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+    cursor: pointer;
+    height: 53px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--gray);
+    position: relative;
+}
+
+.profileSwitchItem:hover {
+    background-color: #E7E7E8;
+}
+
+.profileSwitchItem.active {
+    font-weight: 700;
+    color: var(--black);
+}
+
+.profileSwitchItem.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    height: 4px;
+    width: 56px;
+    background-color: var(--blue);
+    border-radius: 9999px;
+}
+
+
+
+.profileFollow {
+    width: 598px;
+    height: 1664px;
+}
+
+.profileFollow .profileSwitchItem {
+    width: 50%;
+    /* background-color: #fff; */
+}
+
+.profileFollow .profileSwitchBlock {
+    margin-top: 50px;
+    position: fixed;
+    width: 598px;
+    z-index: 1000;
+    background-color: #fff;
+}
+
+.profileFollow .profileSwitchBlock a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--gray);
+    transition: 0.2s ease;
+}
+
+.profileFollow .profileSwitchBlock a:hover {
+    background-color: #E7E7E8;
+}
+
+.followingBlock {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 103px;
+}
+
+
+
+
+.profileTopics {
+    width: 598px;
+    height: 1664px;
+}
+
+.profileTopicsTitle {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+    margin: 10px 0 10px 20px;
+}
+
+.profileTopicsSwitch {
+    display: flex;
+    width: 598px;
+    height: 53px;
+    border-bottom: 1px solid #EFF3F4;
+}
+
+.profileTopicsSwitchItem {
+    width: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+    cursor: pointer;
+    height: 53px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--gray);
+    position: relative;
+}
+
+.profileTopicsSwitch a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.profileTopicsSwitchItem:hover {
+    background-color: #E7E7E8;
+}
+
+.profileTopicsSwitchItem.active {
+    font-weight: 700;
+    color: var(--black);
+}
+
+.profileTopicsSwitchItem.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    height: 4px;
+    width: 56px;
+    background-color: var(--blue);
+    border-radius: 9999px;
+}
+
+.profileTopicsContentBlock {
+    padding: 16px;
+}
+
+.profileTopicsText {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.profileTopicsText a {
+    color: var(--blue);
+}
+
+.profileTopicsText a:hover {
+    text-decoration: underline;
+}
+
+.profileTopicsMain {
+    width: 336px;
+    margin: 20px auto 0;
+}
+
+.profileTopicsMainTitle {
+    margin-bottom: 10px;
+    font-size: 31px;
+    font-weight: 800;
+    line-height: 36px;
+    color: var(--black);
+}
+
+
+.profileLists {
+    width: 598px;
+    height: 1664px;
+}
+
+.profileLists .profileTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.profileTopIconBlock {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+}
+
+.profileTopIcon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.profileTopIcon:hover {
+    background-color: #E7E7E8;
+}
+
+.profileTopIcon img {
+    width: 20px;
+    height: 20px;
+}
+
+.profileListsMain {
+    margin-top: 53px;
+}
+
+.profileListsTextContainer {
+    padding: 12px 16px;
+}
+
+
+.profileListsText {
+    padding: 32px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.profileListsTitle {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.listsBlock {
+    display: none;
+    position: absolute;
+    left: -90px;
+    top: 10px;
+    z-index: 1000;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.listsBlock.active {
+    display: flex;
+    align-items: center;
+    width: 166px;
+    height: 44px;
+    padding: 12px 16px;
+    box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
+    border-radius: 12px;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.listsBlock.active a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listsBlock.active img {
+    width: 18px;
+    height: 18px;
+}
+
+.listsBlock.active:hover {
+    background-color: #F7F9F9;
+}
+
+.profileListsMembership {
+    width: 598px;
+    height: 1664px;
+}
+
+.profileListsMembership .profileTopicsMain {
+    margin-top: 70px;
+}
+
+.addListBlock {
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.addListBlock.active {
+    display: flex;
+}
+
+.addListBlock .overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.addListBlock.active .addListBlockContainer {
+    z-index: 10001;
+    width: 600px;
+    height: 650px;
+    background-color: #fff;
+    margin: 150px auto 0;
+    border-radius: 16px;
+}
+
+.addListTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+}
+
+.addListTopLeft {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.addListCrossBlock {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.addListCrossBlock:hover {
+    background-color: #E7E7E8;
+}
+
+.addListTitle {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.addListNextBtn {
+    width: 66px;
+    height: 32px;
+    border-radius: 32px;
+    background-color: var(--black);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+}
+
+.addListImgBlock {
+    width: 100%;
+    height: 200px;
+    background-color: #B2B2B2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addListIcon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #56595c;
+    transition: 0.2s ease;
+}
+
+.addListIcon:hover {
+    background-color: #646769;
+}
+
+.addListIcon img {
+    width: 20px;
+    height: 20px;
+}
+
+.addListForm {
+    padding: 12px 16px;
+}
+
+.addListInputBlock {
+    width: 100%;
+    height: 58px;
+    border: 1px solid #CFD9DE;
+    margin-top: 10px;
+    border-radius: 4px;
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.addListInputBlock.active {
+    border: 2px solid #1D9BF0;
+}
+
+.addListInput {
+    width: 100%;
+    height: 100%;
+    padding: 12px 8px 8px;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--black);
+}
+
+.addListLabel {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 17px;
+    font-weight: 400;
+    color: #8E99A1;
+    cursor: auto;
+    transition: 0.2s ease;
+}
+
+.addListLabel.activeBlue {
+    color: #1D9BF0;
+    font-size: 13px;
+    top: 20%;
+}
+
+.addListLabel.active {
+    color: #8E99A1;
+    font-size: 13px;
+    top: 20%;
+}
+
+.addListInputCounter {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.addListInputBlock.descInput {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.descInput .addListInput.descInput {
+    width: 100%;
+    height: 100%;
+    padding: 12px 8px 8px;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--black);
+}
+
+.descInput .addListLabel.activeBlue {
+    color: #1D9BF0;
+    font-size: 13px;
+    top: 10%;
+}
+
+.descInput .addListLabel.active {
+    color: #8E99A1;
+    font-size: 13px;
+    top: 10%;
+}
+
+.descInput {
+    height: 124px;
+}
+
+.descInput .addListLabel {
+    top: 20%;
+}
+
+.addListInput.descInput {
+    width: 100%;
+    height: 100%;
+    padding: 12px 8px 8px;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--black);
+    position: relative;
+    top: 20px;
+    resize: none;
+    outline: none;
+}
+
+.addListNextBtn.disabled {
+    background-color: #87898C;
+}
+
+
+
+.addition {
+    margin-left: 3px;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #1d9bf0;
+    cursor: pointer;
+}
+
+.addition:hover {
+    text-decoration: underline;
+}
+
+
+
+.checkboxBlock:hover {
+    background-color: #EDEFF1;
+}
+
+.addListRadioInputBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.addListRadioInputBlockTextBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.addListRadioInputBlockText {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.addListRadioInputBlockAddition {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.addListRadioInputBlock input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.addListRadioInputBlock .checkboxBlock {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    right: -10px;
+}
+
+
+
+.editProfileBlock {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.editProfileBlock .overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.editProfileContainer {
+    width: 600px;
+    height: 650px;
+    background-color: #fff;
+    z-index: 10001;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 150px;
+    overflow-y: scroll;
+    border-radius: 16px;
+}
+
+.editProfileTop {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.editProfileCross {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.editProfileCross:hover {
+    background-color: #E7E7E8;
+}
+
+.editProfileTop h1 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+    margin-left: 30px;
+}
+
+.editProfileTop button {
+    padding: 8px 18px;
+    background-color: var(--black);
+    color: #fff;
+    border-radius: 999px;
+    position: absolute;
+    right: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+}
+
+.editProfileBackgroundBlock {
+    width: 100%;
+    height: 193px;
+    background-color: #b2b2b2;
+    border: 3px solid #fff;
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+}
+
+.editProfileBackgroundAddPhotoBlock {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(15, 20, 25, 0.5);
+    cursor: pointer;
+    transition: 0.2s ease;
+    z-index: 10000;
+}
+
+.editProfileBackgroundAddPhotoBlock:hover {
+    background-color: rgba(39, 44, 48, 0.5);
+}
+
+
+.editProfileUserAvaBlock {
+    width: 122px;
+    height: 122px;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    position: relative;
+    top: -40px;
+    left: 20px;
+    z-index: 100001;
+}
+
+.editProfileUserAvaBlock .userAvaImg {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+}
+
+.editProfileUserAvaOverlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 112px;
+    height: 112px;
+    border: 5px solid transparent;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editProfileInputs {
+    padding: 12px 16px;
+    position: relative;
+    top: -50px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.bioInput {
+    height: 90px;
+}
+
+.bioInput .addListLabel.inactive {
+    position: relative;
+    top: 20px;
+}
+
+.bioInput .addListLabel {
+    margin-bottom: 15px;
+}
+
+.bioInput textarea {
+    position: relative;
+    top: 20px;
+    height: 52px;
+    margin-top: 10px;
+}
+
+.birthDateTop {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.birthDateTitle,
+.middleDot,
+.birdtDateEdit {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.birdtDateEdit {
+    color: var(--blue);
+    cursor: pointer;
+}
+
+.birdtDateEdit:hover {
+    text-decoration: underline;
+}
+
+.birthDateBottom {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.profileBio {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+    margin-bottom: 10px;
+}
+
+.profileLocationAndJoined {
+    display: flex;
+    gap: 5px;
+}
+
+.profileLocationAndJoined a {
+    color: var(--blue);
+    cursor: pointer;
+}
+
+.profileLocationAndJoined a:hover {
+    text-decoration: underline;
+}
+
+.userAvaFullScreen {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.userAvaFullScreenOverlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, .9);
+}
+
+.userAvaImg {
+    z-index: 10000;
+}
+
+.userAvaFullScreen .fullScreenImgCross {
+    width: 34px;
+    height: 34px;
+    z-index: 1000001;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.userAvaFullScreen .fullScreenImgCross:hover {
+    background-color: rgba(26, 26, 26, 0.75);
+}
+
+.currentCover {
+    position: relative;
+    width: 577.4px;
+    height: 193px;
+}
+
+.coverImg {
+    width: 100%;
+    height: 100%
+}
+
+.currentCoverOverlay {
+    background-color: rgba(0, 0, 0, .4);
+    z-index: 1000;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.editProfileBackgroundAddPhotoIcons {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 120px;
+    gap: 10px;
+    z-index: 10000;
+}
+
+.profileBackground {
+    width: 600px;
+    max-height: 200px;
+    cursor: pointer;
+    z-index: 100000;
+}
+
+.birthDateChangingDesc p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.birthDateChangingDesc p span {
+    color: var(--blue);
+    cursor: pointer;
+}
+
+.birthDateChangingDesc p span:hover {
+    text-decoration: underline;
+}
+
+
+.followingBlockItem {
+    display: flex;
+    padding: 12px 16px;
+    align-items: center;
+    justify-content: space-between;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.followingBlockItem:hover {
+    background-color: #F7F7F7;
+}
+
+.followingBlockItemLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.followingBlockItemUserAva {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.followingBlockUsername {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.followingBlockUsername:hover {
+    text-decoration: underline;
+}
+
+.followingBlockUserId {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.followingBlockRight button {
+    padding: 8px 16px;
+    border: 1px solid #cfd9de;
+    border-radius: 32px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--black);
+    transition: 0.2s ease;
+}
+
+.followingBlockRight button:hover {
+    background-color: #F7E1E3;
+}
+
+.followingBlockBio {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.followingBlockModal {
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 16px;
+    position: absolute;
+    top: 50px;
+    z-index: 1000;
+    /* width: 300px; */
+    cursor: default;
+    box-shadow: rgba(149, 157, 165) 0px 8px 24px;
+}
+
+.followingBlockModalTop {
+    display: flex;
+    gap: 100px;
+}
+
+.followingBlockUserAvaBlock {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.followingBlockUserAvaBlock img {
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+.followingBlockUserAvaBlock .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.followingBlockUserAvaBlock:hover .overlay {
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.followingBlockModalUserData {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.followingBlockModalUserData h2 {
+    font-size: 17px;
+    line-height: 20px;
+    font-weight: 700;
+    color: var(--black);
+    cursor: pointer;
+}
+
+.followingBlockModalUserData h2:hover {
+    text-decoration: underline;
+}
+
+.followingBlockModalUserData p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+    cursor: pointer;
+}
+
+.followingBlockModalFollow {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.followingBlockModalFollowItem {
+    cursor: pointer;
+}
+
+.followingBlockModalFollowItem:hover {
+    text-decoration: underline;
+}
+
+.followingBlockModalFollow strong {
+    color: var(--black);
+}
+
+.followingBlockModal .followingBlockRight {
+    height: fit-content;
+}

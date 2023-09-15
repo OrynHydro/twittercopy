@@ -1,0 +1,256 @@
+.loginForm {
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.loginForm.active {
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+}
+
+.loginForm.active .formBlock {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15%;
+    width: 600px;
+    height: 650px;
+    border-radius: 16px;
+    background-color: #fff;
+    z-index: 10002;
+    overflow: visible !important;
+}
+
+.loginForm.active .overlay {
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+    opacity: 0.4;
+}
+
+.formBlockTop {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    align-self: flex-end;
+    justify-content: space-between;
+}
+
+.crossBlock {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.crossBlock:hover {
+    background-color: #E7E7E8;
+}
+
+.loginForm.active .logoImg {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 24px;
+}
+
+.loginForm.active .formContainer {
+    position: relative;
+    width: 364px;
+    margin: 20px 118px 0;
+    padding: 0px 32px 48px;
+}
+
+.loginForm.active .formTitle {
+    font-size: 31px;
+    font-weight: 700;
+    line-height: 36px;
+    color: var(--black);
+    text-align: center;
+}
+
+.loginForm.active .rightbarTopItem {
+    margin-top: 30px;
+}
+
+.loginForm.active .orBlock {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+    position: relative;
+}
+
+.loginForm.active .orBlock::before,
+.loginForm.active .orBlock::after {
+    content: "";
+    width: 130px;
+    height: 1px;
+    position: absolute;
+    top: 12px;
+    background-color: #CFD9DE;
+}
+
+.loginForm.active .orBlock::before {
+    left: 0;
+}
+
+.loginForm.active .orBlock::after {
+    right: 0;
+}
+
+.loginForm.active .rightbarTopItem.specialItem {
+    background-color: var(--black);
+    color: #fff;
+    transition: 0.2s ease;
+    margin-top: 20px;
+}
+
+.loginForm.active .rightbarTopItem.specialItemWhite {
+    background-color: var(--black);
+    background-color: #fff;
+    color: var(--black);
+    transition: 0.2s ease;
+    margin-top: 20px;
+}
+
+.loginForm.active .rightbarTopItem.specialItem:hover {
+    background-color: #272C30;
+}
+
+.loginForm.active .rightbarTopItem.specialItemWhite:hover {
+    background-color: #E7E7E8;
+}
+
+.formSignUp {
+    position: relative;
+    top: 30px;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+    color: var(--gray);
+}
+
+.formSignUp a {
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #1d9bf0;
+}
+
+.formSignUp a:hover {
+    text-decoration: underline;
+}
+
+.passwordContainer .formContainer,
+.resetPasswordContainer .formContainer {
+    padding: 0px 80px !important;
+    margin: 0px !important;
+    width: 600px !important;
+}
+
+.addListInputBlock.disabled {
+    background-color: #f7f7f8;
+    border: none;
+}
+
+.addListInputBlock.disabled label {
+    color: #A9B1B8;
+}
+
+.addListInputBlock.disabled input {
+    color: #A9B1B8;
+}
+
+.formContainer .link {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--blue);
+    cursor: pointer;
+}
+
+.formContainer .link:hover {
+    text-decoration: underline;
+}
+
+.formContainer .signupBtn {
+    font-size: 15px !important;
+    color: var(--gray);
+}
+
+
+/* .loginForm.active .formContainer .formModal {
+    position: relative;
+    top: 220px;
+} */
+
+.loginForm.active .formModal span {
+    text-align: center;
+}
+
+
+
+
+.rightbarTopItem.specialItem.button,
+.submitBtn {
+    border: none;
+    outline: none;
+    position: relative;
+}
+
+.rightbarTopItem.specialItem.button span,
+.submitBtn span {
+    transition: 0.2s ease;
+}
+
+.rightbarTopItem.specialItem.button.loadingBtn::after,
+.submitBtn.loadingBtn::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: 4px solid transparent;
+    border-top-color: #ffffff !important;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+.rightbarTopItem.specialItem.button.loadingBtn,
+.submitBtn.loadingBtn span {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.submitBtn.prev {
+    background-color: #fff;
+    border: 1px solid rgb(207, 217, 222);
+    color: var(--black);
+}
+
+.submitBtn.prev:hover {
+    background-color: #E7E7E8;
+}

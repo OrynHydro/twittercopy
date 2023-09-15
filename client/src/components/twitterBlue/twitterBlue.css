@@ -1,0 +1,296 @@
+.twitterBlue {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: none;
+}
+
+.twitterBlue.active {
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    display: flex;
+    overflow: hidden;
+}
+
+.twitterBlue.active .twitterBlueContainer {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15%;
+    width: 600px;
+    height: 700px;
+    border-radius: 16px;
+    background-color: #fff;
+    z-index: 10002;
+}
+
+.twitterBlue.active .twitterBlueContainer.active {
+    height: 800px;
+    overflow-y: scroll;
+    top: 12%;
+}
+
+.twitterBlue.active .overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.twitterBlueContainer {
+    position: fixed;
+    z-index: 10006;
+    width: 600px;
+    height: 138px;
+    background-color: #fff;
+}
+
+.twitterBlueTop {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    align-self: flex-end;
+    justify-content: space-between;
+}
+
+.crossBlock {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.crossBlock:hover {
+    background-color: #E7E7E8;
+}
+
+.logoImg {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 25px;
+}
+
+.twitterBlueMid {
+    padding: 24px 72px 0px;
+    background: url('https://abs.twimg.com/sticky/illustrations/twitter_blue_images_v2/background-600W.png') no-repeat;
+}
+
+.twitterBlueTitleBlock {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+}
+
+.twitterBlueTitle {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.twitterBlueCheckmark {
+    width: 150px;
+    height: 96px;
+}
+
+.twitterBlueSwitchBlock {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    background-color: rgb(229, 234, 236);
+    border-radius: 9999px;
+}
+
+.twitterBlueSwitchItem {
+    width: calc(50% - 5px);
+    border-radius: 9999px;
+    background-color: #fff;
+    padding: 6px 0px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.twitterBlueSwitchItem.disabled {
+    background-color: transparent;
+}
+
+.twitterBlueSwitchItem span {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--black);
+    position: relative;
+}
+
+.twitterBlueSwitchItem.disabled span {
+    color: var(--gray);
+}
+
+.twitterBlueSwitchItem span.specialSpan::after {
+    width: 80px;
+    padding: 2px 4px;
+    background-color: #DBF8EB;
+    position: relative;
+    margin-left: 5px;
+    content: "SAVE 12%";
+    font-size: 13px;
+    font-weight: 500;
+    color: #004329;
+    border-radius: 9999px;
+}
+
+.twitterBlueDesc {
+    width: 448px;
+    border-radius: 12px;
+    border: 2px solid #EFF3F4;
+    margin-top: 24px;
+}
+
+.twitterBlueDescTop {
+    padding: 8px 4px 12px 8px;
+}
+
+.twitterBlueDescTop h2 {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+}
+
+ul.twitterBlueDescList {
+    padding: 8px 4px 0px 28px;
+}
+
+.twitterBlueDescItem {
+    list-style: disc;
+    font-size: 15px;    
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--black);
+    padding-bottom: 8px;
+    width: 400px;
+}
+
+.learnMoreBlock {
+    padding: 8px;
+    margin-top: 4px;
+    margin-left: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--black);
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    width: 127px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.learnMoreBlock.active {
+    width: calc(100% - 16px);
+    justify-content: space-between;
+}
+
+.learnMoreBlock img {
+    margin-top: 3px;
+}
+
+.learnMoreBlock:hover {
+    background-color: #F7F9F9;
+}
+
+.twitterBlueBottom {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px 0px;
+    box-shadow: rgba(15, 20, 25, 0.15) 0px 0px 3px, rgba(15, 20, 25, 0.1) 0px 0px 16px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.twitterBlueBottomContainer {
+    padding: 0px 72px;
+}
+
+.twitterBlueBottomBtn {
+    width: 100%;
+    background-color: var(--black);
+    color: #fff;
+    border-radius: 9999px;
+    padding: 8px 0px;
+    font-size: 15px;    
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.twitterBlueBottomDesc {
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 13px;
+    color: var(--gray);
+    margin-top: 10px;
+}
+
+.twitterBlueBottomDesc a {
+    color: var(--blue);
+}
+
+.twitterBlueBottomDesc a:hover {
+    text-decoration: underline;
+}
+
+.twitterBlueBottomBtn .fullPrice {
+    text-decoration: line-through;
+    font-weight: 500;
+}
+
+
+.moreBlock {
+    display: none;
+}
+
+.moreBlock.active {
+    height: 208px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+} 
+
+.moreBlockItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.moreBlockContent {
+    position: relative;
+    top: -5px;
+}
+
+.moreBlockTitle {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.moreBlockDesc {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}

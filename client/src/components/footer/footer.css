@@ -1,0 +1,79 @@
+.rightbarBottom {
+    margin: 10px 0px 100px;
+}
+
+.rightbarBottomContainer {
+    padding: 0px 16px;
+    position: relative;
+}
+
+.rightbarBottomText {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #536471;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.rightbarBottomPolicy {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+.rightbarBottomText:hover {
+    text-decoration: underline;
+}
+
+.rightbarBottomText.more span {
+    position: relative;
+}
+
+.rightbarBottomText.more span::after {
+    content: "";
+    width: 2px;
+    height: 2px;
+    background-color: #536471;
+    border-radius: 50%;
+    position: absolute;
+    left: 4px;
+    top: 9px;
+}
+
+.rightbarBottomContainer ul {
+    border-radius: 16px;
+    box-shadow: rgba(149, 157, 165, 0.3) 0px 8px 24px;
+    width: 190px;
+    position: absolute;
+    top: 20px;
+    left: 45px;
+    overflow: hidden;
+    transition: 0.2s ease;
+}
+
+.rightbarBottomContainer li {
+    height: 44px;
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--black);
+    background-color: #fff;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.rightbarBottomContainer li:first-child {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.rightbarBottomContainer li:last-child {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.rightbarBottomContainer li:hover {
+    background-color: #F7F9F9;
+}

@@ -1,0 +1,453 @@
+.homePost {
+    background-color: #fff;
+    cursor: pointer;
+    width: 598px;
+    position: relative;
+}
+
+.homePostContainer:hover {
+    background-color: #F7F7F7;
+}
+
+.homePostContainer {
+    padding: 8px 16px;transition: 0.2s ease;
+}
+
+.homePostTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.homePostTopInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.homePostUserInfo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+    top: -10px;
+}
+
+.homePostUserImg {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.homePostMoreBlock {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+}
+
+.homePostMoreBlock:hover {
+    background-color: #E1EEF6;
+}
+
+.homePostUsername,
+.homePostUserId,
+.homePostDate {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+    cursor: pointer;
+}
+
+.homePostUserId,
+.homePostDate {
+    font-weight: 400;
+    color: var(--gray);
+}
+
+.homePostUsername:hover,
+.homePostDate:hover {
+    text-decoration: underline;
+}
+
+.homePostMid {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 59px;
+    gap: 10px;
+    position: relative;
+    top: -20px;
+}
+
+.homePostDesc {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.homePostImg {
+    border-radius: 16px;
+    max-height: 512px;
+    width: 512px;
+}
+
+.homePostBottom {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-left: 60px;
+}
+
+.postImagesContainer {
+    display: flex;
+    gap: 2px;
+    flex-direction: row;
+}
+
+.postImagesContainer.two img {
+    width: 223px;
+    height: 288px;
+}
+
+.postImagesContainer.two img:first-child {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.postImagesContainer.two img:last-child {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.postImagesContainer.three .column {
+    height: 288px;
+}
+
+.postImagesContainer.three .column:first-child img {
+    width: 223px;
+    height: 288px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.postImagesContainer.three .column:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.postImagesContainer.three .column:last-child img {
+    width: 223px;
+    height: 143px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.postImagesContainer.three .column:last-child img:first-child {
+    border-bottom-right-radius: 0px;
+}
+
+.postImagesContainer.three .column:last-child img:last-child {
+    border-top-right-radius: 0px;
+}
+
+.postImagesContainer.four {
+    width: 450px;
+    flex-wrap: wrap;
+}
+
+.postImagesContainer.four img {
+    width: 223px;
+    height: 288px;
+}
+
+.postImagesContainer.four img:nth-child(1) {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.postImagesContainer.four img:nth-child(2) {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.postImagesContainer.four img:nth-child(3) {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.postImagesContainer.four img:nth-child(4) {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.fullScreenImg {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100000;
+    cursor: default;
+}
+
+.fullScreenImg .fullScreenImgBlock {
+    z-index: 100001;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: calc(100% - 48px);
+}
+
+.fullScreenImg .fullScreenImgOverlay {
+    background-color: rgba(0, 0, 0, 0.9);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    /* z-index: 10000; */
+}
+
+.fullScreenImgIconContainer {
+    z-index: 1000001;
+    width: 600px;
+    height: 48px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fullScreenImg .fullScreenImgCross {
+    width: 34px;
+    height: 34px;
+    z-index: 1000001;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.fullScreenImg .fullScreenImgCross:hover {
+    background-color: rgba(26, 26, 26, 0.75);
+}
+
+.fullScreenImgIconBlock {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.fullScreenImgIconBlockCounter {
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.fullScreenImgIconImgBlock {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.2s ease;
+}
+
+.fullScreenImgIconImgBlock:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+.swiper {
+    width: 100vw;
+    height: 100vh;
+}
+
+.swiper-button-disabled::after,
+.swiper-button-disabled {
+    display: none !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    content: '';
+    width: 23px;
+    height: 23px;
+    color: transparent;
+    background-image: url('./../../../../api/public/images/icon/colored/arrowRightWhite.svg');
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.75);
+    transition: all 0.2s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.swiper-button-prev::after {
+    transform: rotate(180deg);
+}
+
+
+
+.popupWindow {
+    position: absolute;
+    right: 16px;
+    top: 8px;
+    width: fit-content;
+    background-color: #fff;
+    box-shadow: rgb(149, 157, 165) 0px 8px 24px;
+    z-index: 1000;
+    border-radius: 12px;
+    cursor: default;
+}
+
+.popupWindowItem {
+    padding: 12px 16px;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.popupWindowItem:first-child {
+    border-radius: 12px 12px 0px 0px;
+}
+
+.popupWindowItem:last-child {
+    border-radius: 0px 0px 12px 12px;
+}
+
+.popupWindowItem:hover {
+    background-color: #F7F7F7;
+}
+
+.popupWindowItem span {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.popupWindowItem img {
+    width: 18px;
+    height: 18px;
+}
+
+.popupWindowItem.special span {
+    color: #f4212e;
+}
+
+
+
+.deletePostModalWindow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    cursor: default;
+}
+
+.deletePostModalWindow .overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.deletePostModalContainer {
+    position: absolute;
+    padding: 32px;
+    border-radius: 16px;
+    background-color: #fff;
+    z-index: 10001;
+    top: 350px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.deletePostModalContainer h2 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+    margin-bottom: 10px;
+}
+
+.deletePostModalContainer p {
+    display: block;
+    width: 250px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+    margin-bottom: 10px;
+}
+
+.buttonBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttonBlock button {
+    border-radius: 32px;
+    transition: 0.2s ease;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.buttonBlock .deleteBtn {
+    background-color: #f4212e;
+    color: #fff;
+}
+
+.buttonBlock .deleteBtn:hover {
+    background-color: #DC1E29;
+}
+
+
+.buttonBlock .cancelBtn {
+    border: 1px solid #dce3e7;
+}
+
+.buttonBlock .cancelBtn:hover {
+    background-color: #E7E7E8;
+}

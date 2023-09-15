@@ -1,0 +1,45 @@
+.bookmarks {
+    margin-left: 270px;
+    min-width: 600px;
+    height: 1664px;
+    border-left: 1px solid #EFF3F4;
+    border-right: 1px solid #EFF3F4;
+}
+
+.bookmarksContainer {
+    padding: 12px;
+}
+
+.boormarksTopTitle {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.bookmarksUserId {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.bookmarksBottom {
+    width: 336px;
+    margin: 30px auto;
+}
+
+.bookmarksBottomTitle {
+    font-size: 31px;
+    font-weight: 800;
+    line-height: 36px;
+    color: var(--black);
+    margin-bottom: 5px;
+}
+
+.bookmarksBottomText {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}

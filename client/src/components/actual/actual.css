@@ -1,0 +1,105 @@
+.actual {
+    width: 600px;
+    height: fit-content;
+    border: 1px solid #eff3f4;
+    margin-left: 270px;
+}
+
+.actual.registered {
+    width: 348px;
+    border: none;
+    margin-left: 35px;
+}
+
+.actualSearchBlock {
+    padding: 5px 20px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.actualSearchBlockForm {
+    width: 502px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.actualSearchBlockFormInput {
+    width: 100%;
+    padding: 13px 0px 13px 50px;
+    background-color: #eff3f4;
+    border-radius: 50px;
+    font-size: 15px;
+    color: #0f1419;
+    font-weight: 400;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.actual.registered .actualSearchBlockFormInput {
+    width: 348px;
+    left: -20px;
+}
+
+.actual.registered .actualSearchBlockForm img {
+    left: 0;
+}
+
+.actualSearchBlockFormInput.active {
+    border-color: #1D9BF0;
+}
+
+.actualSearchBlockForm img {
+    position: absolute;
+    left: 18px;
+    top: 15px;
+    width: 18px;
+    height: 18px;
+    z-index: 1000;
+}
+
+.actualSearchBlockSettings {
+    width: 18px;
+    height: 18px;
+}
+
+.actualTitle {
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 24px;
+    color: var(--black);
+    margin: 20px 0 20px 15px;
+}
+
+.actual.registered .actualTitle {
+    margin-bottom: 23px;
+}
+
+.actualSettingsBlock {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+    border-radius: 50%;
+    left: 10px;
+}
+
+.actualSettingsBlock:hover {
+    background-color: #E7E7E8;
+    cursor: pointer;
+}
+
+.actualSettingsBlock img {
+    width: 16px;
+    height: 16px;
+}
+
+.actual.registered .actualContainer {
+    background-color: #f7f9f9;
+    padding: 4px 0px;
+    margin-top: 10px;
+    border-radius: 16px;
+}

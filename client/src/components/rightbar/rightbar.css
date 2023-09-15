@@ -1,0 +1,75 @@
+.rightbar {
+    width: 428px;
+    display: flex;
+}
+
+.rightbarContainer {
+    padding: 10px 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.rightbarTop {
+    width: 100%;
+    height: 276px;
+    border: 1px solid rgb(239, 243, 244);
+    border-radius: 16px;
+}
+
+.rightbarTopContainer {
+    padding: 16px;
+}
+
+.rightbarTopTitle {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 24px;
+    color: var(--black);
+}
+
+.rightbarTopSubtitle {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #536471;
+    margin: 10px 0;
+}
+
+.rightbarTopItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--black);
+    width: 300px;
+    height: 40px;
+    border: 1px solid rgb(207, 217, 222);
+    border-radius: 32px;
+    margin-top: 10px;
+    width: 300px;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.rightbarTopItem:hover {
+    background-color: #E6E6E6;
+}
+
+.rightbarTopInfo {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #536471;
+    margin-top: 10px;
+}
+
+.rightbarTopInfoLink {
+    color: #1d9bf0;
+}
+
+.rightbarTopInfoLink:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

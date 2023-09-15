@@ -1,0 +1,124 @@
+.whoToFollow {
+    width: 350px;
+    max-width: 350px;
+    margin-left: 30px;
+    margin-top: 15px;
+    position: relative;
+}
+
+.whoToFollowBlock {
+    margin-bottom: 16px;
+    width: 100%;
+    background-color: #f7f9f9;
+    border-radius: 16px;
+}
+
+.whoToFollowTitle {
+    padding: 12px 16px;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 24px;
+    color: var(--black);
+}
+
+
+
+.whoToFollowItem {
+    transition: 0.2s ease;
+    cursor: pointer;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.whoToFollowItem:hover {
+    background-color: #EFF1F1;
+}
+
+.whoToFollowUserImg {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.whoToFollowUsername,
+.whoToFollowUserId {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.whoToFollowUsername:hover {
+    text-decoration: underline;
+}
+
+.whoToFollowUserId {
+    font-weight: 400;
+    color: var(--gray);
+}
+
+.followBtn {
+    padding: 8px 16px;
+    background-color: var(--black);
+    border-radius: 32px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: #fff;
+    position: absolute;
+    right: 20px;
+}
+
+
+.whoToFollowUserImg,
+.whoToFollowImgBlock,
+.imgBlockOverlay {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.whoToFollowImgBlock {
+    position: relative;
+}
+
+.imgBlockOverlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: 0.2s ease;
+    background-color: #1e1e1e;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.whoToFollowImgBlock:hover .imgBlockOverlay {
+    opacity: 0.1;
+}
+
+
+.showMoreBlock {
+    transition: 0.2s ease;
+    padding: 15px;
+    position: relative;
+}
+
+.showMoreBlock:hover {
+    background-color: #F7F7F7;
+    cursor: pointer;
+}
+
+.showMoreBlock:hover{
+    background-color: #EFF1F1;
+}
+
+.showMoreBlock {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    position: relative;
+    top: 3px;
+    color: #37A6F1;
+}
