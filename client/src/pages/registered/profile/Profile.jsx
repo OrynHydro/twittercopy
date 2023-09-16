@@ -40,7 +40,6 @@ const FollowingItem = ({
 	bio,
 	followers,
 	following,
-	currentUser,
 }) => {
 	// declaring variable that helps to get images from folder directly without importing
 
@@ -115,12 +114,12 @@ const FollowingItem = ({
 						</span>
 					</div>
 					{/* <div>
-            {currentUser?.following
-              .filter(item => followers.find(i => i === item))
-              .map(shared => (
-                <>{shared}</>
-              ))}
-          </div> */}
+				{currentUser?.following
+				.filter(item => followers.find(i => i === item))
+				.map(shared => (
+					<>{shared}</>
+				))}
+			</div> */}
 				</div>
 			</div>
 			<div
@@ -366,39 +365,9 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			} catch (err) {
 				console.log(err)
 			}
-			user && userFollowing.length === 0 && findUserFollowing()
-
-			return (
-				<div className='profileFollow'>
-					<div className='profileSwitchBlock'>
-						<div className='profileSwitchItem'>
-							<Link to={`/${user?.userId}/followers`}>Followers</Link>
-						</div>
-						<div className='profileSwitchItem active'>Following</div>
-					</div>
-					<div className='followingBlock'>
-						{userFollowing.length !== 0 ? (
-							userFollowing.map((following, id) => (
-								<FollowingItem
-									username={following.username}
-									userId={following.userId}
-									profilePicture={following.profilePicture}
-									key={id}
-									bio={following.bio}
-									followers={following.followers}
-									following={following.following}
-									currentUser={user}
-								/>
-							))
-						) : (
-							<PostsLoader />
-						)}
-					</div>
-				</div>
-			)
 		}
 
-		const [text, setText] = useState('Following')
+		user && userFollowing.length === 0 && findUserFollowing()
 
 		return (
 			<div className='profileFollow'>
@@ -416,9 +385,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								userId={following.userId}
 								profilePicture={following.profilePicture}
 								key={id}
-								text={text}
-								setText={setText}
 								bio={following.bio}
+								followers={following.followers}
+								following={following.following}
+								currentUser={user}
 							/>
 						))
 					) : (

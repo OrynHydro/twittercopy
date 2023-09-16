@@ -97,7 +97,7 @@
 }
 
 .sidebarProfileBlock {
-    margin-top: calc(100% - 100px);
+    margin-top: calc(100% - 60px);
     transition: 0.2s ease;
     cursor: pointer;
     padding: 12px;
