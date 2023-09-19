@@ -47,9 +47,13 @@ const FollowingItem = ({
 
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
-	const [text, setText] = useState('Following')
+	const [text, setText] = useState(
+		!currentUser?.following.includes(userId) ? 'Following' : 'Follow'
+	)
 	const [openModal, setOpenModal] = useState(false)
-	const [modalText, setModalText] = useState('Following')
+	const [modalText, setModalText] = useState(
+		!currentUser?.following.includes(userId) ? 'Following' : 'Follow'
+	)
 
 	const followUser = async () => {
 		if (currentUser?.following.includes(userDbId)) {
@@ -103,7 +107,12 @@ const FollowingItem = ({
 
 				<div className='followingBlockUserData'>
 					<h2 className='followingBlockUsername'>{username}</h2>
-					<p className='followingBlockUserId'>{userId}</p>
+					<p className='followingBlockUserId'>
+						{userId + ' '}
+						{currentUser.followers.includes(userDbId) && (
+							<span className='followsYou'>Follows you</span>
+						)}
+					</p>
 					<p className='followingBlockBio'>{bio}</p>
 				</div>
 				<div
@@ -385,6 +394,21 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	const ProfileFollowers = () => {
 		document.title = `People followed ${user?.username}`
+
+		const [userFollowers, setUserFollowers] = useState([])
+
+		const findUserFollowers = async () => {
+			try {
+				await axios
+					.get(`/users/followers/${user?._id}`)
+					.then(res => setUserFollowers(res.data))
+			} catch (err) {
+				console.log(err)
+			}
+		}
+
+		user && userFollowers.length === 0 && findUserFollowers()
+
 		return (
 			<div className='profileFollow'>
 				<div className='profileSwitchBlock'>
@@ -392,6 +416,25 @@ const Profile = ({ isLoading, setIsLoading }) => {
 					<div className='profileSwitchItem'>
 						<Link to={`/${user?.userId}/following`}>Following</Link>
 					</div>
+				</div>
+				<div className='followingBlock'>
+					{userFollowers.length !== 0 ? (
+						userFollowers.map((follower, id) => (
+							<FollowingItem
+								username={follower.username}
+								userId={follower.userId}
+								userDbId={follower._id}
+								profilePicture={follower.profilePicture}
+								key={id}
+								bio={follower.bio}
+								followers={follower.followers}
+								following={follower.following}
+								currentUser={user}
+							/>
+						))
+					) : (
+						<PostsLoader />
+					)}
 				</div>
 			</div>
 		)

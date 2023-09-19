@@ -1271,18 +1271,12 @@
     background-color: #272C30;
 }
 
-/* 
-.followingBlockRight button {
-    padding: 8px 16px;
-    border: 1px solid #cfd9de;
-    border-radius: 32px;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 16px;
-    color: var(--black);
-    transition: 0.2s ease;
+.followsYou {
+    padding: 2px 4px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 12px;
+    color: var(--gray);
+    background-color: #eff3f4;
+    border-radius: 4px;
 }
-
-.followingBlockRight button:hover {
-    background-color: #F7E1E3;
-} */
