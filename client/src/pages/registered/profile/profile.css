@@ -1112,7 +1112,7 @@
     font-weight: 700;
     line-height: 16px;
     color: var(--black);
-    transition: 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .followingBlockRight button:hover {
@@ -1258,3 +1258,31 @@
 .followingBlockItemUserAvaBlock:hover .overlay {
     background-color: rgba(0, 0, 0, .3);
 }
+
+
+
+.followingBlockRight.followUserBtn button {
+    width: 78px;
+    color: #fff;
+    background-color: var(--black);
+}
+
+.followingBlockRight.followUserBtn button:hover {
+    background-color: #272C30;
+}
+
+/* 
+.followingBlockRight button {
+    padding: 8px 16px;
+    border: 1px solid #cfd9de;
+    border-radius: 32px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--black);
+    transition: 0.2s ease;
+}
+
+.followingBlockRight button:hover {
+    background-color: #F7E1E3;
+} */

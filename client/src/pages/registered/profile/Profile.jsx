@@ -36,10 +36,12 @@ import moment from 'moment'
 const FollowingItem = ({
 	username,
 	userId,
+	userDbId,
 	profilePicture,
 	bio,
 	followers,
 	following,
+	currentUser,
 }) => {
 	// declaring variable that helps to get images from folder directly without importing
 
@@ -48,8 +50,39 @@ const FollowingItem = ({
 	const [text, setText] = useState('Following')
 	const [openModal, setOpenModal] = useState(false)
 	const [modalText, setModalText] = useState('Following')
+
+	const followUser = async () => {
+		if (currentUser?.following.includes(userDbId)) {
+			try {
+				await axios.put(`/users/${userDbId}/unfollow`, {
+					userId: currentUser._id,
+				})
+				setModalText('Follow')
+				setText('Follow')
+				currentUser.following = currentUser.following.filter(
+					item => item !== userDbId
+				)
+				followers = followers.filter(item => item !== currentUser._id)
+			} catch (err) {
+				console.log(err)
+			}
+		} else if (!currentUser?.following.includes(userDbId)) {
+			try {
+				await axios.put(`/users/${userDbId}/follow`, {
+					userId: currentUser._id,
+				})
+				setModalText('Following')
+				setText('Following')
+				currentUser.following.push(userDbId)
+				followers.push(currentUser._id)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+	}
+
 	return (
-		<NavLink className='followingBlockItem' to={`/${userId}`}>
+		<div className='followingBlockItem'>
 			<div
 				className='followingBlockItemLeft'
 				onMouseOver={() => setOpenModal(true)}
@@ -93,12 +126,18 @@ const FollowingItem = ({
 							className={
 								modalText === 'Unfollow'
 									? 'followingBlockRight unfollowBtn'
+									: modalText === 'Follow'
+									? 'followingBlockRight followBtn'
 									: 'followingBlockRight'
 							}
-							onMouseOver={() => setModalText('Unfollow')}
-							onMouseOut={() => setModalText('Following')}
+							onMouseOver={() => {
+								modalText !== 'Follow' && setModalText('Unfollow')
+							}}
+							onMouseOut={() => {
+								modalText !== 'Follow' && setModalText('Following')
+							}}
 						>
-							<button>{modalText}</button>
+							<button onClick={() => followUser(true)}>{modalText}</button>
 						</div>
 					</div>
 					<div className='followingBlockModalUserData'>
@@ -126,14 +165,20 @@ const FollowingItem = ({
 				className={
 					text === 'Unfollow'
 						? 'followingBlockRight unfollowBtn'
+						: text === 'Follow'
+						? 'followingBlockRight followUserBtn'
 						: 'followingBlockRight'
 				}
-				onMouseOver={() => setText('Unfollow')}
-				onMouseOut={() => setText('Following')}
+				onMouseOver={() => {
+					text !== 'Follow' && setText('Unfollow')
+				}}
+				onMouseOut={() => {
+					text !== 'Follow' && setText('Following')
+				}}
 			>
-				<button>{text}</button>
+				<button onClick={() => followUser(false)}>{text}</button>
 			</div>
-		</NavLink>
+		</div>
 	)
 }
 
@@ -360,7 +405,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		const findUserFollowing = async () => {
 			try {
 				await axios
-					.get(`/users/followers/${user?._id}`)
+					.get(`/users/followings/${user?._id}`)
 					.then(res => setUserFollowing(res.data))
 			} catch (err) {
 				console.log(err)
@@ -383,6 +428,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							<FollowingItem
 								username={following.username}
 								userId={following.userId}
+								userDbId={following._id}
 								profilePicture={following.profilePicture}
 								key={id}
 								bio={following.bio}
