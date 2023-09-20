@@ -186,6 +186,7 @@ const FollowingItem = ({
 				}}
 			>
 				<button onClick={() => followUser(false)}>{text}</button>
+				{!currentUser?.following.includes(userId)}
 			</div>
 		</div>
 	)

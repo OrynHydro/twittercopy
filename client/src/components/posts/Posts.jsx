@@ -3,7 +3,10 @@
 import './posts.css'
 import { useEffect, useState } from 'react'
 import { PostIcons } from '../../helpers/post'
-import { postMoreItems } from '../../helpers/postMoreItems'
+import {
+	postMoreUserItem,
+	postMoreNotUserItem,
+} from '../../helpers/postMoreItems'
 
 import Posticons from '../posticons/Posticons'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -26,32 +29,52 @@ const PostMoreItem = ({
 	userId,
 	setDeleteModal,
 	setPopupWindow,
+	isUserPosts,
 }) => {
 	return (
-		<div
-			className={
-				title === 'Delete' ? 'popupWindowItem special' : 'popupWindowItem'
-			}
-			onClick={() => {
-				title === 'Delete' && setDeleteModal(true)
-				title === 'Delete' && setPopupWindow(false)
-			}}
-		>
-			{title === 'Highlight on your profile' ||
-			title === 'Pin to your profile' ? (
-				<>{icon}</>
-			) : (
-				<img src={icon} alt='' />
-			)}
+		<>
+			{isUserPosts ? (
+				<div
+					className={
+						title === 'Delete' ? 'popupWindowItem special' : 'popupWindowItem'
+					}
+					onClick={() => {
+						title === 'Delete' && setDeleteModal(true)
+						title === 'Delete' && setPopupWindow(false)
+					}}
+				>
+					{title === 'Highlight on your profile' ||
+					title === 'Pin to your profile' ? (
+						<>{icon}</>
+					) : (
+						<img src={icon} alt='' />
+					)}
 
-			{title !== 'Add/remove' ? (
-				<span>{title}</span>
+					{title !== 'Add/remove' ? (
+						<span>{title}</span>
+					) : (
+						<span>
+							{title} {userId} from Lists
+						</span>
+					)}
+				</div>
 			) : (
-				<span>
-					{title} {userId} from Lists
-				</span>
+				<div className={'popupWindowItem'}>
+					<>{icon}</>
+					{title === 'Add/remove' ? (
+						<span>
+							{title} {userId} from Lists
+						</span>
+					) : title !== 'Unfollow' && title !== 'Mute' && title !== 'Block' ? (
+						<span>{title}</span>
+					) : (
+						<span>
+							{title} {userId}
+						</span>
+					)}
+				</div>
 			)}
-		</div>
+		</>
 	)
 }
 
@@ -347,21 +370,32 @@ const Posts = ({ post, more, moreActive, currentUser, isUserPosts }) => {
 			<div
 				className='popupWindow'
 				style={{
-					display:
-						popupWindow && params.userId && isUserPosts ? 'block' : 'none',
+					display: popupWindow ? 'block' : 'none',
 				}}
 				ref={popup}
 			>
-				{postMoreItems.map((item, id) => (
-					<PostMoreItem
-						key={id}
-						title={item.title}
-						icon={item.icon}
-						userId={currentUser?.userId}
-						setDeleteModal={setDeleteModal}
-						setPopupWindow={setPopupWindow}
-					/>
-				))}
+				{isUserPosts
+					? postMoreUserItem.map((item, id) => (
+							<PostMoreItem
+								key={id}
+								title={item.title}
+								icon={item.icon}
+								userId={currentUser?.userId}
+								setDeleteModal={setDeleteModal}
+								setPopupWindow={setPopupWindow}
+								isUserPosts={isUserPosts}
+							/>
+					  ))
+					: postMoreNotUserItem.map((item, id) => (
+							<PostMoreItem
+								key={id}
+								title={item.title}
+								icon={item.icon}
+								userId={currentUser?.userId}
+								setDeleteModal={setDeleteModal}
+								setPopupWindow={setPopupWindow}
+							/>
+					  ))}
 			</div>
 			<div
 				className='deletePostModalWindow'
