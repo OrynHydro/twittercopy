@@ -22,6 +22,7 @@ import {
 	Link,
 	useLocation,
 	NavLink,
+	useParams,
 } from 'react-router-dom'
 
 import { Posts } from './../../../components/index'
@@ -632,7 +633,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	// user data states
 
 	const { user, setUser } = useContext(UserContext)
+	const [anotherUser, setAnotherUser] = useState(null)
 	const [userInStorage, setUserInStorage] = useLocalStorage('user')
+
+	const params = useParams()
 
 	// fetches user from local storage
 
@@ -643,6 +647,14 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		}
 		fetchUser()
 	}, [userInStorage])
+
+	useEffect(() => {
+		const anotherUser = async () => {
+			const findUser = await axios.get(`/users/findById/${params.userId}`)
+			setAnotherUser(findUser.data)
+		}
+		anotherUser()
+	}, [params.userId])
 
 	// sets user data to inputs inside of modal window
 
@@ -661,7 +673,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	}, [user])
 
 	user
-		? (document.title = `${user?.username} (${user?.userId})`)
+		? (document.title = `${anotherUser?.username} (${anotherUser?.userId})`)
 		: (document.title = 'Profile / Twitter')
 
 	// fetches user's posts from database
@@ -673,7 +685,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setUserPosts([])
 		try {
 			const userAllPosts = await axios.get(
-				`/posts/allUserPosts/${user?.userId.split('@')[1]}`
+				`/posts/allUserPosts/${anotherUser?.userId.split('@')[1]}`
 			)
 			setUserPosts(
 				userAllPosts.data.sort((p1, p2) => {
@@ -686,8 +698,8 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	}
 
 	useEffect(() => {
-		user?.userId && findUserPosts()
-	}, [user?.userId])
+		anotherUser?.userId && user?.userId && findUserPosts()
+	}, [anotherUser?.userId, user?.userId])
 
 	// declaring states in "updating user data" modal window
 
@@ -839,7 +851,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		: (document.body.style.overflowY = 'hiddeb')
 
 	if (!activeEditProfileBlock && currentCover === 'none')
-		setCurrentCover(user?.coverPicture)
+		setCurrentCover(anotherUser?.coverPicture)
 
 	// fetches posts liked by user
 
@@ -949,15 +961,15 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						className='profileTop'
 						style={{
 							display:
-								location.pathname === `/${user?.userId}/topics` ||
-								location.pathname === `/${user?.userId}/lists` ||
-								location.pathname === `/${user?.userId}/topics/followed` ||
-								location.pathname === `/${user?.userId}/topics/not_interested`
+								location.pathname === `/${params.userId}/topics` ||
+								location.pathname === `/${params.userId}/lists` ||
+								location.pathname === `/${params.userId}/topics/followed` ||
+								location.pathname === `/${params.userId}/topics/not_interested`
 									? 'none'
 									: 'block',
 						}}
 					>
-						<h2 className='profileTopTitle'>{user?.username}</h2>
+						<h2 className='profileTopTitle'>{anotherUser?.username}</h2>
 						<span className='profileTopTweetsCounter'>
 							{userPosts.length} Tweets
 						</span>
@@ -983,13 +995,13 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						className='profileMainBlock'
 						style={{
 							display:
-								location.pathname === `/${user?.userId}/following` ||
-								location.pathname === `/${user?.userId}/followers` ||
-								location.pathname === `/${user?.userId}/topics` ||
-								location.pathname === `/${user?.userId}/lists` ||
-								location.pathname === `/${user?.userId}/lists/membership` ||
-								location.pathname === `/${user?.userId}/topics/followed` ||
-								location.pathname === `/${user?.userId}/topics/not_interested`
+								location.pathname === `/${params.userId}/following` ||
+								location.pathname === `/${params.userId}/followers` ||
+								location.pathname === `/${params.userId}/topics` ||
+								location.pathname === `/${params.userId}/lists` ||
+								location.pathname === `/${params.userId}/lists/membership` ||
+								location.pathname === `/${params.userId}/topics/followed` ||
+								location.pathname === `/${params.userId}/topics/not_interested`
 									? 'none'
 									: 'block',
 						}}
@@ -998,19 +1010,28 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						<div className='profilebackgroundBlock'>
 							<img
 								className='profileBackground'
-								src={PF + 'storage/' + user?.coverPicture}
+								src={
+									anotherUser !== user
+										? PF + 'storage/' + anotherUser?.coverPicture
+										: PF + 'storage/' + user?.coverPicture
+								}
 								alt=''
 								onClick={() => openUserCoverFullScreen(true)}
 							/>
 							<div
 								className='profileUserAva'
 								onClick={() => {
-									user?.profilePicture && openUserAvaFullScreen(true)
+									;(anotherUser !== user && anotherUser?.profilePicture) ||
+										(anotherUser === user &&
+											user?.profilePicture &&
+											openUserAvaFullScreen(true))
 								}}
 							>
 								<img
 									src={
-										user && user?.profilePicture
+										anotherUser !== user && anotherUser?.profilePicture
+											? PF + 'storage/' + anotherUser?.profilePicture
+											: user && user?.profilePicture
 											? PF + 'storage/' + user?.profilePicture
 											: PF + 'icon/noAvatar.png'
 									}
@@ -1027,7 +1048,11 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								</div>
 								<img
 									className='userAvaImg'
-									src={PF + 'storage/' + user?.coverPicture}
+									src={
+										anotherUser !== user
+											? PF + 'storage/' + anotherUser?.coverPicture
+											: PF + 'storage/' + user?.coverPicture
+									}
 									ref={userCover}
 								/>
 								<div className='userAvaFullScreenOverlay'></div>
@@ -1041,7 +1066,11 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								</div>
 								<img
 									className='userAvaImg'
-									src={PF + 'storage/' + user?.profilePicture}
+									src={
+										anotherUser !== user
+											? PF + 'storage/' + anotherUser?.profilePicture
+											: PF + 'storage/' + user?.profilePicture
+									}
 									ref={userAvatar}
 								/>
 								<div className='userAvaFullScreenOverlay'></div>
@@ -1055,28 +1084,49 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							>
 								Edit profile
 							</button>
-							<h1 className='profileUsername'>{user?.username}</h1>
-							<p className='profileUserId'>{user?.userId}</p>
-							<p className='profileBio'>{user?.bio}</p>
+							<h1 className='profileUsername'>
+								{anotherUser === user ? user?.username : anotherUser?.username}
+							</h1>
+							<p className='profileUserId'>
+								{anotherUser === user ? user?.username : anotherUser?.username}
+							</p>
+							<p className='profileBio'>
+								{anotherUser === user ? user?.bio : anotherUser?.bio}
+							</p>
 							<div className='profileLocationAndJoined'>
-								{user?.location && (
-									<span className='profileUserJoined'>
-										<img src={PF + 'icon/colored/gpsGray.svg'} alt='' />
-										{user?.location}
-									</span>
-								)}
-								{user?.website && (
-									<span className='profileUserJoined'>
-										<img
-											src={PF + 'icon/common/link.svg'}
-											alt=''
-											style={{ transform: 'rotate(-45deg)' }}
-										/>
-										<a href={user?.website} target='_blank'>
-											{user?.website}
-										</a>
-									</span>
-								)}
+								{anotherUser === user
+									? user?.location
+									: anotherUser?.location && (
+											<span className='profileUserJoined'>
+												<img src={PF + 'icon/colored/gpsGray.svg'} alt='' />
+												{anotherUser === user
+													? user?.location
+													: anotherUser?.location}
+											</span>
+									  )}
+								{anotherUser === user
+									? user?.website
+									: anotherUser?.website && (
+											<span className='profileUserJoined'>
+												<img
+													src={PF + 'icon/common/link.svg'}
+													alt=''
+													style={{ transform: 'rotate(-45deg)' }}
+												/>
+												<a
+													href={
+														anotherUser === user
+															? user?.website
+															: anotherUser?.website
+													}
+													target='_blank'
+												>
+													{anotherUser === user
+														? user?.website
+														: anotherUser?.website}
+												</a>
+											</span>
+									  )}
 								<span className='profileUserJoined'>
 									<img src={PF + 'icon/common/calendarGray.svg'} alt='' />
 									Joined{' '}
@@ -1088,12 +1138,22 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							<div className='followsBlock'>
 								<Link to={`/${user?.userId}/following`}>
 									<span>
-										<strong>{user?.following.length}</strong> Following
+										<strong>
+											{anotherUser === user
+												? user?.following.length
+												: anotherUser?.following.length}
+										</strong>{' '}
+										Following
 									</span>
 								</Link>
 								<Link to={`/${user?.userId}/followers`}>
 									<span>
-										<strong>{user?.followers.length}</strong> Followers
+										<strong>
+											{anotherUser === user
+												? user?.followers.length
+												: anotherUser?.followers.length}
+										</strong>{' '}
+										Followers
 									</span>
 								</Link>
 							</div>
@@ -1621,7 +1681,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						userPosts.map((post, index) => (
 							<Posts
 								key={index}
-								post={[post, user]}
+								post={[post, anotherUser]}
 								more={PF + 'icon/utility/moreHorizontal.svg'}
 								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 								currentUser={user}
