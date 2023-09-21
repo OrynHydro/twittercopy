@@ -1280,3 +1280,47 @@
     background-color: #eff3f4;
     border-radius: 4px;
 }
+
+
+
+.anotherProfileBlock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.editProfileButtons {
+    position: relative;
+    left: 370px;
+    height: 36px;
+    transition: 0.2s ease;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+    border: 1px solid rgb(207, 217, 222);
+    border-radius: 32px;
+}
+
+.editProfileButtons:nth-child(1),
+.editProfileButtons:nth-child(2) {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editProfileButtons:nth-child(1) svg,
+.editProfileButtons:nth-child(2) svg {
+    width: 20px;
+    height: 20px;
+}
+
+.editProfileButtons.following {
+    width: 104px;
+}
+
+.editProfileButtons:hover {
+    background-color: #E7E7E8;
+}

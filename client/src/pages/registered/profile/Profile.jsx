@@ -33,6 +33,8 @@ import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
 import moment from 'moment'
+import { FiMoreHorizontal } from 'react-icons/fi'
+import { LuBellPlus } from 'react-icons/lu'
 
 const FollowingItem = ({
 	username,
@@ -864,7 +866,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setLikedPosts([])
 		const getUserLikedPosts = async () => {
 			const userLikedPosts = await axios.get(
-				`/users/userLikedPosts/${user?._id}`
+				`/users/userLikedPosts/${anotherUser?._id}`
 			)
 			setLikedPosts(userLikedPosts.data)
 		}
@@ -1020,12 +1022,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							/>
 							<div
 								className='profileUserAva'
-								onClick={() => {
-									;(anotherUser !== user && anotherUser?.profilePicture) ||
-										(anotherUser === user &&
-											user?.profilePicture &&
-											openUserAvaFullScreen(true))
-								}}
+								onClick={() => openUserAvaFullScreen(true)}
 							>
 								<img
 									src={
@@ -1078,13 +1075,32 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						)}
 						{/* user's name, id, bio, location, website, followings and followers */}
 						<div className='profileUserInfo'>
-							<button
-								className='editProfile'
-								onClick={() => setActiveEditProfileBlock(true)}
+							{anotherUser === user ? (
+								<button
+									className='editProfile'
+									onClick={() => setActiveEditProfileBlock(true)}
+								>
+									Edit profile
+								</button>
+							) : (
+								<div className='anotherProfileBlock'>
+									<button className='editProfileButtons'>
+										<FiMoreHorizontal />
+									</button>
+
+									<button className='editProfileButtons'>
+										<LuBellPlus />
+									</button>
+									<button className='editProfileButtons following'>
+										Following
+									</button>
+								</div>
+							)}
+
+							<h1
+								className='profileUsername'
+								style={{ marginTop: anotherUser !== user ? '30px' : '80px' }}
 							>
-								Edit profile
-							</button>
-							<h1 className='profileUsername'>
 								{anotherUser === user ? user?.username : anotherUser?.username}
 							</h1>
 							<p className='profileUserId'>
