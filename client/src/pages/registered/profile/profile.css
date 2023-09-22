@@ -1287,13 +1287,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
 }
 
 .editProfileButtons {
-    position: relative;
-    left: 370px;
+    /* position: relative;
+    left: 370px; */
     height: 36px;
-    transition: 0.2s ease;
+    transition: background 0.2s ease;
     font-size: 15px;
     font-weight: 700;
     line-height: 20px;
@@ -1319,8 +1320,24 @@
 
 .editProfileButtons.following {
     width: 104px;
+    height: 36px;
 }
 
 .editProfileButtons:hover {
     background-color: #E7E7E8;
+}
+
+.editProfileButtons.following.redButton {
+    background-color: #FEE8EA;
+    color: #F5313D;
+}
+
+.editProfileButtons.following.blackButton {
+    background-color: var(--black);
+    color: #fff;
+    border-color: var(--black);
+}
+
+.editProfileButtons.following.blackButton:hover {
+    background-color: #272C30;
 }

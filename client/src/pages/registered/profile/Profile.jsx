@@ -122,8 +122,14 @@ const FollowingItem = ({
 					className='followingBlockModal'
 					style={{ display: openModal ? 'block' : 'none' }}
 				>
-					<div className='followingBlockModalTop'>
-						<div className='followingBlockUserAvaBlock'>
+					<div
+						className='followingBlockModalTop'
+						style={{ width: userDbId === currentUser?._id && '264px' }}
+					>
+						<div
+							className='followingBlockUserAvaBlock'
+							// style={{ width: userDbId !== currentUser?._id && '264px' }}
+						>
 							<img
 								src={
 									profilePicture
@@ -134,23 +140,25 @@ const FollowingItem = ({
 							/>
 							<div className='overlay'></div>
 						</div>
-						<div
-							className={
-								modalText === 'Unfollow'
-									? 'followingBlockRight unfollowBtn'
-									: modalText === 'Follow'
-									? 'followingBlockRight followBtn'
-									: 'followingBlockRight'
-							}
-							onMouseOver={() => {
-								modalText !== 'Follow' && setModalText('Unfollow')
-							}}
-							onMouseOut={() => {
-								modalText !== 'Follow' && setModalText('Following')
-							}}
-						>
-							<button onClick={() => followUser(true)}>{modalText}</button>
-						</div>
+						{userDbId !== currentUser?._id && (
+							<div
+								className={
+									modalText === 'Unfollow'
+										? 'followingBlockRight unfollowBtn'
+										: modalText === 'Follow'
+										? 'followingBlockRight followBtn'
+										: 'followingBlockRight'
+								}
+								onMouseOver={() => {
+									modalText !== 'Follow' && setModalText('Unfollow')
+								}}
+								onMouseOut={() => {
+									modalText !== 'Follow' && setModalText('Following')
+								}}
+							>
+								<button onClick={() => followUser(true)}>{modalText}</button>
+							</div>
+						)}
 					</div>
 					<div className='followingBlockModalUserData'>
 						<h2>{username}</h2>
@@ -164,33 +172,28 @@ const FollowingItem = ({
 							<strong>{followers.length}</strong> Followers
 						</span>
 					</div>
-					{/* <div>
-				{currentUser?.following
-				.filter(item => followers.find(i => i === item))
-				.map(shared => (
-					<>{shared}</>
-				))}
-			</div> */}
 				</div>
 			</div>
-			<div
-				className={
-					text === 'Unfollow'
-						? 'followingBlockRight unfollowBtn'
-						: text === 'Follow'
-						? 'followingBlockRight followUserBtn'
-						: 'followingBlockRight'
-				}
-				onMouseOver={() => {
-					text !== 'Follow' && setText('Unfollow')
-				}}
-				onMouseOut={() => {
-					text !== 'Follow' && setText('Following')
-				}}
-			>
-				<button onClick={() => followUser(false)}>{text}</button>
-				{!currentUser?.following.includes(userId)}
-			</div>
+			{userDbId !== currentUser?._id && (
+				<div
+					className={
+						text === 'Unfollow'
+							? 'followingBlockRight unfollowBtn'
+							: text === 'Follow'
+							? 'followingBlockRight followUserBtn'
+							: 'followingBlockRight'
+					}
+					onMouseOver={() => {
+						text !== 'Follow' && setText('Unfollow')
+					}}
+					onMouseOut={() => {
+						text !== 'Follow' && setText('Following')
+					}}
+				>
+					<button onClick={() => followUser(false)}>{text}</button>
+					{!currentUser?.following.includes(userId)}
+				</div>
+			)}
 		</div>
 	)
 }
@@ -397,28 +400,28 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	// followers and followings pages inside of profile
 
 	const ProfileFollowers = () => {
-		document.title = `People followed ${user?.username}`
+		document.title = `People followed ${anotherUser?.username}`
 
 		const [userFollowers, setUserFollowers] = useState([])
 
 		const findUserFollowers = async () => {
 			try {
 				await axios
-					.get(`/users/followers/${user?._id}`)
+					.get(`/users/followers/${anotherUser?._id}`)
 					.then(res => setUserFollowers(res.data))
 			} catch (err) {
 				console.log(err)
 			}
 		}
 
-		user && userFollowers.length === 0 && findUserFollowers()
+		anotherUser && userFollowers.length === 0 && findUserFollowers()
 
 		return (
 			<div className='profileFollow'>
 				<div className='profileSwitchBlock'>
 					<div className='profileSwitchItem active'>Followers</div>
 					<div className='profileSwitchItem'>
-						<Link to={`/${user?.userId}/following`}>Following</Link>
+						<Link to={`/${anotherUser?.userId}/following`}>Following</Link>
 					</div>
 				</div>
 				<div className='followingBlock'>
@@ -445,27 +448,27 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	}
 
 	const ProfileFollowing = () => {
-		document.title = `People following ${user?.username}`
+		document.title = `People following ${anotherUser?.username}`
 
 		const [userFollowing, setUserFollowing] = useState([])
 
 		const findUserFollowing = async () => {
 			try {
 				await axios
-					.get(`/users/followings/${user?._id}`)
+					.get(`/users/followings/${anotherUser?._id}`)
 					.then(res => setUserFollowing(res.data))
 			} catch (err) {
 				console.log(err)
 			}
 		}
 
-		user && userFollowing.length === 0 && findUserFollowing()
+		anotherUser && userFollowing.length === 0 && findUserFollowing()
 
 		return (
 			<div className='profileFollow'>
 				<div className='profileSwitchBlock'>
 					<div className='profileSwitchItem'>
-						<Link to={`/${user?.userId}/followers`}>Followers</Link>
+						<Link to={`/${anotherUser?.userId}/followers`}>Followers</Link>
 					</div>
 					<div className='profileSwitchItem active'>Following</div>
 				</div>
@@ -936,6 +939,43 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const [activeYear, setActiveYear] = useState(false)
 	const yearSelect = useOutsideClick(() => setActiveYear(false))
 
+	const [activeFollowBtn, setActiveFollowBtn] = useState('Following')
+
+	useEffect(() => {
+		user?.following.includes(anotherUser?._id)
+			? setActiveFollowBtn('Following')
+			: setActiveFollowBtn('Follow')
+	}, [user?.following, anotherUser?._id])
+
+	const followUser = async () => {
+		if (user?.following.includes(anotherUser?._id)) {
+			try {
+				await axios.put(`/users/${anotherUser?._id}/unfollow`, {
+					userId: user?._id,
+				})
+				setActiveFollowBtn('Follow')
+				user.following = user.following.filter(
+					item => item !== anotherUser?._id
+				)
+				anotherUser.followers = anotherUser?.followers.filter(
+					item => item !== user?._id
+				)
+			} catch (err) {
+				console.log(err)
+			}
+		} else if (!user?.following.includes(anotherUser?._id)) {
+			try {
+				await axios.put(`/users/${anotherUser?._id}/follow`, {
+					userId: user?._id,
+				})
+				setActiveFollowBtn('Following')
+				user.following.push(anotherUser?._id)
+				anotherUser.followers.push(user?._id)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+	}
 	return (
 		<div style={{ display: 'flex' }}>
 			{/* sidebar with modal windows' states */}
@@ -1075,7 +1115,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						)}
 						{/* user's name, id, bio, location, website, followings and followers */}
 						<div className='profileUserInfo'>
-							{anotherUser === user ? (
+							{anotherUser?.userId === user?.userId ? (
 								<button
 									className='editProfile'
 									onClick={() => setActiveEditProfileBlock(true)}
@@ -1083,23 +1123,51 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									Edit profile
 								</button>
 							) : (
-								<div className='anotherProfileBlock'>
+								<div
+									className='anotherProfileBlock'
+									style={{
+										left: activeFollowBtn !== 'Follow' ? '370px' : '414px',
+									}}
+								>
 									<button className='editProfileButtons'>
 										<FiMoreHorizontal />
 									</button>
 
-									<button className='editProfileButtons'>
-										<LuBellPlus />
-									</button>
-									<button className='editProfileButtons following'>
-										Following
+									{activeFollowBtn !== 'Follow' && (
+										<button className='editProfileButtons'>
+											<LuBellPlus />
+										</button>
+									)}
+
+									<button
+										className={
+											activeFollowBtn === 'Unfollow'
+												? 'editProfileButtons following redButton'
+												: activeFollowBtn === 'Follow'
+												? 'editProfileButtons following blackButton'
+												: 'editProfileButtons following'
+										}
+										onMouseOver={() => {
+											activeFollowBtn !== 'Follow' &&
+												setActiveFollowBtn('Unfollow')
+										}}
+										onMouseOut={() => {
+											activeFollowBtn !== 'Follow' &&
+												setActiveFollowBtn('Following')
+										}}
+										onClick={() => followUser()}
+									>
+										{activeFollowBtn}
 									</button>
 								</div>
 							)}
 
 							<h1
 								className='profileUsername'
-								style={{ marginTop: anotherUser !== user ? '30px' : '80px' }}
+								style={{
+									marginTop:
+										anotherUser?.userId !== user?.userId ? '40px' : '70px',
+								}}
 							>
 								{anotherUser === user ? user?.username : anotherUser?.username}
 							</h1>
@@ -1152,7 +1220,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								</span>
 							</div>
 							<div className='followsBlock'>
-								<Link to={`/${user?.userId}/following`}>
+								<Link to={`/${params?.userId}/following`}>
 									<span>
 										<strong>
 											{anotherUser === user
@@ -1162,7 +1230,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 										Following
 									</span>
 								</Link>
-								<Link to={`/${user?.userId}/followers`}>
+								<Link to={`/${params?.userId}/followers`}>
 									<span>
 										<strong>
 											{anotherUser === user
