@@ -35,6 +35,7 @@ import axios from 'axios'
 import moment from 'moment'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { LuBellPlus } from 'react-icons/lu'
+import { AiOutlineMail } from 'react-icons/ai'
 
 const FollowingItem = ({
 	username,
@@ -58,7 +59,18 @@ const FollowingItem = ({
 		!currentUser?.following.includes(userId) ? 'Following' : 'Follow'
 	)
 
-	const followUser = async () => {
+	useEffect(() => {
+		if (currentUser?.following.includes(userDbId)) {
+			setText('Following')
+			setModalText('Following')
+		} else {
+			setText('Follow')
+			setModalText('Follow')
+		}
+	}, [currentUser?.following, userDbId])
+
+	const followUser = async e => {
+		e.preventDefault()
 		if (currentUser?.following.includes(userDbId)) {
 			try {
 				await axios.put(`/users/${userDbId}/unfollow`, {
@@ -66,10 +78,8 @@ const FollowingItem = ({
 				})
 				setModalText('Follow')
 				setText('Follow')
-				currentUser.following = currentUser.following.filter(
-					item => item !== userDbId
-				)
-				followers = followers.filter(item => item !== currentUser._id)
+				currentUser.following.splice(currentUser.following.indexOf(userDbId), 1)
+				followers.splice(followers.indexOf(userDbId), 1)
 			} catch (err) {
 				console.log(err)
 			}
@@ -89,7 +99,7 @@ const FollowingItem = ({
 	}
 
 	return (
-		<div className='followingBlockItem'>
+		<Link to={`/${userId}`} className='followingBlockItem'>
 			<div
 				className='followingBlockItemLeft'
 				onMouseOver={() => setOpenModal(true)}
@@ -121,15 +131,13 @@ const FollowingItem = ({
 				<div
 					className='followingBlockModal'
 					style={{ display: openModal ? 'block' : 'none' }}
+					onClick={e => e.preventDefault()}
 				>
 					<div
 						className='followingBlockModalTop'
 						style={{ width: userDbId === currentUser?._id && '264px' }}
 					>
-						<div
-							className='followingBlockUserAvaBlock'
-							// style={{ width: userDbId !== currentUser?._id && '264px' }}
-						>
+						<Link to={`/${userId}`} className='followingBlockUserAvaBlock'>
 							<img
 								src={
 									profilePicture
@@ -139,14 +147,14 @@ const FollowingItem = ({
 								alt=''
 							/>
 							<div className='overlay'></div>
-						</div>
+						</Link>
 						{userDbId !== currentUser?._id && (
 							<div
 								className={
 									modalText === 'Unfollow'
 										? 'followingBlockRight unfollowBtn'
 										: modalText === 'Follow'
-										? 'followingBlockRight followBtn'
+										? 'followingBlockRight followUserBtn'
 										: 'followingBlockRight'
 								}
 								onMouseOver={() => {
@@ -156,21 +164,30 @@ const FollowingItem = ({
 									modalText !== 'Follow' && setModalText('Following')
 								}}
 							>
-								<button onClick={() => followUser(true)}>{modalText}</button>
+								<button onClick={e => followUser(e)}>{modalText}</button>
 							</div>
 						)}
 					</div>
 					<div className='followingBlockModalUserData'>
-						<h2>{username}</h2>
-						<p>{userId}</p>
+						<Link to={`/${userId}`}>
+							<h2>{username}</h2>
+						</Link>
+						<Link to={`/${userId}`}>
+							<p>{userId}</p>
+						</Link>
 					</div>
 					<div className='followingBlockModalFollow'>
-						<span className='followingBlockModalFollowItem'>
-							<strong>{following.length}</strong> Following
-						</span>
-						<span className='followingBlockModalFollowItem'>
-							<strong>{followers.length}</strong> Followers
-						</span>
+						<Link to={`/${userId}/following`}>
+							<span className='followingBlockModalFollowItem'>
+								<strong>{following.length}</strong> Following
+							</span>
+						</Link>
+
+						<Link to={`/${userId}/followers`}>
+							<span className='followingBlockModalFollowItem'>
+								<strong>{followers.length}</strong> Followers
+							</span>
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -190,11 +207,11 @@ const FollowingItem = ({
 						text !== 'Follow' && setText('Following')
 					}}
 				>
-					<button onClick={() => followUser(false)}>{text}</button>
-					{!currentUser?.following.includes(userId)}
+					<button onClick={e => followUser(e)}>{text}</button>
+					{/* {!currentUser?.following.includes(userId)} */}
 				</div>
 			)}
-		</div>
+		</Link>
 	)
 }
 
@@ -976,6 +993,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			}
 		}
 	}
+
 	return (
 		<div style={{ display: 'flex' }}>
 			{/* sidebar with modal windows' states */}
@@ -1013,7 +1031,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 					>
 						<h2 className='profileTopTitle'>{anotherUser?.username}</h2>
 						<span className='profileTopTweetsCounter'>
-							{userPosts.length} Tweets
+							{location.pathname === `/${params.userId}/following` ||
+							location.pathname === `/${params.userId}/followers`
+								? `${params.userId}`
+								: `${userPosts.length} Tweets`}
 						</span>
 					</div>
 					{/* routes to different pages inside profile */}
@@ -1053,9 +1074,11 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							<img
 								className='profileBackground'
 								src={
-									anotherUser !== user
+									user && !anotherUser
+										? PF + 'storage/' + user?.coverPicture
+										: anotherUser && anotherUser?.coverPicture
 										? PF + 'storage/' + anotherUser?.coverPicture
-										: PF + 'storage/' + user?.coverPicture
+										: PF + 'icon/noAvatar.png'
 								}
 								alt=''
 								onClick={() => openUserCoverFullScreen(true)}
@@ -1066,10 +1089,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							>
 								<img
 									src={
-										anotherUser !== user && anotherUser?.profilePicture
-											? PF + 'storage/' + anotherUser?.profilePicture
-											: user && user?.profilePicture
+										user && !anotherUser
 											? PF + 'storage/' + user?.profilePicture
+											: anotherUser && anotherUser?.profilePicture
+											? PF + 'storage/' + anotherUser?.profilePicture
 											: PF + 'icon/noAvatar.png'
 									}
 									alt=''
@@ -1086,7 +1109,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								<img
 									className='userAvaImg'
 									src={
-										anotherUser !== user
+										user && !anotherUser
 											? PF + 'storage/' + anotherUser?.coverPicture
 											: PF + 'storage/' + user?.coverPicture
 									}
@@ -1104,7 +1127,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								<img
 									className='userAvaImg'
 									src={
-										anotherUser !== user
+										user && !anotherUser
 											? PF + 'storage/' + anotherUser?.profilePicture
 											: PF + 'storage/' + user?.profilePicture
 									}
@@ -1135,7 +1158,12 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 									{activeFollowBtn !== 'Follow' && (
 										<button className='editProfileButtons'>
-											<LuBellPlus />
+											{user?.followers.includes(anotherUser?._id) &&
+											user?.following.includes(anotherUser?._id) ? (
+												<AiOutlineMail />
+											) : (
+												<LuBellPlus />
+											)}
 										</button>
 									)}
 
@@ -1169,26 +1197,26 @@ const Profile = ({ isLoading, setIsLoading }) => {
 										anotherUser?.userId !== user?.userId ? '40px' : '70px',
 								}}
 							>
-								{anotherUser === user ? user?.username : anotherUser?.username}
+								{user && !anotherUser ? user?.username : anotherUser?.username}
 							</h1>
 							<p className='profileUserId'>
-								{anotherUser === user ? user?.username : anotherUser?.username}
+								{user && !anotherUser ? user?.username : anotherUser?.username}
 							</p>
 							<p className='profileBio'>
-								{anotherUser === user ? user?.bio : anotherUser?.bio}
+								{user && !anotherUser ? user?.bio : anotherUser?.bio}
 							</p>
 							<div className='profileLocationAndJoined'>
-								{anotherUser === user
+								{user && !anotherUser
 									? user?.location
 									: anotherUser?.location && (
 											<span className='profileUserJoined'>
 												<img src={PF + 'icon/colored/gpsGray.svg'} alt='' />
-												{anotherUser === user
+												{user && !anotherUser
 													? user?.location
 													: anotherUser?.location}
 											</span>
 									  )}
-								{anotherUser === user
+								{user && !anotherUser
 									? user?.website
 									: anotherUser?.website && (
 											<span className='profileUserJoined'>
@@ -1199,13 +1227,13 @@ const Profile = ({ isLoading, setIsLoading }) => {
 												/>
 												<a
 													href={
-														anotherUser === user
+														user && !anotherUser
 															? user?.website
 															: anotherUser?.website
 													}
 													target='_blank'
 												>
-													{anotherUser === user
+													{user && !anotherUser
 														? user?.website
 														: anotherUser?.website}
 												</a>
@@ -1223,7 +1251,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								<Link to={`/${params?.userId}/following`}>
 									<span>
 										<strong>
-											{anotherUser === user
+											{user && !anotherUser
 												? user?.following.length
 												: anotherUser?.following.length}
 										</strong>{' '}
@@ -1233,7 +1261,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								<Link to={`/${params?.userId}/followers`}>
 									<span>
 										<strong>
-											{anotherUser === user
+											{user && !anotherUser
 												? user?.followers.length
 												: anotherUser?.followers.length}
 										</strong>{' '}
@@ -1769,7 +1797,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								more={PF + 'icon/utility/moreHorizontal.svg'}
 								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 								currentUser={user}
-								isUserPosts
+								isUserPosts={post.user._id === user._id ? true : false}
 							/>
 						))
 					) : activePosts === 'likes' && likedPosts?.length !== 0 ? (

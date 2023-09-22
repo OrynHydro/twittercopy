@@ -98,7 +98,9 @@ const Sidebar = ({
 								<div
 									className={
 										(item.title !== 'Twitter Blue' && activeTwitterBlue) ||
-										(item.title !== 'Verified Organizations' && activeVerified)
+										(item.title !== 'Verified Organizations' &&
+											activeVerified) ||
+										params.userId !== user?.userId
 											? 'sidebarNavItem'
 											: (location.pathname === '/' &&
 													item.link === '/explore' &&
@@ -121,7 +123,8 @@ const Sidebar = ({
 										src={
 											(item.title !== 'Twitter Blue' && activeTwitterBlue) ||
 											(item.title !== 'Verified Organizations' &&
-												activeVerified)
+												activeVerified) ||
+											params.userId !== user?.userId
 												? item.img
 												: (location.pathname === '/' &&
 														item.link === '/explore') ||
