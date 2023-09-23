@@ -44,7 +44,7 @@ export const postMoreNotUserItem = [
 		icon: <TfiFaceSad />,
 	},
 	{
-		title: 'Unfollow',
+		title: 'Follow',
 		icon: <BiUserX />,
 	},
 	{

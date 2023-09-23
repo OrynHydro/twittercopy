@@ -958,12 +958,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	const [activeFollowBtn, setActiveFollowBtn] = useState('Following')
 
-	useEffect(() => {
-		user?.following.includes(anotherUser?._id)
-			? setActiveFollowBtn('Following')
-			: setActiveFollowBtn('Follow')
-	}, [user?.following, anotherUser?._id])
-
 	const followUser = async () => {
 		if (user?.following.includes(anotherUser?._id)) {
 			try {
@@ -993,6 +987,24 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			}
 		}
 	}
+
+	useEffect(() => {
+		user?.following.includes(anotherUser?._id)
+			? setActiveFollowBtn('Following')
+			: setActiveFollowBtn('Follow')
+	}, [user?.following, anotherUser?._id])
+
+	const [unfollow, setUnfollow] = useState(false)
+
+	useEffect(() => {
+		if (!unfollow) return
+		setActiveFollowBtn('Follow')
+		setUnfollow(false)
+		user.following = user.following.filter(item => item !== anotherUser?._id)
+		anotherUser.followers = anotherUser?.followers.filter(
+			item => item !== user?._id
+		)
+	}, [unfollow])
 
 	return (
 		<div style={{ display: 'flex' }}>
@@ -1076,9 +1088,9 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								src={
 									user && !anotherUser
 										? PF + 'storage/' + user?.coverPicture
-										: anotherUser && anotherUser?.coverPicture
-										? PF + 'storage/' + anotherUser?.coverPicture
-										: PF + 'icon/noAvatar.png'
+										: anotherUser &&
+										  anotherUser?.coverPicture &&
+										  PF + 'storage/' + anotherUser?.coverPicture
 								}
 								alt=''
 								onClick={() => openUserCoverFullScreen(true)}
@@ -1110,8 +1122,8 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									className='userAvaImg'
 									src={
 										user && !anotherUser
-											? PF + 'storage/' + anotherUser?.coverPicture
-											: PF + 'storage/' + user?.coverPicture
+											? PF + 'storage/' + user?.coverPicture
+											: PF + 'storage/' + anotherUser?.coverPicture
 									}
 									ref={userCover}
 								/>
@@ -1128,8 +1140,8 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									className='userAvaImg'
 									src={
 										user && !anotherUser
-											? PF + 'storage/' + anotherUser?.profilePicture
-											: PF + 'storage/' + user?.profilePicture
+											? PF + 'storage/' + user?.profilePicture
+											: PF + 'storage/' + anotherUser?.profilePicture
 									}
 									ref={userAvatar}
 								/>
@@ -1798,6 +1810,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 								currentUser={user}
 								isUserPosts={post.user._id === user._id ? true : false}
+								activeFollowBtn={activeFollowBtn}
+								setActiveFollowBtn={setActiveFollowBtn}
+								unfollow={unfollow}
+								setUnfollow={setUnfollow}
 							/>
 						))
 					) : activePosts === 'likes' && likedPosts?.length !== 0 ? (
@@ -1809,6 +1825,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 								currentUser={user}
 								isUserPosts={post.user._id === user._id ? true : false}
+								activeFollowBtn={activeFollowBtn}
+								setActiveFollowBtn={setActiveFollowBtn}
+								unfollow={unfollow}
+								setUnfollow={setUnfollow}
 							/>
 						))
 					) : activePosts === 'tweets' && userPosts?.length === 0 ? (

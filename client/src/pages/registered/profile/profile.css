@@ -17,7 +17,6 @@
 
 .profileTop {
     width: 600px;
-    background-color: #fff;
     display: flex;
     flex-direction: column;
     padding: 4px 16px;
@@ -26,6 +25,10 @@
     left: 601px;
     z-index: 2000;
     border-right: 1px solid #eff3f4;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    
 }
 
 

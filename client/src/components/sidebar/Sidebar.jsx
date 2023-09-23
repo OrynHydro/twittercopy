@@ -100,7 +100,8 @@ const Sidebar = ({
 										(item.title !== 'Twitter Blue' && activeTwitterBlue) ||
 										(item.title !== 'Verified Organizations' &&
 											activeVerified) ||
-										params.userId !== user?.userId
+										(params.userId !== user?.userId &&
+											location.pathname.match(`${params.userId}`))
 											? 'sidebarNavItem'
 											: (location.pathname === '/' &&
 													item.link === '/explore' &&
@@ -124,7 +125,8 @@ const Sidebar = ({
 											(item.title !== 'Twitter Blue' && activeTwitterBlue) ||
 											(item.title !== 'Verified Organizations' &&
 												activeVerified) ||
-											params.userId !== user?.userId
+											(params.userId !== user?.userId &&
+												location.pathname.match(`${params.userId}`))
 												? item.img
 												: (location.pathname === '/' &&
 														item.link === '/explore') ||

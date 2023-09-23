@@ -8,11 +8,13 @@
 
 .homeTopbar {
     background-color: #fff;
-    backdrop-filter: blur(99%);
     border-bottom: 1px solid #EFF3F4;
     position: fixed;
     z-index: 10000;
     width: 598px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .homeTopbarTitle {

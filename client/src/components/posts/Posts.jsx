@@ -30,7 +30,48 @@ const PostMoreItem = ({
 	setDeleteModal,
 	setPopupWindow,
 	isUserPosts,
+	currentUser,
+	userDbId,
+	postAuthor,
+	activeFollowBtn,
+	setActiveFollowBtn,
+	unfollow,
+	setUnfollow,
 }) => {
+	const followUser = async title => {
+		if (title !== 'Follow') return
+		if (currentUser?.following.includes(postAuthor?._id)) {
+			try {
+				await axios.put(`/users/${postAuthor?._id}/unfollow`, {
+					userId: currentUser?._id,
+				})
+				currentUser.following = currentUser.following.filter(
+					item => item !== userDbId
+				)
+				postAuthor.followers = postAuthor?.followers.filter(
+					item => item !== currentUser?._id
+				)
+				setActiveFollowBtn('Follow')
+				setUnfollow(true)
+				setPopupWindow(false)
+			} catch (err) {
+				console.log(err)
+			}
+		} else if (!currentUser?.following.includes(postAuthor?._id)) {
+			try {
+				await axios.put(`/users/${postAuthor?._id}/follow`, {
+					userId: currentUser?._id,
+				})
+				currentUser.following.push(postAuthor?._id)
+				postAuthor.followers.push(currentUser?._id)
+				setActiveFollowBtn('Following')
+				setPopupWindow(false)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+	}
+
 	return (
 		<>
 			{isUserPosts ? (
@@ -59,18 +100,24 @@ const PostMoreItem = ({
 					)}
 				</div>
 			) : (
-				<div className={'popupWindowItem'}>
+				<div className={'popupWindowItem'} onClick={() => followUser(title)}>
 					<>{icon}</>
 					{title === 'Add/remove' ? (
 						<span>
-							{title} {userId} from Lists
+							{title} {postAuthor?.userId} from Lists
 						</span>
-					) : title !== 'Unfollow' && title !== 'Mute' && title !== 'Block' ? (
-						<span>{title}</span>
-					) : (
+					) : title === 'Mute' || title === 'Block' ? (
 						<span>
-							{title} {userId}
+							{title} {postAuthor?.userId}
 						</span>
+					) : title === 'Follow' ? (
+						<span>
+							{activeFollowBtn !== 'Follow'
+								? `Unfollow ${postAuthor.userId}`
+								: `Follow ${postAuthor.userId}`}
+						</span>
+					) : (
+						<span>{title}</span>
 					)}
 				</div>
 			)}
@@ -78,7 +125,17 @@ const PostMoreItem = ({
 	)
 }
 
-const Posts = ({ post, more, moreActive, currentUser, isUserPosts }) => {
+const Posts = ({
+	post,
+	more,
+	moreActive,
+	currentUser,
+	isUserPosts,
+	activeFollowBtn,
+	setActiveFollowBtn,
+	unfollow,
+	setUnfollow,
+}) => {
 	// declaring state of more icon
 
 	const [activeMore, setActiveMore] = useState(false)
@@ -380,7 +437,7 @@ const Posts = ({ post, more, moreActive, currentUser, isUserPosts }) => {
 								key={id}
 								title={item.title}
 								icon={item.icon}
-								userId={currentUser?.userId}
+								userId={post[1]?.userId}
 								setDeleteModal={setDeleteModal}
 								setPopupWindow={setPopupWindow}
 								isUserPosts={isUserPosts}
@@ -391,9 +448,14 @@ const Posts = ({ post, more, moreActive, currentUser, isUserPosts }) => {
 								key={id}
 								title={item.title}
 								icon={item.icon}
-								userId={currentUser?.userId}
+								postAuthor={post[1]}
 								setDeleteModal={setDeleteModal}
 								setPopupWindow={setPopupWindow}
+								currentUser={currentUser}
+								activeFollowBtn={activeFollowBtn}
+								setActiveFollowBtn={setActiveFollowBtn}
+								unfollow={unfollow}
+								setUnfollow={setUnfollow}
 							/>
 					  ))}
 			</div>
