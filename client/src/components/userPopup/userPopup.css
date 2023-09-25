@@ -1,0 +1,153 @@
+.followingBlockModal {
+	padding: 16px;
+	background-color: #fff;
+	border-radius: 16px;
+	position: absolute;
+	top: 30px;
+	z-index: 1000;
+	cursor: default;
+	box-shadow: rgba(149, 157, 165) 0px 8px 24px;
+}
+
+.followingBlockModalTop {
+	display: flex;
+	gap: 100px;
+}
+
+.followingBlockUserAvaBlock {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	position: relative;
+}
+
+.followingBlockUserAvaBlock img {
+	border-radius: 50%;
+	width: 64px;
+	height: 64px;
+	object-fit: cover;
+}
+
+.followingBlockUserAvaBlock .overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	transition: 0.2s ease;
+	cursor: pointer;
+}
+
+.followingBlockUserAvaBlock:hover .overlay {
+	background-color: rgba(0, 0, 0, .3);
+}
+
+.followingBlockModalUserData {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.followingBlockModalUserData h2 {
+	font-size: 17px;
+	line-height: 20px;
+	font-weight: 700;
+	color: var(--black);
+	cursor: pointer;
+	display: inline-block;
+	width: fit-content;
+}
+
+.followingBlockModalUserData h2:hover {
+	text-decoration: underline;
+}
+
+.followingBlockModalUserData p {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--gray);
+	cursor: pointer;
+}
+
+.followingBlockModalFollow {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	margin-top: 10px;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16px;
+	color: var(--gray);
+}
+
+.followingBlockModalFollowItem {
+	cursor: pointer;
+}
+
+.followingBlockModalFollowItem:hover {
+	text-decoration: underline;
+}
+
+.followingBlockModalFollow strong {
+	color: var(--black);
+}
+
+.followingBlockModal .followingBlockRight {
+	height: fit-content;
+}
+
+.followingBlockRight button {
+	width: 100px;
+}
+
+.followingBlockRight.unfollowBtn button {
+	color: #F4212E;
+}
+
+
+.followingBlockItemUserAvaBlock {
+	position: relative;
+	cursor: pointer;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+
+.followingBlockItemUserAvaBlock .overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: 0.2s ease;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+.followingBlockItemUserAvaBlock:hover .overlay {
+	background-color: rgba(0, 0, 0, .3);
+}
+
+
+
+.followingBlockRight.followUserBtn button {
+	width: 78px;
+	color: #fff;
+	background-color: var(--black);
+}
+
+.followingBlockRight.followUserBtn button:hover {
+	background-color: #272C30;
+}
+
+.followsYou {
+	padding: 2px 4px;
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 12px;
+	color: var(--gray);
+	background-color: #eff3f4;
+	border-radius: 4px;
+}

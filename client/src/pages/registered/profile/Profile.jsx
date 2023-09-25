@@ -36,184 +36,12 @@ import moment from 'moment'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { LuBellPlus } from 'react-icons/lu'
 import { AiOutlineMail } from 'react-icons/ai'
-
-const FollowingItem = ({
-	username,
-	userId,
-	userDbId,
-	profilePicture,
-	bio,
-	followers,
-	following,
-	currentUser,
-}) => {
-	// declaring variable that helps to get images from folder directly without importing
-
-	const PF = process.env.REACT_APP_PUBLIC_FOLDER
-
-	const [text, setText] = useState(
-		!currentUser?.following.includes(userId) ? 'Following' : 'Follow'
-	)
-	const [openModal, setOpenModal] = useState(false)
-	const [modalText, setModalText] = useState(
-		!currentUser?.following.includes(userId) ? 'Following' : 'Follow'
-	)
-
-	useEffect(() => {
-		if (currentUser?.following.includes(userDbId)) {
-			setText('Following')
-			setModalText('Following')
-		} else {
-			setText('Follow')
-			setModalText('Follow')
-		}
-	}, [currentUser?.following, userDbId])
-
-	const followUser = async e => {
-		e.preventDefault()
-		if (currentUser?.following.includes(userDbId)) {
-			try {
-				await axios.put(`/users/${userDbId}/unfollow`, {
-					userId: currentUser._id,
-				})
-				setModalText('Follow')
-				setText('Follow')
-				currentUser.following.splice(currentUser.following.indexOf(userDbId), 1)
-				followers.splice(followers.indexOf(userDbId), 1)
-			} catch (err) {
-				console.log(err)
-			}
-		} else if (!currentUser?.following.includes(userDbId)) {
-			try {
-				await axios.put(`/users/${userDbId}/follow`, {
-					userId: currentUser._id,
-				})
-				setModalText('Following')
-				setText('Following')
-				currentUser.following.push(userDbId)
-				followers.push(currentUser._id)
-			} catch (err) {
-				console.log(err)
-			}
-		}
-	}
-
-	return (
-		<Link to={`/${userId}`} className='followingBlockItem'>
-			<div
-				className='followingBlockItemLeft'
-				onMouseOver={() => setOpenModal(true)}
-				onMouseOut={() => setOpenModal(false)}
-			>
-				<div className='followingBlockItemUserAvaBlock'>
-					<img
-						className='followingBlockItemUserAva'
-						src={
-							profilePicture
-								? PF + 'storage/' + profilePicture
-								: PF + 'icon/noAvatar.png'
-						}
-						alt=''
-					/>
-					<div className='overlay'></div>
-				</div>
-
-				<div className='followingBlockUserData'>
-					<h2 className='followingBlockUsername'>{username}</h2>
-					<p className='followingBlockUserId'>
-						{userId + ' '}
-						{currentUser.followers.includes(userDbId) && (
-							<span className='followsYou'>Follows you</span>
-						)}
-					</p>
-					<p className='followingBlockBio'>{bio}</p>
-				</div>
-				<div
-					className='followingBlockModal'
-					style={{ display: openModal ? 'block' : 'none' }}
-					onClick={e => e.preventDefault()}
-				>
-					<div
-						className='followingBlockModalTop'
-						style={{ width: userDbId === currentUser?._id && '264px' }}
-					>
-						<Link to={`/${userId}`} className='followingBlockUserAvaBlock'>
-							<img
-								src={
-									profilePicture
-										? PF + 'storage/' + profilePicture
-										: PF + 'icon/noAvatar.png'
-								}
-								alt=''
-							/>
-							<div className='overlay'></div>
-						</Link>
-						{userDbId !== currentUser?._id && (
-							<div
-								className={
-									modalText === 'Unfollow'
-										? 'followingBlockRight unfollowBtn'
-										: modalText === 'Follow'
-										? 'followingBlockRight followUserBtn'
-										: 'followingBlockRight'
-								}
-								onMouseOver={() => {
-									modalText !== 'Follow' && setModalText('Unfollow')
-								}}
-								onMouseOut={() => {
-									modalText !== 'Follow' && setModalText('Following')
-								}}
-							>
-								<button onClick={e => followUser(e)}>{modalText}</button>
-							</div>
-						)}
-					</div>
-					<div className='followingBlockModalUserData'>
-						<Link to={`/${userId}`}>
-							<h2>{username}</h2>
-						</Link>
-						<Link to={`/${userId}`}>
-							<p>{userId}</p>
-						</Link>
-					</div>
-					<div className='followingBlockModalFollow'>
-						<Link to={`/${userId}/following`}>
-							<span className='followingBlockModalFollowItem'>
-								<strong>{following.length}</strong> Following
-							</span>
-						</Link>
-
-						<Link to={`/${userId}/followers`}>
-							<span className='followingBlockModalFollowItem'>
-								<strong>{followers.length}</strong> Followers
-							</span>
-						</Link>
-					</div>
-				</div>
-			</div>
-			{userDbId !== currentUser?._id && (
-				<div
-					className={
-						text === 'Unfollow'
-							? 'followingBlockRight unfollowBtn'
-							: text === 'Follow'
-							? 'followingBlockRight followUserBtn'
-							: 'followingBlockRight'
-					}
-					onMouseOver={() => {
-						text !== 'Follow' && setText('Unfollow')
-					}}
-					onMouseOut={() => {
-						text !== 'Follow' && setText('Following')
-					}}
-				>
-					<button onClick={e => followUser(e)}>{text}</button>
-					{/* {!currentUser?.following.includes(userId)} */}
-				</div>
-			)}
-		</Link>
-	)
-}
+import { ProfileFollowing } from './profile-follow/ProfileFollowing'
+import { ProfileFollowers } from './profile-follow/ProfileFollowers'
+import { ProfileTopics } from './profile-topics/ProfileTopics'
+import { ProfileTopicsNotInterested } from './profile-topics/ProfileTopicsNotInterested'
+import { ProfileLists } from './profile-lists/ProfileLists'
+import { ProfileListsMembership } from './profile-lists/ProfileListsMembership'
 
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
@@ -222,8 +50,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const [activeLogOut, setActiveLogOut] = useState(false)
 	const [activeLoginForm, setActiveLoginForm] = useState(false)
 	const [activeVerified, setActiveVerified] = useState(false)
-	const [activeLists, setActiveLists] = useState(false)
-	const listsBlock = useOutsideClick(() => setActiveLists(false))
+
 	const [activeAddList, setActiveAddList] = useState(false)
 
 	// declaring location variable using react-router-dom
@@ -412,244 +239,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				setInputEditWebsiteValue(e.target.value)
 				break
 		}
-	}
-
-	// followers and followings pages inside of profile
-
-	const ProfileFollowers = () => {
-		document.title = `People followed ${anotherUser?.username}`
-
-		const [userFollowers, setUserFollowers] = useState([])
-
-		const findUserFollowers = async () => {
-			try {
-				await axios
-					.get(`/users/followers/${anotherUser?._id}`)
-					.then(res => setUserFollowers(res.data))
-			} catch (err) {
-				console.log(err)
-			}
-		}
-
-		anotherUser && userFollowers.length === 0 && findUserFollowers()
-
-		return (
-			<div className='profileFollow'>
-				<div className='profileSwitchBlock'>
-					<div className='profileSwitchItem active'>Followers</div>
-					<div className='profileSwitchItem'>
-						<Link to={`/${anotherUser?.userId}/following`}>Following</Link>
-					</div>
-				</div>
-				<div className='followingBlock'>
-					{userFollowers.length !== 0 ? (
-						userFollowers.map((follower, id) => (
-							<FollowingItem
-								username={follower.username}
-								userId={follower.userId}
-								userDbId={follower._id}
-								profilePicture={follower.profilePicture}
-								key={id}
-								bio={follower.bio}
-								followers={follower.followers}
-								following={follower.following}
-								currentUser={user}
-							/>
-						))
-					) : (
-						<PostsLoader />
-					)}
-				</div>
-			</div>
-		)
-	}
-
-	const ProfileFollowing = () => {
-		document.title = `People following ${anotherUser?.username}`
-
-		const [userFollowing, setUserFollowing] = useState([])
-
-		const findUserFollowing = async () => {
-			try {
-				await axios
-					.get(`/users/followings/${anotherUser?._id}`)
-					.then(res => setUserFollowing(res.data))
-			} catch (err) {
-				console.log(err)
-			}
-		}
-
-		anotherUser && userFollowing.length === 0 && findUserFollowing()
-
-		return (
-			<div className='profileFollow'>
-				<div className='profileSwitchBlock'>
-					<div className='profileSwitchItem'>
-						<Link to={`/${anotherUser?.userId}/followers`}>Followers</Link>
-					</div>
-					<div className='profileSwitchItem active'>Following</div>
-				</div>
-				<div className='followingBlock'>
-					{userFollowing.length !== 0 ? (
-						userFollowing.map((following, id) => (
-							<FollowingItem
-								username={following.username}
-								userId={following.userId}
-								userDbId={following._id}
-								profilePicture={following.profilePicture}
-								key={id}
-								bio={following.bio}
-								followers={following.followers}
-								following={following.following}
-								currentUser={user}
-							/>
-						))
-					) : (
-						<PostsLoader />
-					)}
-				</div>
-			</div>
-		)
-	}
-
-	// topics pages inside of profile
-
-	const ProfileTopics = () => {
-		document.title = 'Topics / Twitter'
-		return (
-			<div className='profileTopics'>
-				<div className='profileTopicsTop'>
-					<h1 className='profileTopicsTitle'>Topics</h1>
-					<div className='profileTopicsSwitch'>
-						<div className='profileTopicsSwitchItem active'>Followed</div>
-						<div className='profileTopicsSwitchItem'>
-							<Link to={`/${user?.userId}/topics/not_interested`}>
-								Not Interested
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className='profileTopicsContentBlock'>
-					<span className='profileTopicsText'>
-						The Topics you follow are used to personalize the Tweets, events,
-						and ads that you see, and show up publicly on your profile
-					</span>
-				</div>
-				<hr className='settingsHr' />
-				<div className='profileTopicsContentBlock'>
-					<span className='profileTopicsText'>
-						Topics that you follow are shown here. To see all the things that
-						Twitter thinks you’re interested in, check out{' '}
-						<Link>Your Twitter data.</Link> You can also <Link>learn more</Link>{' '}
-						about following Topics.
-					</span>
-				</div>
-			</div>
-		)
-	}
-
-	const ProfileTopicsNotInterested = () => {
-		document.title = 'Topics / Twitter'
-		return (
-			<div className='profileTopics'>
-				<div className='profileTopicsTop'>
-					<h1 className='profileTopicsTitle'>Topics</h1>
-					<div className='profileTopicsSwitch'>
-						<div className='profileTopicsSwitchItem'>
-							<Link to={`/${user?.userId}/topics/followed`}>Followed</Link>
-						</div>
-						<div className='profileTopicsSwitchItem active'>Not Interested</div>
-					</div>
-				</div>
-				<div className='profileTopicsMain'>
-					<h1 className='profileTopicsMainTitle'>No interest? No problem.</h1>
-					<span className='profileTopicsText'>
-						When you tell us you're not interested in a Topic, it will show up
-						here. We won't recommend Tweets, events, or ads related to Topics
-						you aren't into.
-					</span>
-				</div>
-			</div>
-		)
-	}
-
-	// lists pages inside of profile
-
-	const ProfileLists = () => {
-		document.title = `Lists created by @${user?.userId}`
-		return (
-			<div className='profileLists'>
-				<div className='profileTop'>
-					<div className='profileTopTextBlock'>
-						<h2 className='profileTopTitle'>Lists</h2>
-						<span className='profileTopTweetsCounter'>{user?.userId}</span>
-					</div>
-					<div className='profileTopIconBlock'>
-						<div
-							className='profileTopIcon'
-							onClick={() => setActiveAddList(true)}
-						>
-							<img src={PF + 'icon/sidebarMore/lists.svg'} alt='' />
-						</div>
-						<div
-							className='profileTopIcon'
-							onClick={() => setActiveLists(true)}
-						>
-							<img src={PF + 'icon/utility/moreHorizontal.svg'} alt='' />
-						</div>
-						<div
-							ref={listsBlock}
-							className={activeLists ? 'listsBlock active' : 'listsBlock'}
-						>
-							<Link
-								to={`/${user?.userId}/lists/membership`}
-								onClick={() => setActiveLists(false)}
-							>
-								<img src={PF + 'icon/sidebarMore/lists.svg'} alt='' />
-								Lists you’re on
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className='profileListsMain'>
-					<div className='profileListsTextContainer'>
-						<h1 className='profileListsTitle'>Pinned Lists</h1>
-						<p className='profileListsText'>
-							Nothing to see here yet — pin your favorite Lists to access them
-							quickly.
-						</p>
-					</div>
-					<hr className='settingsHr' />
-					<div className='profileListsTextContainer'>
-						<h1 className='profileListsTitle'>Your Lists</h1>
-						<p className='profileListsText'>
-							You haven't created or followed any Lists. When you do, they'll
-							show up here.
-						</p>
-					</div>
-				</div>
-			</div>
-		)
-	}
-
-	const ProfileListsMembership = () => {
-		document.title = `List membership for @${user?.userId}`
-		return (
-			<div className='profileListsMembership'>
-				<div className='profileTop'>
-					<h2 className='profileTopTitle'>Lists you’re on</h2>
-					<span className='profileTopTweetsCounter'>{user?.userId}</span>
-				</div>
-				<div className='profileTopicsMain'>
-					<h1 className='profileTopicsMainTitle'>
-						You haven’t been added to any Lists yet
-					</h1>
-					<span className='profileTopicsText'>
-						When someone adds you to a List, it’ll show up here.
-					</span>
-				</div>
-			</div>
-		)
 	}
 
 	// user data states
@@ -1051,18 +640,36 @@ const Profile = ({ isLoading, setIsLoading }) => {
 					</div>
 					{/* routes to different pages inside profile */}
 					<Routes>
-						<Route path='/followers' element={<ProfileFollowers />} />
-						<Route path='/following' element={<ProfileFollowing />} />
-						<Route path='/topics' element={<ProfileTopics />} />
-						<Route path='/topics/followed' element={<ProfileTopics />} />
+						<Route
+							path='/followers'
+							element={
+								<ProfileFollowers user={user} anotherUser={anotherUser} />
+							}
+						/>
+						<Route
+							path='/following'
+							element={
+								<ProfileFollowing user={user} anotherUser={anotherUser} />
+							}
+						/>
+						<Route path='/topics' element={<ProfileTopics user={user} />} />
+						<Route
+							path='/topics/followed'
+							element={<ProfileTopics user={user} />}
+						/>
 						<Route
 							path='/topics/not_interested'
-							element={<ProfileTopicsNotInterested />}
+							element={<ProfileTopicsNotInterested user={user} />}
 						/>
-						<Route path='/lists' element={<ProfileLists />} />
+						<Route
+							path='/lists'
+							element={
+								<ProfileLists user={user} setActiveAddList={setActiveAddList} />
+							}
+						/>
 						<Route
 							path='/lists/membership'
-							element={<ProfileListsMembership />}
+							element={<ProfileListsMembership user={user} />}
 						/>
 					</Routes>
 					{/* main content in page */}
@@ -1809,7 +1416,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								more={PF + 'icon/utility/moreHorizontal.svg'}
 								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 								currentUser={user}
-								isUserPosts={post.user._id === user._id ? true : false}
+								isUserPosts={post.userId === user._id ? true : false}
 								activeFollowBtn={activeFollowBtn}
 								setActiveFollowBtn={setActiveFollowBtn}
 								unfollow={unfollow}

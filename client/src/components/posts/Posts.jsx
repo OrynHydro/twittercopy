@@ -9,7 +9,7 @@ import {
 } from '../../helpers/postMoreItems'
 
 import Posticons from '../posticons/Posticons'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import moment from 'moment'
 import 'react-loading-skeleton/dist/skeleton.css'
 import axios from 'axios'
@@ -22,6 +22,7 @@ import 'swiper/css/navigation'
 
 import { useInView } from 'react-intersection-observer'
 import { useOutsideClick } from '../../utils/useOutsideClick'
+import UserPopup from '../userPopup/UserPopup'
 
 const PostMoreItem = ({
 	title,
@@ -71,6 +72,12 @@ const PostMoreItem = ({
 			}
 		}
 	}
+
+	// useEffect(() => {
+	// 	currentUser?.following.includes(postAuthor?._id) && activeFollowBtn
+	// 		? setActiveFollowBtn('Following')
+	// 		: activeFollowBtn && setActiveFollowBtn('Follow')
+	// }, [currentUser?.following, postAuthor?._id, activeFollowBtn])
 
 	return (
 		<>
@@ -231,8 +238,6 @@ const Posts = ({
 
 	const popup = useOutsideClick(() => setPopupWindow(false))
 
-	const params = useParams()
-
 	const [deleteModal, setDeleteModal] = useState(false)
 
 	const deletePost = async () => {
@@ -253,12 +258,59 @@ const Posts = ({
 		? (document.body.style.overflowY = 'hidden')
 		: (document.body.style.overflowY = 'scroll')
 
+	const [openModal, setOpenModal] = useState(false)
+	const [modalText, setModalText] = useState(
+		!currentUser?.following.includes(post[1]?.userId) ? 'Following' : 'Follow'
+	)
+
+	useEffect(() => {
+		if (currentUser?.following.includes(post[1]?._id)) {
+			setModalText('Following')
+		} else {
+			setModalText('Follow')
+		}
+	}, [currentUser?.following, post[1]?._id])
+
+	const followUser = async e => {
+		e.preventDefault()
+		if (currentUser?.following.includes(post[1]?._id)) {
+			try {
+				await axios.put(`/users/${post[1]?._id}/unfollow`, {
+					userId: currentUser._id,
+				})
+				setModalText('Follow')
+				currentUser.following.splice(
+					currentUser.following.indexOf(post[1]?._id),
+					1
+				)
+				post[1]?.followers.splice(post[1]?.followers.indexOf(post[1]?._id), 1)
+			} catch (err) {
+				console.log(err)
+			}
+		} else if (!currentUser?.following.includes(post[1]?._id)) {
+			try {
+				await axios.put(`/users/${post[1]?._id}/follow`, {
+					userId: currentUser._id,
+				})
+				setModalText('Following')
+				currentUser.following.push(post[1]?._id)
+				post[1]?.followers.push(currentUser._id)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+	}
+
 	return (
 		<div className='homePost' ref={ref}>
 			<div className='homePostContainer'>
 				{/* user avatar, name, id and when post was created */}
 				<div className='homePostTop'>
-					<div className='homePostTopInfo'>
+					<div
+						className='homePostTopInfo'
+						onMouseOver={() => setOpenModal(true)}
+						onMouseOut={() => setOpenModal(false)}
+					>
 						<img
 							className='homePostUserImg'
 							src={
@@ -274,6 +326,21 @@ const Posts = ({
 							<span className='homePostDate'>
 								{moment(post[0]?.createdAt).fromNow()}
 							</span>
+						</div>
+						<div style={{ position: 'absolute', top: '-10px' }}>
+							<UserPopup
+								modalText={modalText}
+								setModalText={setModalText}
+								userDbId={post[1]?._id}
+								currentUser={currentUser}
+								followUser={followUser}
+								userId={post[1]?.userId}
+								username={post[1]?.username}
+								followers={post[1]?.followers}
+								following={post[1]?.following}
+								profilePicture={post[1]?.profilePicture}
+								openModal={openModal}
+							/>
 						</div>
 					</div>
 					<div
