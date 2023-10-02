@@ -1,0 +1,32 @@
+.postPage .profileTopTitle {
+	margin: 4px 16px;
+	display: inline-block;
+	width: 600px;
+}
+
+.postPageSeeMore {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-left: 16px;
+}
+
+.postPageSeeMore svg {
+	fill: var(--gray);
+}
+
+.postPageSeeMoreText {
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 16px;
+	color: var(--gray);
+}
+
+.postPageSeeMoreText a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.postPageSeeMoreText a:last-child {
+	color: #51b2f3;
+}

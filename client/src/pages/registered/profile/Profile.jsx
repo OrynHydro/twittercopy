@@ -42,6 +42,7 @@ import { ProfileTopics } from './profile-topics/ProfileTopics'
 import { ProfileTopicsNotInterested } from './profile-topics/ProfileTopicsNotInterested'
 import { ProfileLists } from './profile-lists/ProfileLists'
 import { ProfileListsMembership } from './profile-lists/ProfileListsMembership'
+import PostPage from './postPage/PostPage'
 
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
@@ -625,7 +626,9 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								location.pathname === `/${params.userId}/topics` ||
 								location.pathname === `/${params.userId}/lists` ||
 								location.pathname === `/${params.userId}/topics/followed` ||
-								location.pathname === `/${params.userId}/topics/not_interested`
+								location.pathname ===
+									`/${params.userId}/topics/not_interested` ||
+								location.pathname.match('status')
 									? 'none'
 									: 'block',
 						}}
@@ -671,6 +674,17 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							path='/lists/membership'
 							element={<ProfileListsMembership user={user} />}
 						/>
+						<Route
+							path='/status/:postId'
+							element={
+								<PostPage
+									unfollow={unfollow}
+									setUnfollow={setUnfollow}
+									activeFollowBtn={activeFollowBtn}
+									setActiveFollowBtn={setActiveFollowBtn}
+								/>
+							}
+						/>
 					</Routes>
 					{/* main content in page */}
 					<div
@@ -683,7 +697,9 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								location.pathname === `/${params.userId}/lists` ||
 								location.pathname === `/${params.userId}/lists/membership` ||
 								location.pathname === `/${params.userId}/topics/followed` ||
-								location.pathname === `/${params.userId}/topics/not_interested`
+								location.pathname ===
+									`/${params.userId}/topics/not_interested` ||
+								location.pathname.match('status')
 									? 'none'
 									: 'block',
 						}}
@@ -1403,7 +1419,8 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							location.pathname === `/${user?.userId}/following` ||
 							location.pathname === `/${user?.userId}/followers` ||
 							location.pathname === `/${user?.userId}/topics` ||
-							location.pathname === `/${user?.userId}/lists`
+							location.pathname === `/${user?.userId}/lists` ||
+							location.pathname.match('status')
 								? 'none'
 								: 'block',
 					}}

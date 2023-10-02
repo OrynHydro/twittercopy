@@ -9,7 +9,7 @@ import {
 } from '../../helpers/postMoreItems'
 
 import Posticons from '../posticons/Posticons'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import moment from 'moment'
 import 'react-loading-skeleton/dist/skeleton.css'
 import axios from 'axios'
@@ -302,7 +302,11 @@ const Posts = ({
 	}
 
 	return (
-		<div className='homePost' ref={ref}>
+		<Link
+			className='homePost'
+			ref={ref}
+			to={`/${post[1]?.userId}/status/${post[0]?._id}`}
+		>
 			<div className='homePostContainer'>
 				{/* user avatar, name, id and when post was created */}
 				<div className='homePostTop'>
@@ -549,7 +553,7 @@ const Posts = ({
 				</div>
 				<div className='overlay' onClick={() => setDeleteModal(false)}></div>
 			</div>
-		</div>
+		</Link>
 	)
 }
 

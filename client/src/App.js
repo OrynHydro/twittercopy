@@ -9,99 +9,154 @@ import './css/main.css'
 
 // importing pages
 
-import { Explore, Settings, Home, ExploreReg, Notifications, Messages, Bookmarks, Profile } from './pages/index';
+import {
+	Explore,
+	Settings,
+	Home,
+	ExploreReg,
+	Notifications,
+	Messages,
+	Bookmarks,
+	Profile,
+} from './pages/index'
 
 // importing custom hook
 
-import ScrollToTop from './utils/scrollToTop';
+import ScrollToTop from './utils/scrollToTop'
 
 // importing react hooks
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react'
 
-// importing context of user, when authentificated 
+// importing context of user, when authentificated
 
-import { UserContext } from './context/UserContext';
+import { UserContext } from './context/UserContext'
 
 // importing localStorage hook, that helps to save data in user's browser storage
 
-import { useLocalStorage } from './utils/useLocalStorage';
+import { useLocalStorage } from './utils/useLocalStorage'
 
 // importing loading screen
 
-import { Loading } from './components';
+import { Loading } from './components'
 
 // App function
 
 function App() {
+	// user state declaration
 
-  // user state declaration
+	const [user, setUser] = useState(null)
+	const [userInStorage, setUserInStorage] = useLocalStorage('user')
 
-  const [user, setUser] = useState(null)
-  const [userInStorage, setUserInStorage] = useLocalStorage('user')
+	const value = useMemo(() => ({ user, setUser }), [user, setUser])
 
-  const value = useMemo(() => ({user, setUser}), [user, setUser])
+	// loading state declaration
 
-  // loading state declaration
+	const [isLoading, setIsLoading] = useState(true)
 
-  const [isLoading, setIsLoading] = useState(true)
+	// user data adding to local storage
 
-  // user data adding to local storage
+	useEffect(() => {
+		if (!userInStorage) {
+			setUserInStorage(user?.token ? user?.token : null)
+		}
+	}, [user])
 
-  useEffect(() => {
-      if(!userInStorage) {
-        setUserInStorage(user?.token ? user?.token : null)
-      }
-  }, [user])
+	return (
+		// wrapper user context component
 
-  return (
+		<UserContext.Provider value={value}>
+			{/* navigation router */}
 
-    // wrapper user context component
+			<Router>
+				{/* scrolling page to 0.0 coordinates when user redirects to a new page */}
 
-    <UserContext.Provider value={value}>
+				<ScrollToTop />
+				{!userInStorage ? (
+					// page navigation
 
-      {/* navigation router */}
+					<Routes>
+						{/* Unegistered */}
+						<Route
+							path='/'
+							element={
+								<Explore isLoading={isLoading} setIsLoading={setIsLoading} />
+							}
+						/>
+						<Route
+							path='/explore'
+							element={
+								<Explore isLoading={isLoading} setIsLoading={setIsLoading} />
+							}
+						/>
+						<Route
+							path='/settings/*'
+							element={
+								<Settings isLoading={isLoading} setIsLoading={setIsLoading} />
+							}
+						/>
+					</Routes>
+				) : (
+					<>
+						{/* if the page is loading adding loading screen */}
 
-      <Router>
+						{isLoading && <Loading />}
 
-        {/* scrolling page to 0.0 coordinates when user redirects to a new page */}
+						{/* page navigation */}
 
-        <ScrollToTop />
-        {!userInStorage ? (
-
-          // page navigation
-
-        <Routes>
-              {/* Unegistered */}
-              <Route path='/' element={<Explore isLoading={isLoading} setIsLoading={setIsLoading}/>}/>
-              <Route path='/explore' element={<Explore isLoading={isLoading} setIsLoading={setIsLoading} />}/>
-              <Route path='/settings/*' element={<Settings isLoading={isLoading} setIsLoading={setIsLoading}/>} />
-        </Routes>
-        ) : (
-        <>
-
-          {/* if the page is loading adding loading screen */}
-
-        {isLoading && (
-                <Loading />
-              )}
-
-        {/* page navigation */}
-
-        <Routes>
-              {/* Registered */}
-              <Route path='/' element={<Home isLoading={isLoading} setIsLoading={setIsLoading} />} />
-              <Route path='/explore' element={<ExploreReg isLoading={isLoading} setIsLoading={setIsLoading} />}/>
-              <Route path='/notifications/*' element={<Notifications isLoading={isLoading} setIsLoading={setIsLoading} />}/>
-              <Route path='/messages' element={<Messages isLoading={isLoading} setIsLoading={setIsLoading} />} />
-              <Route path='/bookmarks' element={<Bookmarks isLoading={isLoading} setIsLoading={setIsLoading} />} />
-              <Route path='/:userId/*' element={<Profile isLoading={isLoading} setIsLoading={setIsLoading} />} />
-        </Routes>
-        </>
-        )}
-      </Router>
-    </UserContext.Provider>
-  );
+						<Routes>
+							{/* Registered */}
+							<Route
+								path='/'
+								element={
+									<Home isLoading={isLoading} setIsLoading={setIsLoading} />
+								}
+							/>
+							<Route
+								path='/explore'
+								element={
+									<ExploreReg
+										isLoading={isLoading}
+										setIsLoading={setIsLoading}
+									/>
+								}
+							/>
+							<Route
+								path='/notifications/*'
+								element={
+									<Notifications
+										isLoading={isLoading}
+										setIsLoading={setIsLoading}
+									/>
+								}
+							/>
+							<Route
+								path='/messages'
+								element={
+									<Messages isLoading={isLoading} setIsLoading={setIsLoading} />
+								}
+							/>
+							<Route
+								path='/bookmarks'
+								element={
+									<Bookmarks
+										isLoading={isLoading}
+										setIsLoading={setIsLoading}
+									/>
+								}
+							/>
+							<Route
+								path='/:userId/*'
+								element={
+									<Profile isLoading={isLoading} setIsLoading={setIsLoading} />
+								}
+							/>
+						</Routes>
+					</>
+				)}
+			</Router>
+		</UserContext.Provider>
+	)
 }
 
-export default App;
+export default App
