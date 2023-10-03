@@ -6,6 +6,8 @@ import axios from 'axios'
 import { Posts, PostsLoader, Share } from '../../../../components'
 import { UserContext } from '../../../../context/UserContext'
 import { useLocalStorage } from '../../../../utils/useLocalStorage'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const PostPage = ({
 	unfollow,
@@ -14,6 +16,7 @@ const PostPage = ({
 	setActiveFollowBtn,
 }) => {
 	const [post, setPost] = useState(null)
+	const [postReplies, setPostReplies] = useState([])
 
 	const params = useParams()
 
@@ -36,9 +39,21 @@ const PostPage = ({
 		await axios.get(`/posts/${params.postId}`).then(res => setPost(res.data))
 	}
 
+	const findReplies = () => {
+		post?.replies.map(async replyId => {
+			await axios
+				.get(`/posts/${replyId}`)
+				.then(res => setPostReplies(prev => [...prev, res.data]))
+		})
+	}
+
 	useEffect(() => {
 		if (!post) findPost()
 	}, [post])
+
+	useEffect(() => {
+		if (post?.replies.length !== 0 && postReplies.length === 0) findReplies()
+	}, [post?.replies.length, postReplies.length])
 
 	return (
 		<div className='postPage'>
@@ -63,7 +78,28 @@ const PostPage = ({
 						setUnfollow={setUnfollow}
 						postPage
 					/>
-					<Share user={user} postPage />
+					<Share user={user} postPage originalPost={post?._id} />
+					{postReplies.length !== 0
+						? postReplies.map(reply => (
+								<Posts
+									post={[reply, reply.user]}
+									more={PF + 'icon/utility/moreHorizontal.svg'}
+									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+									currentUser={user}
+									isUserPosts={reply.user._id === user._id ? true : false}
+									activeFollowBtn={activeFollowBtn}
+									setActiveFollowBtn={setActiveFollowBtn}
+									unfollow={unfollow}
+									setUnfollow={setUnfollow}
+								/>
+						  ))
+						: post?.replies.length !== 0 &&
+						  post?.replies.map(() => (
+								<div style={{ margin: '8px 12px' }}>
+									<Skeleton height={16} />
+									<Skeleton height={64} />
+								</div>
+						  ))}
 				</>
 			) : (
 				<PostsLoader />

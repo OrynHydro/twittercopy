@@ -108,7 +108,9 @@ router.get('/timeline/:userId', async (req, res) => {
 
 		await Promise.all(
 			user.following.map(async followingId => {
-				const followingPosts = await Post.find({ userId: followingId })
+				const followingPosts = await Post.find({
+					userId: followingId,
+				})
 				const followingUser = await User.findById(followingId)
 
 				followingPostsArr.push(followingPosts)
@@ -127,6 +129,22 @@ router.get('/timeline/:userId', async (req, res) => {
 		})
 
 		res.status(200).json([sortedPosts, followingPostsAuthor])
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// reply to a post
+router.put(`/:postDbId/reply/:userDbId`, async (req, res) => {
+	try {
+		const originalPost = await Post.findByIdAndUpdate(req.params.postDbId, {
+			$push: { replies: req.body.replyId },
+		})
+		const currentUser = await User.findByIdAndUpdate(req.params.userDbId, {
+			$push: { postReplies: req.body.replyId },
+		})
+
+		res.status(200).json([originalPost, currentUser])
 	} catch (err) {
 		res.status(500).json(err)
 	}

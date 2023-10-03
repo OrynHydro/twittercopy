@@ -47,6 +47,7 @@ const PostSchema = new mongoose.Schema(
 		originalPost: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Post',
+			default: null,
 		},
 		bookmarks: {
 			type: Array,

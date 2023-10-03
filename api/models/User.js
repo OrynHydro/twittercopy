@@ -70,7 +70,7 @@ const UserSchema = new mongoose.Schema(
 			type: Array,
 			default: [],
 		},
-		repliedPosts: {
+		postReplies: {
 			type: Array,
 			default: [],
 		},

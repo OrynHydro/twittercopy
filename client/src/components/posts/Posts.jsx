@@ -301,6 +301,7 @@ const Posts = ({
 			}
 		}
 	}
+
 	if (postPage)
 		return (
 			<Link

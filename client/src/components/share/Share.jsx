@@ -28,6 +28,7 @@ const Share = ({
 	setHasValue,
 	user,
 	postPage,
+	originalPost,
 }) => {
 	// declaring variable that helps to get images from folder directly without importing
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -99,20 +100,28 @@ const Share = ({
 				}
 
 				await axios.post(`/upload`, formData)
-				await axios.post(`/posts`, {
-					userId: user?._id,
-					desc: text,
-					img: filesIdName || [],
-					user: user,
-				})
+
+				await axios
+					.post(`/posts`, {
+						userId: user?._id,
+						desc: text,
+						img: filesIdName || [],
+						user: user,
+						originalPost: originalPost,
+					})
+					.then(async newPost => {
+						if (originalPost) {
+							await axios.put(`/posts/${originalPost}/reply/${user._id}`, {
+								replyId: newPost.data._id,
+							})
+						}
+					})
 				document.location.reload()
 			} catch (err) {
 				console.log(err)
 			}
 		}
 	}
-
-	console.log(user)
 
 	return (
 		// making post form
@@ -327,6 +336,7 @@ const Share = ({
 									? 'half-height shareImgContainer'
 									: 'shareImgContainer'
 							}
+							style={{ top: postPage && '0' }}
 						>
 							<div
 								className='imgContainerCrossBlock'
