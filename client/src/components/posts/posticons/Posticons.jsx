@@ -17,6 +17,7 @@ const Posticons = ({
 	isLiked,
 	setIsLiked,
 	currentUser,
+	postPage,
 }) => {
 	// declaring state of icons
 
@@ -78,7 +79,7 @@ const Posticons = ({
 					: dbTitle === 'views'
 					? post[0].views
 					: dbTitle === 'shares'
-					? post[0]?.shares?.length
+					? ''
 					: 0}
 			</span>
 		</div>

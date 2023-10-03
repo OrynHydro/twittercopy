@@ -30,3 +30,68 @@
 .postPageSeeMoreText a:last-child {
 	color: #51b2f3;
 }
+
+
+
+.homePostUserInfo.postPageInfo {
+	flex-direction: column;
+	gap: 0px;	
+	top: 0px;
+}
+
+.homePostMid.postPageMid {
+ 	top: 0px;	
+	padding: 0;	
+	margin-top: 10px;
+}
+
+.homePostMid.postPageMid .homePostDesc {
+	font-size: 17px;
+	line-height: 24px;
+}
+
+.homePostMid.postPageMid .homePostImg {
+	width: 564px;
+	height: 564px;
+}
+
+.postPageData {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--gray);
+	margin: 15px 2px;
+}
+
+.postPageTime:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.postPageViews strong {
+	color: var(--black);
+}
+
+.postPageHr {
+	width: calc(100% - 15px);
+	margin: 0px auto;
+	height: 1px;
+	background-color: #eff3f4;
+}
+
+.homePostBottom.postPageBottom {
+	margin: 10px 0;
+	width: 100%;
+}
+
+.postPageReplyBtn {
+	margin-left: calc(40% + 35px);
+}
+
+.homePostContainer.postPageContainer:hover {
+	background-color: #fff;
+}
+
+.homePost.postPagePost {
+	cursor: default;
+}

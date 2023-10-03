@@ -10,7 +10,8 @@
 }
 
 .homePostContainer {
-    padding: 8px 16px;transition: 0.2s ease;
+    padding: 8px 12px;
+    transition: 0.2s ease;
 }
 
 .homePostTop {
@@ -38,6 +39,7 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
+    cursor: pointer;
 }
 
 .homePostMoreBlock {
@@ -79,7 +81,7 @@
 .homePostMid {
     display: flex;
     flex-direction: column;
-    padding: 0px 59px;
+    padding: 0px 0px 0px 59px;
     gap: 10px;
     position: relative;
     top: -20px;
@@ -94,14 +96,18 @@
 
 .homePostImg {
     border-radius: 16px;
-    max-height: 512px;
+    height: 512px;
     width: 512px;
+    object-fit: cover;
+    cursor: pointer;
 }
 
 .homePostBottom {
+    width: 512px;
     display: flex;
     align-items: center;
-    gap: 30px;
+    justify-content: space-between;
+    /* gap: 60px; */
     margin-left: 60px;
 }
 

@@ -48,6 +48,10 @@ const PostSchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Post',
 		},
+		bookmarks: {
+			type: Array,
+			default: [],
+		},
 	},
 	{ timestamps: true }
 )

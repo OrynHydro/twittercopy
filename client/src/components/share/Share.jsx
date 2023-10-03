@@ -27,6 +27,7 @@ const Share = ({
 	hasValue,
 	setHasValue,
 	user,
+	postPage,
 }) => {
 	// declaring variable that helps to get images from folder directly without importing
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -111,10 +112,19 @@ const Share = ({
 		}
 	}
 
+	console.log(user)
+
 	return (
 		// making post form
-		<form className='homePostBlock' onSubmit={newPost}>
-			<div className='homePostBlockContainer'>
+		<form
+			className='homePostBlock'
+			onSubmit={newPost}
+			style={{ marginTop: postPage ? '0' : '107px' }}
+		>
+			<div
+				className='homePostBlockContainer'
+				style={{ paddingBottom: postPage && '18px' }}
+			>
 				<div
 					className='homeUserImgBlock'
 					onClick={() => navigate(`/${user.userId}`)}
@@ -132,7 +142,7 @@ const Share = ({
 				{/* who can reply on your post */}
 				<div
 					className={
-						activeInput === false
+						activeInput === false || postPage
 							? 'homePostWhoCanReplyBlock'
 							: activeInput && activeEveryone
 							? 'homePostWhoCanReplyBlock active'
@@ -245,12 +255,12 @@ const Share = ({
 					setHasValue={setHasValue}
 				/>
 				<TextareaAutosize
-					className='homePostBlockInput'
+					className={'homePostBlockInput'}
 					style={{
-						left: activeInput ? '60px' : '',
-						top: activeInput ? '-25px' : '',
+						left: postPage ? '' : activeInput ? '60px' : '',
+						top: postPage ? '' : activeInput ? '-25px' : '',
 					}}
-					placeholder="What's happening?"
+					placeholder={postPage ? 'Post your reply' : "What's happening?"}
 					onClick={() => setActiveInput(true)}
 					onChange={e => setText(e.target.value)}
 				/>
@@ -258,7 +268,7 @@ const Share = ({
 					onClick={e => (activeInput && activeEveryone ? openModal(e) : null)}
 					disabled={activeCircle ? true : false}
 					className={
-						activeInput === false
+						activeInput === false || postPage
 							? 'homePostWhoCanReplySecondBlock'
 							: activeInput && activeEveryone
 							? 'homePostWhoCanReplySecondBlock active'
@@ -420,6 +430,7 @@ const Share = ({
 				</div>
 				<hr
 					className={activeInput ? 'homePostBlockHr active' : 'homePostBlockHr'}
+					style={{ display: postPage && 'none' }}
 				/>
 				{/* bottom icons */}
 				<div
@@ -447,7 +458,10 @@ const Share = ({
 							alt=''
 						/>
 					</div>
-					<div className='homePostBlockIconBlock'>
+					<div
+						className='homePostBlockIconBlock'
+						style={{ display: postPage && 'none' }}
+					>
 						<img
 							className='homePostBlockIcon'
 							src={PF + 'icon/common/list.svg'}
@@ -467,6 +481,7 @@ const Share = ({
 								? 'homePostBlockIconBlock disabled'
 								: 'homePostBlockIconBlock'
 						}
+						style={{ display: postPage && 'none' }}
 					>
 						<img
 							className='homePostBlockIcon'
@@ -492,13 +507,18 @@ const Share = ({
 							? 'progressBarBlock active'
 							: 'progressBarBlock'
 					}
+					style={{ bottom: postPage && '20px' }}
 				>
 					<CircularProgressbar value={percentage} />
 				</span>
 				<button
 					type='submit'
 					className={
-						text.length === 0 && uploadedFiles.length === 0
+						text.length === 0 && uploadedFiles.length === 0 && postPage
+							? 'tweetBtn disabled postPageReplyBtn'
+							: postPage
+							? 'tweetBtn postPageReplyBtn'
+							: text.length === 0 && uploadedFiles.length === 0
 							? 'tweetBtn disabled'
 							: 'tweetBtn'
 					}
@@ -506,7 +526,7 @@ const Share = ({
 						text.length === 0 && uploadedFiles.length === 0 ? true : false
 					}
 				>
-					Tweet
+					{postPage ? 'Reply' : 'Tweet'}
 				</button>
 			</div>
 		</form>

@@ -463,15 +463,15 @@
 
 .previewImage.three {
     display: grid;
-    grid-template-columns: 249px 249px; /* Два столбца: левый и правый */
-    grid-template-rows: 137px 137px; /* Автоматическая высота строк */
-    gap: 10px; /* Расстояние между элементами */
+    grid-template-columns: 249px 249px; 
+    grid-template-rows: 137px 137px;
+    gap: 10px; 
     margin-bottom: 15px;
 }
 
 .full-height {
-    grid-column: 1 / 2; /* Занимает первый столбец */
-    grid-row: 1 / 3; /* Занимает две строки */
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
 }
 
 .full-height img {
@@ -479,7 +479,7 @@
 }
 
 .half-height {
-    grid-column: 2 / 3; /* Занимает второй столбец */
+    grid-column: 2 / 3;
 }
 
 .half-height img {

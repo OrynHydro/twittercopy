@@ -3,7 +3,7 @@ import './postPage.css'
 import { BiMessageRoundedDetail } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { Posts, PostsLoader } from '../../../../components'
+import { Posts, PostsLoader, Share } from '../../../../components'
 import { UserContext } from '../../../../context/UserContext'
 import { useLocalStorage } from '../../../../utils/useLocalStorage'
 
@@ -36,9 +36,9 @@ const PostPage = ({
 		await axios.get(`/posts/${params.postId}`).then(res => setPost(res.data))
 	}
 
-	if (!post) findPost()
-
-	// console.log(post)
+	useEffect(() => {
+		if (!post) findPost()
+	}, [post])
 
 	return (
 		<div className='postPage'>
@@ -61,7 +61,9 @@ const PostPage = ({
 						setActiveFollowBtn={setActiveFollowBtn}
 						unfollow={unfollow}
 						setUnfollow={setUnfollow}
+						postPage
 					/>
+					<Share user={user} postPage />
 				</>
 			) : (
 				<PostsLoader />
