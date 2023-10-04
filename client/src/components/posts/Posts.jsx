@@ -195,13 +195,13 @@ const Posts = ({
 
 	// liking post
 
-	const [like, setLike] = useState(post[0]?.likes?.length)
+	const [like, setLike] = useState(post?.likes?.length)
 	const [isLiked, setIsLiked] = useState(false)
 
 	const likePost = async isLikeTitle => {
 		if (isLikeTitle) {
 			try {
-				await axios.put(`/posts/${post[0]?._id}/like`, {
+				await axios.put(`/posts/${post?._id}/like`, {
 					userId: currentUser?._id,
 				})
 				setLike(isLiked ? like - 1 : like + 1)
@@ -213,8 +213,8 @@ const Posts = ({
 	}
 
 	useEffect(() => {
-		setIsLiked(currentUser?.likedPosts.includes(post[0]?._id))
-	}, [currentUser?.likedPosts, post[0]?._id])
+		setIsLiked(currentUser?.likedPosts.includes(post?._id))
+	}, [currentUser?.likedPosts, post?._id])
 
 	// adding a view to post
 
@@ -224,9 +224,9 @@ const Posts = ({
 
 	const viewPost = async () => {
 		try {
-			await axios.put(`/posts/${post[0]?._id}/update`, {
-				userId: post[1]?._id,
-				views: post[0]?.views + 1,
+			await axios.put(`/posts/${post?._id}/update`, {
+				userId: post?.user?._id,
+				views: post?.views + 1,
 			})
 		} catch (err) {
 			console.log(err)
@@ -243,12 +243,12 @@ const Posts = ({
 
 	const deletePost = async () => {
 		try {
-			if (post[0]?.likes.includes(currentUser?._id)) {
-				await axios.put(`/posts/${post[0]?._id}/like`, {
+			if (post?.likes.includes(currentUser?._id)) {
+				await axios.put(`/posts/${post?._id}/like`, {
 					userId: currentUser?._id,
 				})
 			}
-			await axios.delete(`/posts/${post[0]?._id}/delete`)
+			await axios.delete(`/posts/${post?._id}/delete`)
 			document.location.reload()
 		} catch (err) {
 			console.log(err)
@@ -261,41 +261,46 @@ const Posts = ({
 
 	const [openModal, setOpenModal] = useState(false)
 	const [modalText, setModalText] = useState(
-		!currentUser?.following.includes(post[1]?.userId) ? 'Following' : 'Follow'
+		!currentUser?.following.includes(post?.user?.userId)
+			? 'Following'
+			: 'Follow'
 	)
 
 	useEffect(() => {
-		if (currentUser?.following.includes(post[1]?._id)) {
+		if (currentUser?.following.includes(post?.user?._id)) {
 			setModalText('Following')
 		} else {
 			setModalText('Follow')
 		}
-	}, [currentUser?.following, post[1]?._id])
+	}, [currentUser?.following, post?.user?._id])
 
 	const followUser = async e => {
 		e.preventDefault()
-		if (currentUser?.following.includes(post[1]?._id)) {
+		if (currentUser?.following.includes(post?.user?._id)) {
 			try {
-				await axios.put(`/users/${post[1]?._id}/unfollow`, {
+				await axios.put(`/users/${post?.user?._id}/unfollow`, {
 					userId: currentUser._id,
 				})
 				setModalText('Follow')
 				currentUser.following.splice(
-					currentUser.following.indexOf(post[1]?._id),
+					currentUser.following.indexOf(post?.user?._id),
 					1
 				)
-				post[1]?.followers.splice(post[1]?.followers.indexOf(post[1]?._id), 1)
+				post?.user?.followers.splice(
+					post?.user?.followers.indexOf(post?.user?._id),
+					1
+				)
 			} catch (err) {
 				console.log(err)
 			}
-		} else if (!currentUser?.following.includes(post[1]?._id)) {
+		} else if (!currentUser?.following.includes(post?.user?._id)) {
 			try {
-				await axios.put(`/users/${post[1]?._id}/follow`, {
+				await axios.put(`/users/${post?.user?._id}/follow`, {
 					userId: currentUser._id,
 				})
 				setModalText('Following')
-				currentUser.following.push(post[1]?._id)
-				post[1]?.followers.push(currentUser._id)
+				currentUser.following.push(post?.user?._id)
+				post?.user?.followers.push(currentUser._id)
 			} catch (err) {
 				console.log(err)
 			}
@@ -304,11 +309,7 @@ const Posts = ({
 
 	if (postPage)
 		return (
-			<Link
-				className='homePost postPagePost'
-				ref={ref}
-				to={`/${post[1]?.userId}/status/${post[0]?._id}`}
-			>
+			<div className='homePost postPagePost' ref={ref}>
 				<div className='homePostContainer postPageContainer'>
 					{/* user avatar, name, id and when post was created */}
 					<div className='homePostTop'>
@@ -320,28 +321,28 @@ const Posts = ({
 							<img
 								className='homePostUserImg'
 								src={
-									post[0] && !post[1]?.profilePicture
+									post && !post?.user?.profilePicture
 										? PF + 'icon/noAvatar.png'
-										: PF + 'storage/' + post[1]?.profilePicture
+										: PF + 'storage/' + post?.user?.profilePicture
 								}
-								onClick={() => navigate(`/${post[1].userId}`)}
+								onClick={() => navigate(`/${post?.user.userId}`)}
 							/>
 							<div className='homePostUserInfo postPageInfo'>
-								<h2 className='homePostUsername'>{post[1]?.username}</h2>
-								<span className='homePostUserId'>{post[1]?.userId}</span>
+								<h2 className='homePostUsername'>{post?.user?.username}</h2>
+								<span className='homePostUserId'>{post?.user?.userId}</span>
 							</div>
 							<div style={{ position: 'absolute', top: '-10px' }}>
 								<UserPopup
 									modalText={modalText}
 									setModalText={setModalText}
-									userDbId={post[1]?._id}
+									userDbId={post?.user?._id}
 									currentUser={currentUser}
 									followUser={followUser}
-									userId={post[1]?.userId}
-									username={post[1]?.username}
-									followers={post[1]?.followers}
-									following={post[1]?.following}
-									profilePicture={post[1]?.profilePicture}
+									userId={post?.user?.userId}
+									username={post?.user?.username}
+									followers={post?.user?.followers}
+									following={post?.user?.following}
+									profilePicture={post?.user?.profilePicture}
 									openModal={openModal}
 								/>
 							</div>
@@ -358,28 +359,28 @@ const Posts = ({
 					</div>
 					{/* post image and desc */}
 					<div className='homePostMid postPageMid'>
-						<span className='homePostDesc'>{post[0]?.desc}</span>
-						{post[0]?.img?.length === 3 ? (
+						<span className='homePostDesc'>{post?.desc}</span>
+						{post?.img?.length === 3 ? (
 							<div className='postImagesContainer three'>
 								<div className='column'>
 									<img
-										src={post[0]?.img[0] && PF + 'storage/' + post[0]?.img[0]}
+										src={post?.img[0] && PF + 'storage/' + post?.img[0]}
 										className='homePostImg'
-										onClick={() => setFullScreenImg([post[0]?.img[0], post[0]])}
+										onClick={() => setFullScreenImg([post?.img[0], post])}
 										key={1}
 									/>
 								</div>
 								<div className='column'>
 									<img
-										src={post[0]?.img[1] && PF + 'storage/' + post[0]?.img[1]}
+										src={post?.img[1] && PF + 'storage/' + post?.img[1]}
 										className='homePostImg'
-										onClick={() => setFullScreenImg([post[0]?.img[0], post[0]])}
+										onClick={() => setFullScreenImg([post?.img[0], post])}
 										key={2}
 									/>
 									<img
-										src={post[0]?.img[2] && PF + 'storage/' + post[0]?.img[2]}
+										src={post?.img[2] && PF + 'storage/' + post?.img[2]}
 										className='homePostImg'
-										onClick={() => setFullScreenImg([post[0]?.img[0], post[0]])}
+										onClick={() => setFullScreenImg([post?.img[0], post])}
 										key={3}
 									/>
 								</div>
@@ -387,19 +388,19 @@ const Posts = ({
 						) : (
 							<div
 								className={
-									post[0]?.img?.length === 1
+									post?.img?.length === 1
 										? ''
-										: post[0]?.img?.length === 2
+										: post?.img?.length === 2
 										? 'postImagesContainer two'
-										: post[0]?.img?.length === 4
+										: post?.img?.length === 4
 										? 'postImagesContainer four'
 										: ''
 								}
 							>
-								{post[0]?.img?.map((link, id) => (
+								{post?.img?.map((link, id) => (
 									<img
 										src={link && PF + 'storage/' + link}
-										onClick={() => setFullScreenImg([link, post[0]])}
+										onClick={() => setFullScreenImg([link, post])}
 										className='homePostImg'
 										key={id}
 									/>
@@ -409,12 +410,12 @@ const Posts = ({
 					</div>
 					<div className='postPageData'>
 						<span className='postPageTime'>
-							{moment(post[0].createdAt).format('h:mm A')} ·{' '}
-							{moment(post[0].createdAt).format('MMM d, yyyy')}
+							{moment(post.createdAt).format('h:mm A')} ·{' '}
+							{moment(post.createdAt).format('MMM d, yyyy')}
 						</span>{' '}
 						·{' '}
 						<span className='postPageViews'>
-							<strong>{post[0].views}</strong> Views
+							<strong>{post.views}</strong> Views
 						</span>
 					</div>
 					<hr className='postPageHr' />
@@ -430,7 +431,7 @@ const Posts = ({
 									hoverColor={i.hoverColor}
 									title={i.title}
 									post={post}
-									userId={post[0]?.userId}
+									userId={post?.userId}
 									dbTitle={i.dbTitle}
 									like={like}
 									setLike={setLike}
@@ -460,7 +461,7 @@ const Posts = ({
 							speed={500}
 							onClick={() => setFullScreenImg(null)}
 						>
-							{post[0].img?.map(item => (
+							{post.img?.map(item => (
 								<SwiperSlide>
 									<img
 										src={PF + 'storage/' + item}
@@ -519,7 +520,7 @@ const Posts = ({
 									key={id}
 									title={item.title}
 									icon={item.icon}
-									userId={post[1]?.userId}
+									userId={post?.user?.userId}
 									setDeleteModal={setDeleteModal}
 									setPopupWindow={setPopupWindow}
 									isUserPosts={isUserPosts}
@@ -530,7 +531,7 @@ const Posts = ({
 									key={id}
 									title={item.title}
 									icon={item.icon}
-									postAuthor={post[1]}
+									postAuthor={post?.user}
 									setDeleteModal={setDeleteModal}
 									setPopupWindow={setPopupWindow}
 									currentUser={currentUser}
@@ -567,14 +568,14 @@ const Posts = ({
 					</div>
 					<div className='overlay' onClick={() => setDeleteModal(false)}></div>
 				</div>
-			</Link>
+			</div>
 		)
 
 	return (
 		<Link
 			className='homePost'
 			ref={ref}
-			to={`/${post[1]?.userId}/status/${post[0]?._id}`}
+			to={`/${post?.user.userId}/status/${post?._id}`}
 		>
 			<div className='homePostContainer'>
 				{/* user avatar, name, id and when post was created */}
@@ -584,34 +585,41 @@ const Posts = ({
 						onMouseOver={() => setOpenModal(true)}
 						onMouseOut={() => setOpenModal(false)}
 					>
-						<img
-							className='homePostUserImg'
-							src={
-								post[0] && !post[1]?.profilePicture
-									? PF + 'icon/noAvatar.png'
-									: PF + 'storage/' + post[1]?.profilePicture
-							}
-							onClick={() => navigate(`/${post[1].userId}`)}
-						/>
+						<Link to={`/${post?.user.userId}`}>
+							<img
+								className='homePostUserImg'
+								src={
+									post && !post?.user?.profilePicture
+										? PF + 'icon/noAvatar.png'
+										: PF + 'storage/' + post?.user?.profilePicture
+								}
+							/>
+						</Link>
+
 						<div className='homePostUserInfo'>
-							<h2 className='homePostUsername'>{post[1]?.username}</h2>
-							<span className='homePostUserId'>{post[1]?.userId}</span>
+							<Link to={`/${post?.user.userId}`}>
+								<h2 className='homePostUsername'>{post?.user?.username}</h2>
+							</Link>
+							<Link to={`/${post?.user.userId}`}>
+								<span className='homePostUserId'>{post?.user?.userId}</span>
+							</Link>
+
 							<span className='homePostDate'>
-								{moment(post[0]?.createdAt).fromNow()}
+								{moment(post?.createdAt).fromNow()}
 							</span>
 						</div>
 						<div style={{ position: 'absolute', top: '-10px' }}>
 							<UserPopup
 								modalText={modalText}
 								setModalText={setModalText}
-								userDbId={post[1]?._id}
+								userDbId={post?.user?._id}
 								currentUser={currentUser}
 								followUser={followUser}
-								userId={post[1]?.userId}
-								username={post[1]?.username}
-								followers={post[1]?.followers}
-								following={post[1]?.following}
-								profilePicture={post[1]?.profilePicture}
+								userId={post?.user?.userId}
+								username={post?.user?.username}
+								followers={post?.user?.followers}
+								following={post?.user?.following}
+								profilePicture={post?.user?.profilePicture}
 								openModal={openModal}
 							/>
 						</div>
@@ -621,35 +629,41 @@ const Posts = ({
 						title='More'
 						onMouseOver={() => setActiveMore(true)}
 						onMouseOut={() => setActiveMore(false)}
-						onClick={() => setPopupWindow(true)}
+						onClick={e => {
+							e.preventDefault()
+							setPopupWindow(true)
+						}}
 					>
 						<img src={activeMore ? moreActive : more} alt='' />
 					</div>
 				</div>
 				{/* post image and desc */}
 				<div className='homePostMid'>
-					<span className='homePostDesc'>{post[0]?.desc}</span>
-					{post[0]?.img?.length === 3 ? (
-						<div className='postImagesContainer three'>
+					<span className='homePostDesc'>{post?.desc}</span>
+					{post?.img?.length === 3 ? (
+						<div
+							className='postImagesContainer three'
+							onClick={e => e.preventDefault()}
+						>
 							<div className='column'>
 								<img
-									src={post[0]?.img[0] && PF + 'storage/' + post[0]?.img[0]}
+									src={post?.img[0] && PF + 'storage/' + post?.img[0]}
 									className='homePostImg'
-									onClick={() => setFullScreenImg([post[0]?.img[0], post[0]])}
+									onClick={() => setFullScreenImg([post?.img[0], post])}
 									key={1}
 								/>
 							</div>
 							<div className='column'>
 								<img
-									src={post[0]?.img[1] && PF + 'storage/' + post[0]?.img[1]}
+									src={post?.img[1] && PF + 'storage/' + post?.img[1]}
 									className='homePostImg'
-									onClick={() => setFullScreenImg([post[0]?.img[0], post[0]])}
+									onClick={() => setFullScreenImg([post?.img[0], post])}
 									key={2}
 								/>
 								<img
-									src={post[0]?.img[2] && PF + 'storage/' + post[0]?.img[2]}
+									src={post?.img[2] && PF + 'storage/' + post?.img[2]}
 									className='homePostImg'
-									onClick={() => setFullScreenImg([post[0]?.img[0], post[0]])}
+									onClick={() => setFullScreenImg([post?.img[0], post])}
 									key={3}
 								/>
 							</div>
@@ -657,19 +671,20 @@ const Posts = ({
 					) : (
 						<div
 							className={
-								post[0]?.img?.length === 1
+								post?.img?.length === 1
 									? ''
-									: post[0]?.img?.length === 2
+									: post?.img?.length === 2
 									? 'postImagesContainer two'
-									: post[0]?.img?.length === 4
+									: post?.img?.length === 4
 									? 'postImagesContainer four'
 									: ''
 							}
+							onClick={e => e.preventDefault()}
 						>
-							{post[0]?.img?.map((link, id) => (
+							{post?.img?.map((link, id) => (
 								<img
 									src={link && PF + 'storage/' + link}
-									onClick={() => setFullScreenImg([link, post[0]])}
+									onClick={() => setFullScreenImg([link, post])}
 									className='homePostImg'
 									key={id}
 								/>
@@ -689,7 +704,7 @@ const Posts = ({
 								hoverColor={i.hoverColor}
 								title={i.title}
 								post={post}
-								userId={post[0]?.userId}
+								userId={post?.userId}
 								dbTitle={i.dbTitle}
 								like={like}
 								setLike={setLike}
@@ -718,7 +733,7 @@ const Posts = ({
 						speed={500}
 						onClick={() => setFullScreenImg(null)}
 					>
-						{post[0].img?.map(item => (
+						{post.img?.map(item => (
 							<SwiperSlide>
 								<img
 									src={PF + 'storage/' + item}
@@ -777,7 +792,7 @@ const Posts = ({
 								key={id}
 								title={item.title}
 								icon={item.icon}
-								userId={post[1]?.userId}
+								userId={post?.user?.userId}
 								setDeleteModal={setDeleteModal}
 								setPopupWindow={setPopupWindow}
 								isUserPosts={isUserPosts}
@@ -788,7 +803,7 @@ const Posts = ({
 								key={id}
 								title={item.title}
 								icon={item.icon}
-								postAuthor={post[1]}
+								postAuthor={post?.user}
 								setDeleteModal={setDeleteModal}
 								setPopupWindow={setPopupWindow}
 								currentUser={currentUser}

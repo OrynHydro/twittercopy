@@ -1426,32 +1426,29 @@ const Profile = ({ isLoading, setIsLoading }) => {
 					}}
 				>
 					{activePosts === 'tweets' && userPosts?.length !== 0 ? (
-						userPosts.map(
-							(post, index) =>
-								post.originalPost === null && (
-									<Posts
-										key={index}
-										post={[post, anotherUser]}
-										more={PF + 'icon/utility/moreHorizontal.svg'}
-										moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-										currentUser={user}
-										isUserPosts={post.userId === user._id ? true : false}
-										activeFollowBtn={activeFollowBtn}
-										setActiveFollowBtn={setActiveFollowBtn}
-										unfollow={unfollow}
-										setUnfollow={setUnfollow}
-									/>
-								)
-						)
+						userPosts.map((post, index) => (
+							<Posts
+								key={index}
+								post={post}
+								more={PF + 'icon/utility/moreHorizontal.svg'}
+								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+								currentUser={user}
+								isUserPosts={post.userId === user?._id ? true : false}
+								activeFollowBtn={activeFollowBtn}
+								setActiveFollowBtn={setActiveFollowBtn}
+								unfollow={unfollow}
+								setUnfollow={setUnfollow}
+							/>
+						))
 					) : activePosts === 'likes' && likedPosts?.length !== 0 ? (
 						likedPosts?.map((post, index) => (
 							<Posts
 								key={index}
-								post={[post, post.user]}
+								post={post}
 								more={PF + 'icon/utility/moreHorizontal.svg'}
 								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 								currentUser={user}
-								isUserPosts={post.user._id === user._id ? true : false}
+								isUserPosts={post.user._id === user?._id ? true : false}
 								activeFollowBtn={activeFollowBtn}
 								setActiveFollowBtn={setActiveFollowBtn}
 								unfollow={unfollow}

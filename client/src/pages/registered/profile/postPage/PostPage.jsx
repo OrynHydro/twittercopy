@@ -39,12 +39,10 @@ const PostPage = ({
 		await axios.get(`/posts/${params.postId}`).then(res => setPost(res.data))
 	}
 
-	const findReplies = () => {
-		post?.replies.map(async replyId => {
-			await axios
-				.get(`/posts/${replyId}`)
-				.then(res => setPostReplies(prev => [...prev, res.data]))
-		})
+	const findReplies = async () => {
+		await axios
+			.get(`/posts/replies/${params.postId}`)
+			.then(res => setPostReplies(res.data))
 	}
 
 	useEffect(() => {
@@ -55,9 +53,26 @@ const PostPage = ({
 		if (post?.replies.length !== 0 && postReplies.length === 0) findReplies()
 	}, [post?.replies.length, postReplies.length])
 
+	useEffect(() => {
+		if (params.postId !== post?._id && post) {
+			findPost()
+		}
+	}, [params.postId])
+
+	useEffect(() => {
+		if (
+			JSON.stringify(postReplies.map(item => item._id)) !==
+				JSON.stringify(post?.replies) &&
+			postReplies.length !== 0
+		) {
+			setPostReplies([])
+			findReplies()
+		}
+	}, [postReplies, post?.replies])
+
 	return (
 		<div className='postPage'>
-			{post ? (
+			{post && post?._id === params.postId ? (
 				<>
 					<h2 className='profileTopTitle'>Post</h2>
 					<div className='postPageSeeMore'>
@@ -67,7 +82,7 @@ const PostPage = ({
 						</span>
 					</div>
 					<Posts
-						post={[post, post.user]}
+						post={post}
 						more={PF + 'icon/utility/moreHorizontal.svg'}
 						moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 						currentUser={user}
@@ -82,7 +97,7 @@ const PostPage = ({
 					{postReplies.length !== 0
 						? postReplies.map(reply => (
 								<Posts
-									post={[reply, reply.user]}
+									post={reply}
 									more={PF + 'icon/utility/moreHorizontal.svg'}
 									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 									currentUser={user}

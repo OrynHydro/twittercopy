@@ -67,13 +67,13 @@ const UserPopup = ({
 			<div className='followingBlockModalFollow'>
 				<Link to={`/${userId}/following`}>
 					<span className='followingBlockModalFollowItem'>
-						<strong>{following.length}</strong> Following
+						<strong>{following?.length}</strong> Following
 					</span>
 				</Link>
 
 				<Link to={`/${userId}/followers`}>
 					<span className='followingBlockModalFollowItem'>
-						<strong>{followers.length}</strong> Followers
+						<strong>{followers?.length}</strong> Followers
 					</span>
 				</Link>
 			</div>

@@ -89,7 +89,10 @@ router.put('/:id', async (req, res) => {
 router.get('/allUserPosts/:userId', async (req, res) => {
 	try {
 		const user = await User.findOne({ userId: '@' + req.params.userId })
-		const posts = await Post.find({ userId: user._id })
+		const posts = await Post.find({
+			userId: user._id,
+			originalPost: null,
+		}).populate('user')
 		// const retweetedPosts = await Post.find({ retweets: [user._id, ...anotherRetweets] })
 		res.status(200).json(posts)
 	} catch (err) {
@@ -102,33 +105,16 @@ router.get('/timeline/:userId', async (req, res) => {
 	try {
 		const user = await User.findOne({ userId: '@' + req.params.userId })
 
-		const followingPostsAuthor = []
-		const followingPostsArr = []
-		const sortedPosts = []
+		const followingIds = user.following
 
-		await Promise.all(
-			user.following.map(async followingId => {
-				const followingPosts = await Post.find({
-					userId: followingId,
-				})
-				const followingUser = await User.findById(followingId)
-
-				followingPostsArr.push(followingPosts)
-				followingPostsAuthor.push(followingUser)
-			})
-		)
-
-		followingPostsArr.map(item =>
-			item.length === 1
-				? sortedPosts.push(item[0])
-				: item.map(i => sortedPosts.push(i))
-		)
-
-		sortedPosts.sort(function (a, b) {
-			return new Date(b.createdAt) - new Date(a.createdAt)
+		const followingPosts = await Post.find({
+			userId: { $in: followingIds },
+			originalPost: null,
 		})
+			.populate('user')
+			.sort({ createdAt: -1 })
 
-		res.status(200).json([sortedPosts, followingPostsAuthor])
+		res.status(200).json(followingPosts)
 	} catch (err) {
 		res.status(500).json(err)
 	}
@@ -150,6 +136,16 @@ router.put(`/:postDbId/reply/:userDbId`, async (req, res) => {
 	}
 })
 
-// export posts router
+// get replies
+router.get(`/replies/:originalPostId`, async (req, res) => {
+	try {
+		const replies = await Post.find({
+			originalPost: req.params.originalPostId,
+		}).populate('user')
+		res.status(200).json(replies)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
 
 module.exports = router

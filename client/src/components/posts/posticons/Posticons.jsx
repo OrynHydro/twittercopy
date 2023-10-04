@@ -17,7 +17,6 @@ const Posticons = ({
 	isLiked,
 	setIsLiked,
 	currentUser,
-	postPage,
 }) => {
 	// declaring state of icons
 
@@ -25,7 +24,7 @@ const Posticons = ({
 	const likePost = async () => {
 		if (title === 'Like') {
 			try {
-				await axios.put(`/posts/${post[0]?._id}/like`, {
+				await axios.put(`/posts/${post?._id}/like`, {
 					userId: currentUser?._id,
 				})
 				setLike(isLiked ? like - 1 : like + 1)
@@ -50,7 +49,10 @@ const Posticons = ({
 			title={title}
 			onMouseOver={() => setActiveIcon(true)}
 			onMouseOut={() => setActiveIcon(false)}
-			onClick={likePost}
+			onClick={e => {
+				e.preventDefault()
+				likePost()
+			}}
 		>
 			<div
 				className='homePostIconImgBlock'
@@ -73,11 +75,11 @@ const Posticons = ({
 				{dbTitle === 'likes'
 					? like
 					: dbTitle === 'replies'
-					? post[0]?.replies?.length
+					? post?.replies?.length
 					: dbTitle === 'retweets'
-					? post[0]?.retweets?.length
+					? post?.retweets?.length
 					: dbTitle === 'views'
-					? post[0].views
+					? post.views
 					: dbTitle === 'shares'
 					? ''
 					: 0}

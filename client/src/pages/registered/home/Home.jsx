@@ -179,14 +179,11 @@ const Home = ({ isLoading, setIsLoading }) => {
 					{loadingPosts ? (
 						<PostsLoader />
 					) : (
-						userPosts[0].map(
+						userPosts.map(
 							(post, index) => (
 								<Posts
 									key={index}
-									post={[
-										post,
-										userPosts[1].find(author => author._id === post.userId),
-									]}
+									post={post}
 									more={PF + 'icon/utility/moreHorizontal.svg'}
 									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 									currentUser={user}

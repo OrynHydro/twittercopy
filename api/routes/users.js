@@ -17,7 +17,7 @@ router.put('/:userId/update', async (req, res) => {
 		}
 	}
 	try {
-		const user = await User.findOneAndUpdate(
+		await User.findOneAndUpdate(
 			{ userId: req.params.userId },
 			{
 				$set: req.body,
@@ -105,52 +105,64 @@ router.get('/findByEmail/:email', async (req, res) => {
 // follow user
 
 router.put('/:id/follow', async (req, res) => {
-	if (req.body.userId !== req.params.id) {
-		try {
-			const user = await User.findById(req.params.id)
-			const currentUser = await User.findById(req.body.userId)
+	const userId = req.body.userId
+	const targetUserId = req.params.id
 
-			if (
-				!user.followers.includes(req.body.userId) &&
-				!currentUser.following.includes(req.params.id)
-			) {
-				await user.updateOne({ $push: { followers: req.body.userId } })
-				await currentUser.updateOne({ $push: { following: req.params.id } })
-				res.status(200).json('user has been followed')
-			} else {
-				res.status(403).json('You already follow this user')
-			}
-		} catch (err) {
-			res.status(500).json(err)
+	if (userId === targetUserId) {
+		return res.status(403).json("You can't follow yourself")
+	}
+
+	try {
+		const user = await User.findById(targetUserId)
+		const currentUser = await User.findById(userId)
+
+		if (
+			!user.followers.includes(userId) &&
+			!currentUser.following.includes(targetUserId)
+		) {
+			await Promise.all([
+				user.updateOne({ $push: { followers: userId } }),
+				currentUser.updateOne({ $push: { following: targetUserId } }),
+			])
+
+			return res.status(200).json('User has been followed')
+		} else {
+			return res.status(403).json('You already follow this user')
 		}
-	} else {
-		res.status(403).json('You cant follow yourself')
+	} catch (err) {
+		return res.status(500).json(err)
 	}
 })
 
 // unfollow user
 
 router.put('/:id/unfollow', async (req, res) => {
-	if (req.body.userId !== req.params.id) {
-		try {
-			const user = await User.findById(req.params.id)
-			const currentUser = await User.findById(req.body.userId)
+	const userId = req.body.userId
+	const targetUserId = req.params.id
 
-			if (
-				user.followers.includes(req.body.userId) &&
-				currentUser.following.includes(req.params.id)
-			) {
-				await user.updateOne({ $pull: { followers: req.body.userId } })
-				await currentUser.updateOne({ $pull: { following: req.params.id } })
-				res.status(200).json('user has been unfollowed')
-			} else {
-				res.status(403).json('You all ready unfollow this user')
-			}
-		} catch (err) {
-			res.status(500).json(err)
+	if (userId === targetUserId) {
+		return res.status(403).json("You can't unfollow yourself")
+	}
+
+	try {
+		const user = await User.findById(targetUserId)
+		const currentUser = await User.findById(userId)
+
+		if (
+			user.followers.includes(userId) &&
+			currentUser.following.includes(targetUserId)
+		) {
+			await Promise.all([
+				user.updateOne({ $pull: { followers: userId } }),
+				currentUser.updateOne({ $pull: { following: targetUserId } }),
+			])
+
+			return res.status(200).json('User has been unfollowed')
+		} else {
+			return res.status(403).json('You have already unfollowed this user')
 		}
-	} else {
-		res.status(403).json('You cant unfollow yourself')
+	} catch (err) {
+		return res.status(500).json(err)
 	}
 })
 
@@ -158,33 +170,19 @@ router.put('/:id/unfollow', async (req, res) => {
 router.get('/followings/:userId', async (req, res) => {
 	try {
 		const user = await User.findById(req.params.userId)
-		const followings = await Promise.all(
-			user.following.map(followingId => {
-				return User.findById(followingId)
-			})
+		const following = await User.find(
+			{ _id: { $in: user.following } },
+			{
+				_id: 1,
+				username: 1,
+				profilePicture: 1,
+				followers: 1,
+				following: 1,
+				userId: 1,
+				bio: 1,
+			}
 		)
-		let followingList = []
-		followings.map(user => {
-			const {
-				_id,
-				username,
-				profilePicture,
-				userId,
-				followers,
-				following,
-				bio,
-			} = user
-			followingList.push({
-				_id,
-				username,
-				profilePicture,
-				followers,
-				following,
-				userId,
-				bio,
-			})
-		})
-		res.status(200).json(followingList)
+		res.status(200).json(following)
 	} catch (err) {
 		res.status(500).json(err)
 	}
@@ -194,33 +192,19 @@ router.get('/followings/:userId', async (req, res) => {
 router.get('/followers/:userId', async (req, res) => {
 	try {
 		const user = await User.findById(req.params.userId)
-		const followers = await Promise.all(
-			user.followers.map(followerId => {
-				return User.findById(followerId)
-			})
+		const followers = await User.find(
+			{ _id: { $in: user.followers } },
+			{
+				_id: 1,
+				username: 1,
+				profilePicture: 1,
+				followers: 1,
+				following: 1,
+				userId: 1,
+				bio: 1,
+			}
 		)
-		let followersList = []
-		followers.map(follower => {
-			const {
-				_id,
-				username,
-				profilePicture,
-				followers,
-				following,
-				userId,
-				bio,
-			} = follower
-			followersList.push({
-				_id,
-				username,
-				profilePicture,
-				followers,
-				following,
-				userId,
-				bio,
-			})
-		})
-		res.status(200).json(followersList)
+		res.status(200).json(followers)
 	} catch (err) {
 		res.status(500).json(err)
 	}
