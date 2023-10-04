@@ -24,10 +24,12 @@ const PostSchema = new mongoose.Schema(
 			type: Array,
 			default: [],
 		},
-		replies: {
-			type: Array,
-			default: [],
-		},
+		replies: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Post',
+			},
+		],
 		retweets: {
 			type: Array,
 			default: [],
