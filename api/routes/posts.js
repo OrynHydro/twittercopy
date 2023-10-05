@@ -169,37 +169,38 @@ router.put(`/:postDbId/reply/:userDbId`, async (req, res) => {
 // 	}
 // })
 
-// get replies
-// router.get(`/replies/:originalPostId`, async (req, res) => {
-// 	try {
-// 		const originalPostId = req.params.originalPostId
-
-// 		const post = await Post.findById(originalPostId)
-
-// 		const populatedReplies = await Promise.all(
-// 			post.replies.map(async replyId => {
-// 				const reply = await Post.findById(replyId).populate('replies')
-// 				return reply
-// 			})
-// 		)
-
-// 		res.status(200).json(populatedReplies)
-// 	} catch (err) {
-// 		res.status(500).json(err)
-// 	}
-// })
-
-// get replies
+// get post with replies
 router.get(`/replies/:originalPostId`, async (req, res) => {
 	try {
-		const replies = await Post.find({
-			originalPost: req.params.originalPostId,
-		}).populate('user')
+		const originalPostId = req.params.originalPostId
 
-		res.status(200).json(replies)
+		const post = await Post.findById(originalPostId).populate('user')
+
+		const populatedReplies = await Promise.all(
+			post.replies.map(async replyId => {
+				const reply = await Post.findById(replyId).populate('user')
+				return reply
+			})
+		)
+		post.replies = populatedReplies
+
+		res.status(200).json(post)
 	} catch (err) {
 		res.status(500).json(err)
 	}
 })
+
+// // get replies
+// router.get(`/replies/:originalPostId`, async (req, res) => {
+// 	try {
+// 		const replies = await Post.find({
+// 			originalPost: req.params.originalPostId,
+// 		}).populate('user')
+
+// 		res.status(200).json(replies)
+// 	} catch (err) {
+// 		res.status(500).json(err)
+// 	}
+// })
 
 module.exports = router

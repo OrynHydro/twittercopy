@@ -21,3 +21,4 @@ export { default as TwitterProfessionals } from './twitterProfessionals/TwitterP
 export { default as Loading } from './loading/Loading.jsx'
 export { default as PostsLoader } from './postsLoader/PostsLoader.jsx'
 export { default as UserPopup } from './userPopup/UserPopup.jsx'
+export { default as Input } from './input/Input.jsx'

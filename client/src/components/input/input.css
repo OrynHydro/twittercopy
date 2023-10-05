@@ -1,0 +1,100 @@
+.addListInputBlock {
+	width: 100%;
+	height: 58px;
+	border: 1px solid #CFD9DE;
+	margin-top: 10px;
+	border-radius: 4px;
+	position: relative;
+	transition: border-color 0.2s ease;
+}
+
+.addListInputBlock.active {
+	border: 2px solid #1D9BF0;
+}
+
+.addListInput {
+	width: 100%;
+	height: 100%;
+	padding: 12px 8px 8px;
+	font-size: 17px;
+	font-weight: 400;
+	color: var(--black);
+}
+
+.addListLabel {
+	position: absolute;
+	left: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 17px;
+	font-weight: 400;
+	color: #8E99A1;
+	cursor: auto;
+	transition: 0.2s ease;
+}
+
+.addListLabel.activeBlue {
+	color: #1D9BF0;
+	font-size: 13px;
+	top: 20%;
+}
+
+.addListLabel.active {
+	color: #8E99A1;
+	font-size: 13px;
+	top: 20%;
+}
+
+.addListInputCounter {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--gray);
+}
+
+.addListInputBlock.descInput {
+	width: 100%;
+	margin-top: 20px;
+}
+
+.descInput .addListInput.descInput {
+	width: 100%;
+	height: 100%;
+	padding: 12px 8px 8px;
+	font-size: 17px;
+	font-weight: 400;
+	color: var(--black);
+}
+
+.descInput .addListLabel.activeBlue {
+	color: #1D9BF0;
+	font-size: 13px;
+	top: 10%;
+}
+
+.descInput .addListLabel.active {
+	color: #8E99A1;
+	font-size: 13px;
+	top: 10%;
+}
+
+.descInput {
+	height: 124px;
+}
+
+.descInput .addListInput {
+	width: 100%;
+	height: 100%;
+	padding: 12px 8px 8px;
+	font-size: 17px;
+	font-weight: 400;
+	color: var(--black);
+	position: relative;
+	top: 20px;
+	resize: none;
+	outline: none;
+}
+

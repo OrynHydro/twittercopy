@@ -13,6 +13,7 @@ import {
 	TwitterCircle,
 	TwitterProfessionals,
 	PostsLoader,
+	Input,
 } from '../../../components/index'
 import { useEffect, useState, useContext } from 'react'
 import {
@@ -72,20 +73,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		? (document.body.style.overflowY = 'hidden')
 		: (document.body.style.overflowY = 'inherit')
 
-	// declaring states of custom input fields
-
-	const [activeInputName, setActiveInputName] = useState(false)
-	const [hasValueName, setHasValueName] = useState(false)
-	const [activeLabelBlueName, setActiveLabelBlueName] = useState(false)
-	const [activeLabelGrayName, setActiveLabelGrayName] = useState(false)
-	const [inputNameValue, setInputNameValue] = useState('')
-
-	const [activeInputDesc, setActiveInputDesc] = useState(false)
-	const [hasValueDesc, setHasValueDesc] = useState(false)
-	const [activeLabelBlueDesc, setActiveLabelBlueDesc] = useState(false)
-	const [activeLabelGrayDesc, setActiveLabelGrayDesc] = useState(false)
-	const [inputDescValue, setInputDescValue] = useState('')
-
 	const [activeEdit, setActiveEdit] = useState(false)
 	const [activeEditCircle, setActiveEditCircle] = useState(true)
 	const [activeEditRec, setActiveEditRec] = useState(false)
@@ -93,154 +80,65 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const [hasValue, setHasValue] = useState(false)
 	const [activeProfessionals, setActiveProfessionals] = useState(false)
 
-	const [activeInputEditName, setActiveInputEditName] = useState(false)
-	const [hasValueEditName, setHasValueEditName] = useState(false)
-	const [activeLabelBlueEditName, setActiveLabelBlueEditName] = useState(false)
-	const [activeLabelGrayEditName, setActiveLabelGrayEditName] = useState(false)
-	const [inputEditNameValue, setInputEditNameValue] = useState('')
+	// declaring states of custom input fields
 
-	const [activeInputEditBio, setActiveInputEditBio] = useState(false)
-	const [hasValueEditBio, setHasValueEditBio] = useState(false)
-	const [activeLabelBlueEditBio, setActiveLabelBlueEditBio] = useState(false)
-	const [activeLabelGrayEditBio, setActiveLabelGrayEditBio] = useState(false)
-	const [inputEditBioValue, setInputEditBioValue] = useState('')
+	const [inputName, setInputName] = useState({
+		active: false,
+		hasValue: false,
+		label: '',
+		value: '',
+		maxCount: 25,
+		name: 'Name',
+	})
 
-	const [activeInputEditWebsite, setActiveInputEditWebsite] = useState(false)
-	const [hasValueEditWebsite, setHasValueEditWebsite] = useState(false)
-	const [activeLabelBlueEditWebsite, setActiveLabelBlueEditWebsite] =
-		useState(false)
-	const [activeLabelGrayEditWebsite, setActiveLabelGrayEditWebsite] =
-		useState(false)
-	const [inputEditWebsiteValue, setInputEditWebsiteValue] = useState('')
+	const [inputDesc, setInputDesc] = useState({
+		active: false,
+		hasValue: false,
+		label: '',
+		value: '',
+		maxCount: 100,
+		name: 'Description',
+	})
 
-	const [activeInputEditLocation, setActiveInputEditLocation] = useState(false)
-	const [hasValueEditLocation, setHasValueEditLocation] = useState(false)
-	const [activeLabelBlueEditLocation, setActiveLabelBlueEditLocation] =
-		useState(false)
-	const [activeLabelGrayEditLocation, setActiveLabelGrayEditLocation] =
-		useState(false)
-	const [inputEditLocationValue, setInputEditLocationValue] = useState('')
+	const [inputEditName, setInputEditName] = useState({
+		active: false,
+		hasValue: false,
+		label: '',
+		value: '',
+		maxCount: '50',
+		name: 'Name',
+		editProfile: true,
+	})
 
-	// changes states of custom inputs
+	const [inputEditBio, setInputEditBio] = useState({
+		active: false,
+		hasValue: false,
+		label: '',
+		value: '',
+		maxCount: '160',
+		name: 'Bio',
+		editProfile: true,
+	})
 
-	useEffect(() => {
-		if (activeInputName) {
-			setActiveLabelBlueName(true)
-			setActiveLabelGrayName(false)
-		}
-		if (hasValueName && !activeInputName) {
-			setActiveLabelGrayName(true)
-			setActiveLabelBlueName(false)
-		}
-		if (!hasValueName && !activeInputName) {
-			setActiveLabelGrayName(false)
-			setActiveLabelBlueName(false)
-		}
-	}, [activeInputName, hasValueName])
+	const [inputEditLocation, setInputEditLocation] = useState({
+		active: false,
+		hasValue: false,
+		label: '',
+		value: '',
+		maxCount: '30',
+		name: 'Location',
+		editProfile: true,
+	})
 
-	useEffect(() => {
-		if (activeInputDesc) {
-			setActiveLabelBlueDesc(true)
-			setActiveLabelGrayDesc(false)
-		}
-		if (hasValueDesc && !activeInputDesc) {
-			setActiveLabelGrayDesc(true)
-			setActiveLabelBlueDesc(false)
-		}
-		if (!hasValueDesc && !activeInputDesc) {
-			setActiveLabelGrayDesc(false)
-			setActiveLabelBlueDesc(false)
-		}
-	}, [activeInputDesc, hasValueDesc])
-
-	useEffect(() => {
-		if (activeInputEditName) {
-			setActiveLabelBlueEditName(true)
-			setActiveLabelGrayEditName(false)
-		}
-		if (hasValueEditName && !activeInputEditName) {
-			setActiveLabelGrayEditName(true)
-			setActiveLabelBlueEditName(false)
-		}
-		if (!hasValueEditName && !activeInputEditName) {
-			setActiveLabelGrayEditName(false)
-			setActiveLabelBlueEditName(false)
-		}
-	}, [activeInputEditName, hasValueEditName])
-
-	useEffect(() => {
-		if (activeInputEditBio) {
-			setActiveLabelBlueEditBio(true)
-			setActiveLabelGrayEditBio(false)
-		}
-		if (hasValueEditBio && !activeInputEditBio) {
-			setActiveLabelGrayEditBio(true)
-			setActiveLabelBlueEditBio(false)
-		}
-		if (!hasValueEditBio && !activeInputEditBio) {
-			setActiveLabelGrayEditBio(false)
-			setActiveLabelBlueEditBio(false)
-		}
-	}, [activeInputEditBio, hasValueEditBio])
-
-	useEffect(() => {
-		if (activeInputEditWebsite) {
-			setActiveLabelBlueEditWebsite(true)
-			setActiveLabelGrayEditWebsite(false)
-		}
-		if (hasValueEditWebsite && !activeInputEditWebsite) {
-			setActiveLabelGrayEditWebsite(true)
-			setActiveLabelBlueEditWebsite(false)
-		}
-		if (!hasValueEditWebsite && !activeInputEditWebsite) {
-			setActiveLabelGrayEditWebsite(false)
-			setActiveLabelBlueEditWebsite(false)
-		}
-	}, [activeInputEditWebsite, hasValueEditWebsite])
-
-	useEffect(() => {
-		if (activeInputEditLocation) {
-			setActiveLabelBlueEditLocation(true)
-			setActiveLabelGrayEditLocation(false)
-		}
-		if (hasValueEditLocation && !activeInputEditLocation) {
-			setActiveLabelGrayEditLocation(true)
-			setActiveLabelBlueEditLocation(false)
-		}
-		if (!hasValueEditLocation && !activeInputEditLocation) {
-			setActiveLabelGrayEditLocation(false)
-			setActiveLabelBlueEditLocation(false)
-		}
-	}, [activeInputEditLocation, hasValueEditLocation])
-
-	const handleInputChange = (e, type) => {
-		switch (type) {
-			case 'name':
-				setHasValueName(true)
-				setInputNameValue(e.target.value)
-				break
-			case 'desc':
-				setHasValueDesc(true)
-				setInputDescValue(e.target.value)
-				break
-			case 'editName':
-				setHasValueEditName(true)
-				setInputEditNameValue(e.target.value)
-				break
-			case 'editBio':
-				setHasValueEditBio(true)
-				setInputEditBioValue(e.target.value)
-				break
-			case 'editLocation':
-				setHasValueEditLocation(true)
-				setInputEditLocationValue(e.target.value)
-				break
-			case 'editWebsite':
-				setHasValueEditWebsite(true)
-				setInputEditWebsiteValue(e.target.value)
-				break
-		}
-	}
+	const [inputEditWebsite, setInputEditWebsite] = useState({
+		active: false,
+		hasValue: false,
+		label: '',
+		value: '',
+		maxCount: '100',
+		name: 'Website',
+		editProfile: true,
+	})
 
 	// user data states
 
@@ -271,17 +169,45 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	// sets user data to inputs inside of modal window
 
 	useEffect(() => {
-		setInputEditNameValue(user?.username)
-		if (user?.username) setHasValueEditName(true)
+		setInputEditName(prev => ({
+			...prev,
+			value: user?.username,
+		}))
+		if (user?.username)
+			setInputEditName(prev => ({
+				...prev,
+				hasValue: true,
+			}))
 
-		setInputEditBioValue(user?.bio)
-		if (user?.bio) setHasValueEditBio(true)
+		setInputEditBio(prev => ({
+			...prev,
+			value: user?.bio,
+		}))
+		if (user?.bio)
+			setInputEditBio(prev => ({
+				...prev,
+				hasValue: true,
+			}))
 
-		setInputEditLocationValue(user?.location)
-		if (user?.location) setHasValueEditLocation(true)
+		setInputEditLocation(prev => ({
+			...prev,
+			value: user?.location,
+		}))
+		if (user?.location)
+			setInputEditLocation(prev => ({
+				...prev,
+				hasValue: true,
+			}))
 
-		setInputEditWebsiteValue(user?.website)
-		if (user?.website) setHasValueEditWebsite(true)
+		setInputEditWebsite(prev => ({
+			...prev,
+			value: user?.website,
+		}))
+		if (user?.website)
+			setInputEditWebsite(prev => ({
+				...prev,
+				hasValue: true,
+			}))
 	}, [user])
 
 	user
@@ -391,10 +317,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			(coverFile && !coverFile?.name.match('undefined')) ||
 			currentCover === 'none' ||
 			(user?.birth !== fullDate && activeBirthChange) ||
-			user?.username !== inputEditNameValue ||
-			user?.bio !== inputEditBioValue ||
-			user?.location !== inputEditLocationValue ||
-			user?.website !== inputEditWebsiteValue
+			user?.username !== inputEditName.value ||
+			user?.bio !== inputEditBio.value ||
+			user?.location !== inputEditLocation.value ||
+			user?.website !== inputEditWebsite.value
 		) {
 			try {
 				const formData = new FormData()
@@ -422,10 +348,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				await axios.post(`/upload`, formData)
 
 				await axios.put(`/users/${user?.userId}/update`, {
-					username: inputEditNameValue,
-					bio: inputEditBioValue,
-					location: inputEditLocationValue,
-					website: inputEditWebsiteValue,
+					username: inputEditName.value,
+					bio: inputEditBio.value,
+					location: inputEditLocation.value,
+					website: inputEditWebsite.value,
 					profilePicture: !fileName.match('undefined')
 						? fileName
 						: user?.profilePicture,
@@ -1040,207 +966,25 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						</div>
 						{/* edit name, bio, location and website */}
 						<div className='editProfileInputs'>
-							<div
-								className={
-									activeInputEditName
-										? 'addListInputBlock nameInput active'
-										: 'addListInputBlock nameInput'
-								}
-								onClick={() => setActiveInputEditName(true)}
-								onBlur={() => setActiveInputEditName(false)}
-							>
-								<span
-									className='addListInputCounter'
-									style={{ display: activeInputEditName ? 'inline' : 'none' }}
-								>
-									{hasValueEditName === false &&
-									inputEditNameValue?.length === 1
-										? 0
-										: inputEditNameValue?.length}{' '}
-									/ 50
-								</span>
-								<label
-									className={
-										activeLabelBlueEditName
-											? 'addListLabel activeBlue'
-											: activeLabelGrayEditName
-											? 'addListLabel active'
-											: 'addListLabel'
-									}
-									htmlFor='editNameInput'
-								>
-									Name
-								</label>
-								<input
-									maxLength={50}
-									value={
-										hasValueEditName === false &&
-										inputEditNameValue?.length === 1
-											? ''
-											: inputEditNameValue
-									}
-									id='editNameInput'
-									type='text'
-									className='addListInput nameInput'
-									onChange={e =>
-										e.target.value
-											? handleInputChange(e, 'editName')
-											: setHasValueEditName(false)
-									}
-								/>
-							</div>
+							<Input
+								inputState={inputEditName}
+								setInputState={setInputEditName}
+							/>
 
-							<div
-								className={
-									activeInputEditBio
-										? 'addListInputBlock nameInput active bioInput'
-										: 'addListInputBlock nameInput bioInput'
-								}
-								onClick={() => setActiveInputEditBio(true)}
-								onBlur={() => setActiveInputEditBio(false)}
-							>
-								<span
-									className='addListInputCounter'
-									style={{ display: activeInputEditBio ? 'inline' : 'none' }}
-								>
-									{hasValueEditBio === false && inputEditBioValue?.length === 1
-										? 0
-										: inputEditBioValue?.length}{' '}
-									/ 160
-								</span>
-								<label
-									className={
-										activeLabelBlueEditBio
-											? 'addListLabel activeBlue'
-											: activeLabelGrayEditBio
-											? 'addListLabel active'
-											: 'addListLabel inactive'
-									}
-									htmlFor='editBioInput'
-								>
-									Bio
-								</label>
-								<textarea
-									maxLength={160}
-									value={
-										hasValueEditBio === false && inputEditBioValue?.length === 1
-											? ''
-											: inputEditBioValue
-									}
-									id='editBioInput'
-									type='text'
-									className='addListInput nameInput'
-									onChange={e =>
-										e.target.value
-											? handleInputChange(e, 'editBio')
-											: setHasValueEditBio(false)
-									}
-								/>
-							</div>
+							<Input
+								inputState={inputEditBio}
+								setInputState={setInputEditBio}
+							/>
 
-							<div
-								className={
-									activeInputEditLocation
-										? 'addListInputBlock nameInput active'
-										: 'addListInputBlock nameInput'
-								}
-								onClick={() => setActiveInputEditLocation(true)}
-								onBlur={() => setActiveInputEditLocation(false)}
-							>
-								<span
-									className='addListInputCounter'
-									style={{
-										display: activeInputEditLocation ? 'inline' : 'none',
-									}}
-								>
-									{hasValueEditLocation === false &&
-									inputEditLocationValue?.length === 1
-										? 0
-										: inputEditLocationValue?.length}{' '}
-									/ 30
-								</span>
-								<label
-									className={
-										activeLabelBlueEditLocation
-											? 'addListLabel activeBlue'
-											: activeLabelGrayEditLocation
-											? 'addListLabel active'
-											: 'addListLabel'
-									}
-									htmlFor='editLocationInput'
-								>
-									Location
-								</label>
-								<input
-									maxLength={30}
-									value={
-										hasValueEditLocation === false &&
-										inputEditLocationValue?.length === 1
-											? ''
-											: inputEditLocationValue
-									}
-									id='editLocationInput'
-									type='text'
-									className='addListInput nameInput'
-									onChange={e =>
-										e.target.value
-											? handleInputChange(e, 'editLocation')
-											: setHasValueEditLocation(false)
-									}
-								/>
-							</div>
+							<Input
+								inputState={inputEditLocation}
+								setInputState={setInputEditLocation}
+							/>
 
-							<div
-								className={
-									activeInputEditWebsite
-										? 'addListInputBlock nameInput active'
-										: 'addListInputBlock nameInput'
-								}
-								onClick={() => setActiveInputEditWebsite(true)}
-								onBlur={() => setActiveInputEditWebsite(false)}
-							>
-								<span
-									className='addListInputCounter'
-									style={{
-										display: activeInputEditWebsite ? 'inline' : 'none',
-									}}
-								>
-									{hasValueEditWebsite === false &&
-									inputEditWebsiteValue?.length === 1
-										? 0
-										: inputEditWebsiteValue?.length}{' '}
-									/ 100
-								</span>
-								<label
-									className={
-										activeLabelBlueEditWebsite
-											? 'addListLabel activeBlue'
-											: activeLabelGrayEditWebsite
-											? 'addListLabel active'
-											: 'addListLabel'
-									}
-									htmlFor='editWebsiteInput'
-								>
-									Website
-								</label>
-								<input
-									maxLength={100}
-									value={
-										hasValueEditWebsite === false &&
-										inputEditWebsiteValue?.length === 1
-											? ''
-											: inputEditWebsiteValue
-									}
-									id='editWebsiteInput'
-									type='text'
-									className='addListInput nameInput'
-									onChange={e =>
-										e.target.value
-											? handleInputChange(e, 'editWebsite')
-											: setHasValueEditWebsite(false)
-									}
-								/>
-							</div>
+							<Input
+								inputState={inputEditWebsite}
+								setInputState={setInputEditWebsite}
+							/>
 
 							{/* edit birth date */}
 
@@ -1514,12 +1258,12 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						</div>
 						<button
 							disabled={
-								hasValueName === false && inputNameValue.length === 1
+								inputName.hasValue === false && inputName.value.length === 1
 									? true
 									: null
 							}
 							className={
-								hasValueName === false && inputNameValue.length === 1
+								inputName.hasValue === false && inputName.value.length === 1
 									? 'addListNextBtn disabled'
 									: 'addListNextBtn'
 							}
@@ -1535,90 +1279,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 					</div>
 					{/* list's name and desc */}
 					<div className='addListForm'>
-						<div
-							className={
-								activeInputName
-									? 'addListInputBlock nameInput active'
-									: 'addListInputBlock nameInput'
-							}
-							onClick={() => setActiveInputName(true)}
-							onBlur={() => setActiveInputName(false)}
-						>
-							<span
-								className='addListInputCounter'
-								style={{ display: activeInputName ? 'inline' : 'none' }}
-							>
-								{hasValueName === false && inputNameValue.length === 1
-									? 0
-									: inputNameValue.length}{' '}
-								/ 25
-							</span>
-							<label
-								className={
-									activeLabelBlueName
-										? 'addListLabel activeBlue'
-										: activeLabelGrayName
-										? 'addListLabel active'
-										: 'addListLabel'
-								}
-								htmlFor='nameInput'
-							>
-								Name
-							</label>
-							<input
-								maxLength={25}
-								id='nameInput'
-								type='text'
-								className='addListInput nameInput'
-								onChange={e =>
-									e.target.value
-										? handleInputChange(e, 'name')
-										: setHasValueName(false)
-								}
-							/>
-						</div>
-						<div
-							className={
-								activeInputDesc
-									? 'addListInputBlock descInput active'
-									: 'addListInputBlock descInput'
-							}
-							onClick={() => setActiveInputDesc(true)}
-							onBlur={() => setActiveInputDesc(false)}
-						>
-							<span
-								className='addListInputCounter'
-								style={{ display: activeInputDesc ? 'inline' : 'none' }}
-							>
-								{hasValueDesc === false && inputDescValue.length === 1
-									? 0
-									: inputDescValue.length}{' '}
-								/ 100
-							</span>
-							<label
-								className={
-									activeLabelBlueDesc
-										? 'addListLabel activeBlue'
-										: activeLabelGrayDesc
-										? 'addListLabel active'
-										: 'addListLabel'
-								}
-								htmlFor='descInput'
-							>
-								Description
-							</label>
-							<textarea
-								maxLength={100}
-								id='descInput'
-								type='text'
-								className='addListInput descInput'
-								onChange={e =>
-									e.target.value
-										? handleInputChange(e, 'desc')
-										: setHasValueDesc(false)
-								}
-							/>
-						</div>
+						<Input inputState={inputName} setInputState={setInputName} />
+
+						<Input inputState={inputDesc} setInputState={setInputDesc} />
+
 						<div className='addListRadioInputBlock'>
 							<div className='addListRadioInputBlockTextBlock'>
 								<span className='addListRadioInputBlockText'>Make private</span>

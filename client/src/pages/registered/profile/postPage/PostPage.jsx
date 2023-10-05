@@ -36,13 +36,9 @@ const PostPage = ({
 	}, [userInStorage])
 
 	const findPost = async () => {
-		await axios.get(`/posts/${params.postId}`).then(res => setPost(res.data))
-	}
-
-	const findReplies = async () => {
 		await axios
 			.get(`/posts/replies/${params.postId}`)
-			.then(res => setPostReplies(res.data))
+			.then(res => setPost(res.data))
 	}
 
 	useEffect(() => {
@@ -50,25 +46,10 @@ const PostPage = ({
 	}, [post])
 
 	useEffect(() => {
-		if (post?.replies.length !== 0 && postReplies.length === 0) findReplies()
-	}, [post?.replies.length, postReplies.length])
-
-	useEffect(() => {
 		if (params.postId !== post?._id && post) {
 			findPost()
 		}
 	}, [params.postId])
-
-	useEffect(() => {
-		if (
-			JSON.stringify(postReplies.map(item => item._id)) !==
-				JSON.stringify(post?.replies) &&
-			postReplies.length !== 0
-		) {
-			setPostReplies([])
-			findReplies()
-		}
-	}, [postReplies, post?.replies])
 
 	return (
 		<div className='postPage'>
@@ -86,7 +67,7 @@ const PostPage = ({
 						more={PF + 'icon/utility/moreHorizontal.svg'}
 						moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 						currentUser={user}
-						isUserPosts={post.user._id === user._id ? true : false}
+						isUserPosts={post.user?._id === user?._id ? true : false}
 						activeFollowBtn={activeFollowBtn}
 						setActiveFollowBtn={setActiveFollowBtn}
 						unfollow={unfollow}
@@ -94,27 +75,20 @@ const PostPage = ({
 						postPage
 					/>
 					<Share user={user} postPage originalPost={post?._id} />
-					{postReplies.length !== 0
-						? postReplies.map(reply => (
-								<Posts
-									post={reply}
-									more={PF + 'icon/utility/moreHorizontal.svg'}
-									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-									currentUser={user}
-									isUserPosts={reply.user._id === user._id ? true : false}
-									activeFollowBtn={activeFollowBtn}
-									setActiveFollowBtn={setActiveFollowBtn}
-									unfollow={unfollow}
-									setUnfollow={setUnfollow}
-								/>
-						  ))
-						: post?.replies.length !== 0 &&
-						  post?.replies.map(() => (
-								<div style={{ margin: '8px 12px' }}>
-									<Skeleton height={16} />
-									<Skeleton height={64} />
-								</div>
-						  ))}
+					{post?.replies.map((reply, index) => (
+						<Posts
+							key={index}
+							post={reply}
+							more={PF + 'icon/utility/moreHorizontal.svg'}
+							moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+							currentUser={user}
+							isUserPosts={reply.user?._id === user?._id ? true : false}
+							activeFollowBtn={activeFollowBtn}
+							setActiveFollowBtn={setActiveFollowBtn}
+							unfollow={unfollow}
+							setUnfollow={setUnfollow}
+						/>
+					))}
 				</>
 			) : (
 				<PostsLoader />
