@@ -1,6 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const Input = ({ inputState, setInputState }) => {
+	const PF = process.env.REACT_APP_PUBLIC_FOLDER
+
 	const handleInputChange = e => {
 		setInputState(prev => ({
 			...prev,
@@ -30,6 +32,8 @@ const Input = ({ inputState, setInputState }) => {
 		}
 	}, [inputState.active, inputState.hasValue])
 
+	const [hindPassword, setHindPassword] = useState(true)
+
 	return (
 		<div
 			className={
@@ -57,10 +61,23 @@ const Input = ({ inputState, setInputState }) => {
 					active: false,
 				}))
 			}
+			style={{
+				borderColor:
+					(inputState.name === 'New password' && inputState.error) ||
+					(inputState.name === 'Confirm new password' && inputState.error)
+						? '#F6444F'
+						: undefined,
+			}}
 		>
 			<span
 				className='addListInputCounter'
-				style={{ display: inputState.active ? 'inline' : 'none' }}
+				style={{
+					display: inputState.notCounter
+						? 'none'
+						: inputState.active
+						? 'inline'
+						: 'none',
+				}}
 			>
 				{inputState.hasValue === false && inputState.value?.length === 1
 					? 0
@@ -82,7 +99,15 @@ const Input = ({ inputState, setInputState }) => {
 			<input
 				maxLength={inputState.maxLength}
 				id='input'
-				type='text'
+				type={
+					inputState.name === 'Email'
+						? 'email'
+						: (inputState.name === 'Password' && hindPassword) ||
+						  (inputState.name === 'New password' && hindPassword) ||
+						  (inputState.name === 'Confirm new password' && hindPassword)
+						? 'password'
+						: 'text'
+				}
 				className='addListInput'
 				onChange={e =>
 					e.target.value
@@ -93,13 +118,32 @@ const Input = ({ inputState, setInputState }) => {
 						  }))
 				}
 				value={
-					inputState.editprofile &&
-					!inputState.hasValue &&
-					inputState.value?.length === 1
+					!inputState.hasValue && inputState.value?.length === 1
 						? ''
 						: inputState.value
 				}
 			/>
+			<div
+				className='hindPasswordBlock'
+				onClick={() => setHindPassword(!hindPassword)}
+				title='Reveal password'
+				style={{
+					display:
+						inputState.name !== 'Password' &&
+						inputState.name !== 'New password' &&
+						inputState.name !== 'Confirm new password' &&
+						'none',
+				}}
+			>
+				<img
+					src={
+						hindPassword
+							? PF + 'icon/utility/eye.svg'
+							: PF + 'icon/utility/eye-off.svg'
+					}
+					alt=''
+				/>
+			</div>
 		</div>
 	)
 }
