@@ -572,49 +572,49 @@ const RegisterForm = ({ activeForm, setActiveForm }) => {
 							Create your account
 						</h1>
 						<div
-							className='addListInputBlock'
+							className='customInputBlock'
 							style={{ marginTop: '25px' }}
 							onClick={() => setActiveBlock('createacc')}
 						>
-							<label className='addListLabel active' htmlFor='nameInput'>
+							<label className='customInputLabel active' htmlFor='nameInput'>
 								Name
 							</label>
 							<input
 								id='nameInput'
 								name='user_name'
 								type='text'
-								className='addListInput'
+								className='customInput'
 								value={inputName.value}
 							/>
 						</div>
 						<div
-							className='addListInputBlock'
+							className='customInputBlock'
 							style={{ marginTop: '25px' }}
 							onClick={() => setActiveBlock('createacc')}
 						>
-							<label className='addListLabel active' htmlFor='emailInput'>
+							<label className='customInputLabel active' htmlFor='emailInput'>
 								Email
 							</label>
 							<input
 								id='emailInput'
 								name='user_email'
 								type='email'
-								className='addListInput'
+								className='customInput'
 								value={inputEmail.value}
 							/>
 						</div>
 						<div
-							className='addListInputBlock'
+							className='customInputBlock'
 							style={{ marginTop: '25px' }}
 							onClick={() => setActiveBlock('createacc')}
 						>
-							<label className='addListLabel active' htmlFor='dateInput'>
+							<label className='customInputLabel active' htmlFor='dateInput'>
 								Date of birth
 							</label>
 							<input
 								id='dateInput'
 								type='text'
-								className='addListInput'
+								className='customInput'
 								value={date}
 							/>
 						</div>

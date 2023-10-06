@@ -1,4 +1,4 @@
-.addListInputBlock {
+.customInputBlock {
 	width: 100%;
 	height: 58px;
 	border: 1px solid #CFD9DE;
@@ -8,20 +8,23 @@
 	transition: border-color 0.2s ease;
 }
 
-.addListInputBlock.active {
+.customInputBlock.active {
 	border: 2px solid #1D9BF0;
 }
 
-.addListInput {
+.customInput {
 	width: 100%;
 	height: 100%;
 	padding: 12px 8px 8px;
 	font-size: 17px;
 	font-weight: 400;
 	color: var(--black);
+	resize: none;
+	outline: none;
 }
 
-.addListLabel {
+
+.customInputLabel {
 	position: absolute;
 	left: 8px;
 	top: 50%;
@@ -33,19 +36,19 @@
 	transition: 0.2s ease;
 }
 
-.addListLabel.activeBlue {
+.customInputLabel.activeBlue {
 	color: #1D9BF0;
 	font-size: 13px;
 	top: 20%;
 }
 
-.addListLabel.active {
+.customInputLabel.active {
 	color: #8E99A1;
 	font-size: 13px;
 	top: 20%;
 }
 
-.addListInputCounter {
+.customInputCounter {
 	position: absolute;
 	right: 5px;
 	top: 5px;
@@ -55,12 +58,12 @@
 	color: var(--gray);
 }
 
-.addListInputBlock.descInput {
+.customInputBlock.descInput {
 	width: 100%;
 	margin-top: 20px;
 }
 
-.descInput .addListInput.descInput {
+.descInput .customInput.descInput {
 	width: 100%;
 	height: 100%;
 	padding: 12px 8px 8px;
@@ -69,13 +72,13 @@
 	color: var(--black);
 }
 
-.descInput .addListLabel.activeBlue {
+.descInput .customInputLabel.activeBlue {
 	color: #1D9BF0;
 	font-size: 13px;
 	top: 10%;
 }
 
-.descInput .addListLabel.active {
+.descInput .customInputLabel.active {
 	color: #8E99A1;
 	font-size: 13px;
 	top: 10%;
@@ -85,7 +88,7 @@
 	height: 124px;
 }
 
-.descInput .addListInput {
+.descInput .customInput {
 	width: 100%;
 	height: 100%;
 	padding: 12px 8px 8px;
@@ -98,3 +101,51 @@
 	outline: none;
 }
 
+.placeholderText {
+	font-size: 22px;
+	font-weight: 400;
+	line-height: 20px;
+	color: #8a9095;
+	position: absolute;
+	left: 6px;
+	top: 20px;
+}
+
+.customInput.inputWithPlaceholder {
+	padding-left: 30px;
+}
+
+.hindPasswordBlock {
+	width: 26px;
+	height: 26px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	transition: 0.2s ease;
+	cursor: pointer;
+	position: absolute;
+	right: 10px;
+	bottom: 5px;
+}
+
+.hindPasswordBlock:hover {
+	background-color: #E7E7E8;
+}
+
+.customInputBlock.disabled {
+	background-color: #f7f7f8;
+	border: none;
+}
+
+.customInputBlock.disabled label {
+	color: #A9B1B8;
+}
+
+.customInputBlock.disabled input {
+	color: #A9B1B8;
+}
+
+.customInputLabel.error {
+	color: #F6444F !important;
+}

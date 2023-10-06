@@ -174,10 +174,6 @@
     margin-top: 20px;
 }
 
-.addListLabel.error {
-    color: #F6444F !important;
-}
-
 .errorMessage {
     font-size: 13px;
     font-weight: 400;
@@ -404,34 +400,3 @@
     width: 350px;
 }
 
-.hindPasswordBlock {
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: 0.2s ease;
-    cursor: pointer;
-    position: absolute;
-    right: 10px;
-    bottom: 5px;
-}
-
-.hindPasswordBlock:hover {
-    background-color: #E7E7E8;
-}
-
-.placeholderText {
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 20px;
-    color: #8a9095;
-    position: absolute;
-    left: 6px;
-    top: 20px;
-}
-
-.addListInput.inputWithPlaceholder {
-    padding-left: 30px;
-}

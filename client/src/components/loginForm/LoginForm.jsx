@@ -354,11 +354,11 @@ const LoginForm = ({ activeForm, setActiveForm }) => {
 							Enter your password
 						</h1>
 						<div
-							className='addListInputBlock disabled'
+							className='customInputBlock disabled'
 							style={{ marginTop: '20px' }}
 						>
 							<label
-								className='addListLabel active'
+								className='customInputLabel active'
 								style={{ cursor: 'default' }}
 							>
 								Email
@@ -367,7 +367,7 @@ const LoginForm = ({ activeForm, setActiveForm }) => {
 								disabled
 								value={inputEmail.value}
 								type='text'
-								className='addListInput'
+								className='customInput'
 							/>
 						</div>
 						<div style={{ marginTop: '20px' }}>

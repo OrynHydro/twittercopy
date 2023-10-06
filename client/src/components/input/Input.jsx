@@ -1,5 +1,8 @@
+import './input.css'
+
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 
 const Input = ({ inputState, setInputState }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -75,16 +78,16 @@ const Input = ({ inputState, setInputState }) => {
 		<div
 			className={
 				inputState.name === 'Description' && inputState.active
-					? 'addListInputBlock descInput active'
+					? 'customInputBlock descInput active'
 					: inputState.name === 'Description' && !inputState.active
-					? 'addListInputBlock descInput'
+					? 'customInputBlock descInput'
 					: inputState.name === 'Bio' && inputState.active
-					? 'addListInputBlock bioInput active'
+					? 'customInputBlock bioInput active'
 					: inputState.name === 'Bio' && !inputState.active
-					? 'addListInputBlock bioInput'
+					? 'customInputBlock bioInput'
 					: inputState.active
-					? 'addListInputBlock active'
-					: 'addListInputBlock'
+					? 'customInputBlock active'
+					: 'customInputBlock'
 			}
 			onClick={() =>
 				setInputState(prev => ({
@@ -111,7 +114,7 @@ const Input = ({ inputState, setInputState }) => {
 			}}
 		>
 			<span
-				className='addListInputCounter'
+				className='customInputCounter'
 				style={{
 					display: inputState.notCounter
 						? 'none'
@@ -134,14 +137,14 @@ const Input = ({ inputState, setInputState }) => {
 			<label
 				className={
 					inputState.error
-						? 'addListLabel active error'
+						? 'customInputLabel active error'
 						: inputState.label === 'blue'
-						? 'addListLabel activeBlue'
+						? 'customInputLabel activeBlue'
 						: inputState.label === 'gray'
-						? 'addListLabel active'
+						? 'customInputLabel active'
 						: inputState.name !== 'User ID'
-						? 'addListLabel'
-						: 'addListLabel active'
+						? 'customInputLabel'
+						: 'customInputLabel active'
 				}
 				htmlFor={inputState.name}
 			>
@@ -161,8 +164,8 @@ const Input = ({ inputState, setInputState }) => {
 				}
 				className={
 					inputState.name === 'User ID'
-						? 'addListInput inputWithPlaceholder'
-						: 'addListInput'
+						? 'customInput inputWithPlaceholder'
+						: 'customInput'
 				}
 				onChange={e =>
 					e.target.value
@@ -177,6 +180,27 @@ const Input = ({ inputState, setInputState }) => {
 						? ''
 						: inputState.value
 				}
+				style={{
+					display: inputState.name === 'Add a description here' && 'none',
+				}}
+			/>
+			<textarea
+				maxLength={160}
+				id='nameInput'
+				type='text'
+				className='customInput'
+				onChange={e =>
+					e.target.value
+						? handleInputChange(e)
+						: setInputState(prev => ({
+								...prev,
+								hasValue: false,
+						  }))
+				}
+				style={{
+					display: inputState.name !== 'Add a description here' && 'none',
+				}}
+				TextareaAutosize
 			/>
 			<div
 				className='hindPasswordBlock'

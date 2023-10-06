@@ -158,19 +158,6 @@
     width: 600px !important;
 }
 
-.addListInputBlock.disabled {
-    background-color: #f7f7f8;
-    border: none;
-}
-
-.addListInputBlock.disabled label {
-    color: #A9B1B8;
-}
-
-.addListInputBlock.disabled input {
-    color: #A9B1B8;
-}
-
 .formContainer .link {
     font-size: 13px;
     font-weight: 400;
