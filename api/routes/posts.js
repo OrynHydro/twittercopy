@@ -93,7 +93,7 @@ router.get('/allUserPosts/:userId', async (req, res) => {
 		const user = await User.findOne({ userId: '@' + req.params.userId })
 		const posts = await Post.find({
 			userId: user._id,
-			originalPost: null,
+			// originalPost: null,
 		}).populate('user')
 		// const retweetedPosts = await Post.find({ retweets: [user._id, ...anotherRetweets] })
 		res.status(200).json(posts)
