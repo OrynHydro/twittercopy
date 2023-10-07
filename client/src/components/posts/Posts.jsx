@@ -86,9 +86,10 @@ const PostMoreItem = ({
 					className={
 						title === 'Delete' ? 'popupWindowItem special' : 'popupWindowItem'
 					}
-					onClick={() => {
+					onClick={e => {
 						title === 'Delete' && setDeleteModal(true)
 						title === 'Delete' && setPopupWindow(false)
+						e.preventDefault()
 					}}
 				>
 					{title === 'Highlight on your profile' ||
@@ -107,7 +108,13 @@ const PostMoreItem = ({
 					)}
 				</div>
 			) : (
-				<div className={'popupWindowItem'} onClick={() => followUser(title)}>
+				<div
+					className={'popupWindowItem'}
+					onClick={e => {
+						followUser(title)
+						e.preventDefault()
+					}}
+				>
 					<>{icon}</>
 					{title === 'Add/remove' ? (
 						<span>

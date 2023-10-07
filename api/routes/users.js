@@ -4,6 +4,7 @@ const router = require('express').Router()
 const Post = require('../models/Post')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
 
 // update user
 
@@ -225,6 +226,23 @@ router.get('/userLikedPosts/:dbId', async (req, res) => {
 		res.status(200).json(likedPostsWithAuthors)
 	} catch (err) {
 		res.status(500).json(err)
+	}
+})
+
+// get user's replies with original posts
+router.get('/userReplies/:userId', async (req, res) => {
+	const userId = new mongoose.Types.ObjectId(req.params.userId) // Преобразуйте userId в ObjectId
+
+	try {
+		const postsWithUserReplies = await Post.find({
+			replies: {
+				$in: await Post.find({ userId }).distinct('_id'),
+			},
+		}).populate('replies')
+
+		res.status(200).json(postsWithUserReplies)
+	} catch (error) {
+		res.status(500).json(error)
 	}
 })
 

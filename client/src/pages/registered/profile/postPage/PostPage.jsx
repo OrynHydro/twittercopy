@@ -6,7 +6,6 @@ import axios from 'axios'
 import { Posts, PostsLoader, Share } from '../../../../components'
 import { UserContext } from '../../../../context/UserContext'
 import { useLocalStorage } from '../../../../utils/useLocalStorage'
-import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 const PostPage = ({
@@ -50,6 +49,55 @@ const PostPage = ({
 			findPost()
 		}
 	}, [params.postId])
+
+	const [replies, setReplies] = useState([])
+
+	// const findReplies = async () => {
+	// 	await axios
+	// 		.get(`/users/userReplies/${user?._id}`)
+	// 		.then(res => setReplies(res.data))
+	// }
+
+	// useEffect(() => {
+	// 	if (replies.length === 0) findReplies()
+	// }, [replies.length])
+
+	// useEffect(() => {
+	// 	if (replies.length > 0) {
+	// 		const postObject = createPostObject(replies)
+
+	// 		console.log(postObject)
+	// 	}
+	// }, [replies.length])
+
+	// function createPostObject(posts) {
+	// 	const postMap = new Map()
+	// 	posts.forEach(post => postMap.set(post._id, post))
+
+	// 	function replaceIds(post) {
+	// 		if (!post) return
+	// 		if (post.replies.length > 0) {
+	// 			post.replies = post.replies
+	// 				.map(replyId => {
+	// 					const replyPost = postMap.get(replyId)
+	// 					if (replyPost) {
+	// 						return replaceIds(replyPost)
+	// 					}
+	// 					return null
+	// 				})
+	// 				.filter(Boolean)
+	// 		}
+	// 		return post
+	// 	}
+
+	// 	posts.forEach(post => {
+	// 		if (post.originalPost) {
+	// 			post.originalPost = replaceIds(post.originalPost)
+	// 		}
+	// 	})
+
+	// 	return posts
+	// }
 
 	return (
 		<div className='postPage'>

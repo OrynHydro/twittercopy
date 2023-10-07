@@ -60,7 +60,9 @@ router.put('/:id/like', async (req, res) => {
 // get post
 router.get('/:id', async (req, res) => {
 	try {
-		const post = await Post.findById(req.params.id).populate('user')
+		const post = await Post.findById(req.params.id)
+			.populate('user')
+			.populate('originalPost')
 		res.status(200).json(post)
 	} catch (err) {
 		res.status(500).json(err)
