@@ -2,7 +2,6 @@ import './input.css'
 
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import TextareaAutosize from 'react-textarea-autosize'
 
 const Input = ({ inputState, setInputState }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER

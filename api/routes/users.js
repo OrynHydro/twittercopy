@@ -231,14 +231,18 @@ router.get('/userLikedPosts/:dbId', async (req, res) => {
 
 // get user's replies with original posts
 router.get('/userReplies/:userId', async (req, res) => {
-	const userId = new mongoose.Types.ObjectId(req.params.userId) // Преобразуйте userId в ObjectId
-
+	const userId = new mongoose.Types.ObjectId(req.params.userId)
 	try {
 		const postsWithUserReplies = await Post.find({
 			replies: {
 				$in: await Post.find({ userId }).distinct('_id'),
 			},
-		}).populate('replies')
+		}).populate('user')
+
+		// Для каждого поста в массиве postsWithUserReplies, выполните populate('replies.user')
+		for (const post of postsWithUserReplies) {
+			await post.populate({ path: 'replies', populate: { path: 'user' } })
+		}
 
 		res.status(200).json(postsWithUserReplies)
 	} catch (error) {

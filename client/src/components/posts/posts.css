@@ -457,3 +457,7 @@
 .buttonBlock .cancelBtn:hover {
     background-color: #E7E7E8;
 }
+
+.homePostBottom.replyBottom {
+    width: 425px;
+}

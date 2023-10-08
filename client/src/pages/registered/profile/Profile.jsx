@@ -522,6 +522,16 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		)
 	}, [unfollow])
 
+	const [replies, setReplies] = useState([])
+
+	const findUserReplies = async () => {
+		setActivePosts('replies')
+		setReplies([])
+		await axios
+			.get(`/users/userReplies/${user?._id}`)
+			.then(comments => setReplies(comments.data))
+	}
+
 	return (
 		<div style={{ display: 'flex' }}>
 			{/* sidebar with modal windows' states */}
@@ -843,7 +853,16 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							>
 								Tweets
 							</div>
-							<div className='profileSwitchItem'>Replies</div>
+							<div
+								className={
+									activePosts === 'replies'
+										? 'profileSwitchItem active'
+										: 'profileSwitchItem'
+								}
+								onClick={findUserReplies}
+							>
+								Replies
+							</div>
 							<div className='profileSwitchItem'>Media</div>
 							<div
 								className={
@@ -1202,9 +1221,55 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								setUnfollow={setUnfollow}
 							/>
 						))
+					) : activePosts === 'replies' && replies.length !== 0 ? (
+						replies?.map((post, index) => (
+							<>
+								<Posts
+									key={index}
+									post={post}
+									more={PF + 'icon/utility/moreHorizontal.svg'}
+									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+									currentUser={user}
+									isUserPosts={post.user._id === user?._id ? true : false}
+									activeFollowBtn={activeFollowBtn}
+									setActiveFollowBtn={setActiveFollowBtn}
+									unfollow={unfollow}
+									setUnfollow={setUnfollow}
+									isReply={'original'}
+								/>
+								{post.replies.map(
+									(reply, index2) =>
+										reply.userId === user._id && (
+											<div style={{ position: 'relative' }}>
+												<hr className='verticalLine' />
+												<Posts
+													key={index + index2}
+													post={reply}
+													more={PF + 'icon/utility/moreHorizontal.svg'}
+													moreActive={
+														PF + 'icon/utility/moreHorizontalActive.svg'
+													}
+													currentUser={user}
+													isUserPosts={
+														reply.user._id === user?._id ? true : false
+													}
+													activeFollowBtn={activeFollowBtn}
+													setActiveFollowBtn={setActiveFollowBtn}
+													unfollow={unfollow}
+													setUnfollow={setUnfollow}
+													isReply={'reply'}
+												/>
+											</div>
+										)
+								)}
+								<hr className='postPageHr' style={{ marginTop: '20px' }} />
+							</>
+						))
 					) : activePosts === 'tweets' && userPosts?.length === 0 ? (
 						<PostsLoader />
 					) : activePosts === 'likes' && likedPosts?.length === 0 ? (
+						<PostsLoader />
+					) : activePosts === 'replies' && replies?.length === 0 ? (
 						<PostsLoader />
 					) : (
 						<div>Nothing to see here yet</div>

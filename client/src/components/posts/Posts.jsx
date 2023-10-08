@@ -150,6 +150,7 @@ const Posts = ({
 	unfollow,
 	setUnfollow,
 	postPage,
+	isReply,
 }) => {
 	// declaring state of more icon
 
@@ -584,7 +585,15 @@ const Posts = ({
 			ref={ref}
 			to={`/${post?.user.userId}/status/${post?._id}`}
 		>
-			<div className='homePostContainer'>
+			<div
+				className='homePostContainer'
+				style={{
+					paddingLeft: isReply === 'reply' && '75px',
+				}}
+			>
+				{isReply === 'original' && (
+					<hr className='verticalLine' style={{ top: '70px' }} />
+				)}
 				{/* user avatar, name, id and when post was created */}
 				<div className='homePostTop'>
 					<div
@@ -592,7 +601,7 @@ const Posts = ({
 						onMouseOver={() => setOpenModal(true)}
 						onMouseOut={() => setOpenModal(false)}
 					>
-						<Link to={`/${post?.user.userId}`}>
+						<Link to={`/${post?.user.userId}`} style={{ zIndex: '100' }}>
 							<img
 								className='homePostUserImg'
 								src={
@@ -700,7 +709,13 @@ const Posts = ({
 					)}
 				</div>
 				{/* post icons  */}
-				<div className='homePostBottom'>
+				<div
+					className={
+						isReply === 'reply'
+							? 'homePostBottom replyBottom'
+							: 'homePostBottom'
+					}
+				>
 					{PostIcons?.map(i => {
 						return (
 							<Posticons

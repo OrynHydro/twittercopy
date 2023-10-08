@@ -1098,3 +1098,14 @@
 .editProfileButtons.following.blackButton:hover {
     background-color: #272C30;
 }
+
+.verticalLine {
+    /* transform: rotate(90deg); */
+    width: 1px;
+    border-radius: 8px;
+    height: 128px;
+    background-color: #dbdada;
+    position: absolute;
+    z-index: 10;
+    left: 35px;
+}
