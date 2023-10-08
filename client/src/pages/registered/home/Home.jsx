@@ -179,29 +179,15 @@ const Home = ({ isLoading, setIsLoading }) => {
 					{loadingPosts ? (
 						<PostsLoader />
 					) : (
-						userPosts.map(
-							(post, index) => (
-								<Posts
-									key={index}
-									post={post}
-									more={PF + 'icon/utility/moreHorizontal.svg'}
-									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-									currentUser={user}
-								/>
-							)
-
-							// ) : (
-							// 	post[0].map((multiplePosts, multipleIndex) => (
-							// 		<Posts
-							// 			key={multipleIndex}
-							// 			post={[multiplePosts, post[1]]}
-							// 			more={PF + 'icon/utility/moreHorizontal.svg'}
-							// 			moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-							// 			currentUser={user}
-							// 		/>
-							// 	))
-							// )
-						)
+						userPosts.map((post, index) => (
+							<Posts
+								key={index}
+								post={post}
+								more={PF + 'icon/utility/moreHorizontal.svg'}
+								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+								currentUser={user}
+							/>
+						))
 					)}
 				</div>
 			</div>

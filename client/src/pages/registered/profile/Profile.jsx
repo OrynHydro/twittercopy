@@ -219,6 +219,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const [userPosts, setUserPosts] = useState([])
 
 	const findUserPosts = async () => {
+		setLoadingPosts(true)
 		setActivePosts('tweets')
 		setUserPosts([])
 		try {
@@ -233,6 +234,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		} catch (err) {
 			console.log(err)
 		}
+		setLoadingPosts(false)
 	}
 
 	useEffect(() => {
@@ -398,16 +400,24 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const [likedPosts, setLikedPosts] = useState([])
 
 	const findLikedPosts = async () => {
+		setLoadingPosts(true)
 		setActivePosts('likes')
 		setLikedPosts([])
-		const getUserLikedPosts = async () => {
-			const userLikedPosts = await axios.get(
-				`/users/userLikedPosts/${anotherUser?._id}`
-			)
-			setLikedPosts(userLikedPosts.data)
-		}
-		getUserLikedPosts()
+		await axios
+			.get(`/users/userLikedPosts/${anotherUser?._id}`)
+			.then(res => setLikedPosts(res.data))
+		setLoadingPosts(false)
 	}
+
+	// const findUserReplies = async () => {
+	// 	setLoadingPosts(true)
+	// 	setActivePosts('replies')
+	// 	setReplies([])
+	// 	await axios
+	// 		.get(`/users/userReplies/${user?._id}`)
+	// 		.then(comments => setReplies(comments.data))
+	// 	setLoadingPosts(false)
+	// }
 
 	// block with changing user birth
 
@@ -525,12 +535,16 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const [replies, setReplies] = useState([])
 
 	const findUserReplies = async () => {
+		setLoadingPosts(true)
 		setActivePosts('replies')
 		setReplies([])
 		await axios
 			.get(`/users/userReplies/${user?._id}`)
 			.then(comments => setReplies(comments.data))
+		setLoadingPosts(false)
 	}
+
+	const [loadingPosts, setLoadingPosts] = useState(true)
 
 	return (
 		<div style={{ display: 'flex' }}>
@@ -1188,7 +1202,9 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								: 'block',
 					}}
 				>
-					{activePosts === 'tweets' && userPosts?.length !== 0 ? (
+					{loadingPosts ? (
+						<PostsLoader />
+					) : activePosts === 'tweets' && userPosts?.length !== 0 ? (
 						userPosts.map(
 							(post, index) =>
 								post?.originalPost === null && (
@@ -1221,7 +1237,9 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								setUnfollow={setUnfollow}
 							/>
 						))
-					) : activePosts === 'replies' && replies.length !== 0 ? (
+					) : (
+						activePosts === 'replies' &&
+						replies.length !== 0 &&
 						replies?.map((post, index) => (
 							<>
 								<Posts
@@ -1265,14 +1283,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								<hr className='postPageHr' style={{ marginTop: '20px' }} />
 							</>
 						))
-					) : activePosts === 'tweets' && userPosts?.length === 0 ? (
-						<PostsLoader />
-					) : activePosts === 'likes' && likedPosts?.length === 0 ? (
-						<PostsLoader />
-					) : activePosts === 'replies' && replies?.length === 0 ? (
-						<PostsLoader />
-					) : (
-						<div>Nothing to see here yet</div>
 					)}
 				</div>
 			</div>
