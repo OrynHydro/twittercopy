@@ -5,7 +5,7 @@ import './share.css'
 
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import TextareaAutosize from 'react-textarea-autosize'
 
@@ -122,6 +122,49 @@ const Share = ({
 			}
 		}
 	}
+
+	const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg']
+
+	const videoExtensions = ['mp4', 'webm', 'ogv', 'avi', 'mkv', 'mov']
+
+	const [inputMediaState, setInputMediaState] = useState({
+		isAcceptVideos: true,
+		hasVideo: false,
+	})
+
+	useEffect(() => {
+		if (uploadedFiles.length > 0) {
+			if (
+				uploadedFiles.find(item =>
+					videoExtensions.includes(item[0]?.name.split('.')[1])
+				)
+			) {
+				setInputMediaState(prev => ({
+					...prev,
+					hasVideo: true,
+				}))
+			} else if (
+				uploadedFiles.filter(item =>
+					imageExtensions.includes(item[0]?.name.split('.')[1])
+				)
+			) {
+				setInputMediaState(prev => ({
+					...prev,
+					isAcceptVideos: false,
+				}))
+			}
+		} else {
+			setInputMediaState(prev => ({
+				...prev,
+				isAcceptVideos: true,
+				hasVideo: false,
+			}))
+		}
+	}, [uploadedFiles.length])
+
+	useEffect(() => {
+		if (uploadedFiles.at(-1)?.length === 0) uploadedFiles.pop()
+	}, [uploadedFiles])
 
 	return (
 		// making post form
@@ -349,13 +392,25 @@ const Share = ({
 							>
 								<span>&#10005;</span>
 							</div>
-							<img
-								className='shareImg'
-								src={URL.createObjectURL(
-									uploadedFiles[uploadedFiles.indexOf(item)][0]
-								)}
-								alt=''
-							/>
+							{imageExtensions.includes(item[0]?.name.split('.')[1]) ? (
+								<img
+									className='shareImg'
+									src={URL.createObjectURL(
+										uploadedFiles[uploadedFiles.indexOf(item)][0]
+									)}
+									alt=''
+								/>
+							) : (
+								videoExtensions.includes(item[0]?.name.split('.')[1]) && (
+									<video className='shareImg' autoPlay loop>
+										<source
+											src={URL.createObjectURL(
+												uploadedFiles[uploadedFiles.indexOf(item)][0]
+											)}
+										/>
+									</video>
+								)
+							)}
 						</div>
 					))}
 				</div>
@@ -447,10 +502,21 @@ const Share = ({
 					className='homePostBlockIcons'
 					onClick={() => setActiveInput(true)}
 				>
-					<label htmlFor='imgInput' className='homePostBlockIconBlock'>
+					<label
+						htmlFor='imgInput'
+						className={
+							inputMediaState.hasVideo
+								? 'homePostBlockIconBlock disabled'
+								: 'homePostBlockIconBlock'
+						}
+					>
 						<img
 							className='homePostBlockIcon'
-							src={PF + 'icon/common/image.svg'}
+							src={
+								inputMediaState.hasVideo
+									? PF + 'icon/common/imageDisabled.svg'
+									: PF + 'icon/common/image.svg'
+							}
 							alt=''
 						/>
 					</label>
@@ -460,6 +526,11 @@ const Share = ({
 						onChange={e => setUploadedFiles([...uploadedFiles, e.target.files])}
 						multiple
 						hidden
+						accept={
+							!inputMediaState.isAcceptVideos &&
+							imageExtensions.map(ext => `image/${ext}`).join(',')
+						}
+						disabled={inputMediaState.hasVideo}
 					/>
 					<div className='homePostBlockIconBlock'>
 						<img

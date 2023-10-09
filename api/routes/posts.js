@@ -192,17 +192,4 @@ router.get(`/replies/:originalPostId`, async (req, res) => {
 	}
 })
 
-// // get replies
-// router.get(`/replies/:originalPostId`, async (req, res) => {
-// 	try {
-// 		const replies = await Post.find({
-// 			originalPost: req.params.originalPostId,
-// 		}).populate('user')
-
-// 		res.status(200).json(replies)
-// 	} catch (err) {
-// 		res.status(500).json(err)
-// 	}
-// })
-
 module.exports = router

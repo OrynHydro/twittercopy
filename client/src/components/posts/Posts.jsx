@@ -315,6 +315,10 @@ const Posts = ({
 		}
 	}
 
+	const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg']
+
+	const videoExtensions = ['mp4', 'webm', 'ogv', 'avi', 'mkv', 'mov']
+
 	if (postPage)
 		return (
 			<div className='homePost postPagePost' ref={ref}>
@@ -405,13 +409,29 @@ const Posts = ({
 										: ''
 								}
 							>
-								{post?.img?.map((link, id) => (
-									<img
-										src={link && PF + 'storage/' + link}
-										onClick={() => setFullScreenImg([link, post])}
-										className='homePostImg'
-										key={id}
-									/>
+								{post?.img?.map((link, index) => (
+									<>
+										{imageExtensions.includes(link.split('.')[1]) ? (
+											<img
+												src={link && PF + 'storage/' + link}
+												onClick={() => setFullScreenImg([link, post])}
+												className='homePostImg'
+												key={index}
+											/>
+										) : (
+											videoExtensions.includes(link.split('.')[1]) && (
+												<video
+													className='homePostImg'
+													autoPlay
+													loop
+													key={index}
+													onClick={() => setFullScreenImg([link, post])}
+												>
+													<source src={link && PF + 'storage/' + link} />
+												</video>
+											)
+										)}
+									</>
 								))}
 							</div>
 						)}
@@ -469,13 +489,28 @@ const Posts = ({
 							speed={500}
 							onClick={() => setFullScreenImg(null)}
 						>
-							{post.img?.map(item => (
+							{post.img?.map((item, index) => (
 								<SwiperSlide>
-									<img
-										src={PF + 'storage/' + item}
-										className='fullScreenImgBlock'
-										alt=''
-									/>
+									<>
+										{imageExtensions.includes(item.split('.')[1]) ? (
+											<img
+												src={PF + 'storage/' + item}
+												className='fullScreenImgBlock'
+												key={index}
+											/>
+										) : (
+											videoExtensions.includes(item.split('.')[1]) && (
+												<video
+													className='fullScreenImgBlock'
+													autoPlay
+													loop
+													key={index}
+												>
+													<source src={PF + 'storage/' + item} />
+												</video>
+											)
+										)}
+									</>
 								</SwiperSlide>
 							))}
 						</Swiper>
@@ -697,13 +732,29 @@ const Posts = ({
 							}
 							onClick={e => e.preventDefault()}
 						>
-							{post?.img?.map((link, id) => (
-								<img
-									src={link && PF + 'storage/' + link}
-									onClick={() => setFullScreenImg([link, post])}
-									className='homePostImg'
-									key={id}
-								/>
+							{post?.img?.map((link, index) => (
+								<>
+									{imageExtensions.includes(link.split('.')[1]) ? (
+										<img
+											src={link && PF + 'storage/' + link}
+											onClick={() => setFullScreenImg([link, post])}
+											className='homePostImg'
+											key={index}
+										/>
+									) : (
+										videoExtensions.includes(link.split('.')[1]) && (
+											<video
+												className='homePostImg'
+												autoPlay
+												loop
+												key={index}
+												onClick={() => setFullScreenImg([link, post])}
+											>
+												<source src={link && PF + 'storage/' + link} />
+											</video>
+										)
+									)}
+								</>
 							))}
 						</div>
 					)}
@@ -755,13 +806,28 @@ const Posts = ({
 						speed={500}
 						onClick={() => setFullScreenImg(null)}
 					>
-						{post.img?.map(item => (
+						{post.img?.map((item, index) => (
 							<SwiperSlide>
-								<img
-									src={PF + 'storage/' + item}
-									className='fullScreenImgBlock'
-									alt=''
-								/>
+								<>
+									{imageExtensions.includes(item.split('.')[1]) ? (
+										<img
+											src={PF + 'storage/' + item}
+											className='fullScreenImgBlock'
+											key={index}
+										/>
+									) : (
+										videoExtensions.includes(item.split('.')[1]) && (
+											<video
+												className='fullScreenImgBlock'
+												autoPlay
+												loop
+												key={index}
+											>
+												<source src={PF + 'storage/' + item} />
+											</video>
+										)
+									)}
+								</>
 							</SwiperSlide>
 						))}
 					</Swiper>

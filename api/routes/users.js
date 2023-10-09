@@ -250,6 +250,18 @@ router.get('/userReplies/:userId', async (req, res) => {
 	}
 })
 
-// export users router
+// get user posts with media
+router.get(`/media/:userDbId`, async (req, res) => {
+	try {
+		const postsWithMedia = await Post.find({
+			userId: req.params.userDbId,
+			img: { $ne: [] },
+			originalPost: null,
+		}).populate('user')
+		res.status(200).json(postsWithMedia)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
 
 module.exports = router

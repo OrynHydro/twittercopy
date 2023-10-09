@@ -546,6 +546,18 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	const [loadingPosts, setLoadingPosts] = useState(true)
 
+	const [postsWithMedia, setPostsWithMedia] = useState([])
+
+	const findUserPostsWithMedia = async () => {
+		setLoadingPosts(true)
+		setActivePosts('media')
+		setPostsWithMedia([])
+		await axios
+			.get(`/users/media/${user?._id}`)
+			.then(posts => setPostsWithMedia(posts.data))
+		setLoadingPosts(false)
+	}
+
 	return (
 		<div style={{ display: 'flex' }}>
 			{/* sidebar with modal windows' states */}
@@ -588,6 +600,14 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							{location.pathname === `/${params.userId}/following` ||
 							location.pathname === `/${params.userId}/followers`
 								? `${params.userId}`
+								: activePosts === 'media'
+								? `${postsWithMedia.length} Photos & videos`
+								: activePosts === 'likes' && likedPosts.length === 1
+								? `${likedPosts.length} Like`
+								: activePosts === 'likes' && likedPosts.length > 1
+								? `${likedPosts.length} Likes`
+								: activePosts === 'likes' && likedPosts.length === 0
+								? `0 Likes`
 								: `${userPosts.length} Tweets`}
 						</span>
 					</div>
@@ -877,7 +897,16 @@ const Profile = ({ isLoading, setIsLoading }) => {
 							>
 								Replies
 							</div>
-							<div className='profileSwitchItem'>Media</div>
+							<div
+								className={
+									activePosts === 'media'
+										? 'profileSwitchItem active'
+										: 'profileSwitchItem'
+								}
+								onClick={findUserPostsWithMedia}
+							>
+								Media
+							</div>
 							<div
 								className={
 									activePosts === 'likes'
@@ -1237,9 +1266,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								setUnfollow={setUnfollow}
 							/>
 						))
-					) : (
-						activePosts === 'replies' &&
-						replies.length !== 0 &&
+					) : activePosts === 'replies' && replies.length !== 0 ? (
 						replies?.map((post, index) => (
 							<>
 								<Posts
@@ -1282,6 +1309,23 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								)}
 								<hr className='postPageHr' style={{ marginTop: '20px' }} />
 							</>
+						))
+					) : (
+						activePosts === 'media' &&
+						postsWithMedia.length !== 0 &&
+						postsWithMedia?.map((post, index) => (
+							<Posts
+								key={index}
+								post={post}
+								more={PF + 'icon/utility/moreHorizontal.svg'}
+								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+								currentUser={user}
+								isUserPosts={post.user._id === user?._id ? true : false}
+								activeFollowBtn={activeFollowBtn}
+								setActiveFollowBtn={setActiveFollowBtn}
+								unfollow={unfollow}
+								setUnfollow={setUnfollow}
+							/>
 						))
 					)}
 				</div>
