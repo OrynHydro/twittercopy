@@ -1108,3 +1108,36 @@
     z-index: 10;
     left: 35px;
 }
+
+
+
+.accNotExistWrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 80px 0px 1120px;
+}
+
+.accNotExistContainer {
+    position: relative;
+    width: 325px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+}
+
+.accNotExistContainer h1 {
+    font-size: 31px;
+    font-weight: 800;
+    line-height: 36px;
+    color: var(--black);
+}
+
+.accNotExistContainer p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}

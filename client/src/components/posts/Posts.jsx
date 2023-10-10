@@ -23,6 +23,8 @@ import 'swiper/css/navigation'
 import { useInView } from 'react-intersection-observer'
 import { useOutsideClick } from '../../utils/useOutsideClick'
 import UserPopup from '../userPopup/UserPopup'
+import { DefaultPlayer as Video } from 'react-html5video'
+import 'react-html5video/dist/styles.css'
 
 const PostMoreItem = ({
 	title,
@@ -420,7 +422,7 @@ const Posts = ({
 											/>
 										) : (
 											videoExtensions.includes(link.split('.')[1]) && (
-												<video
+												<Video
 													className='homePostImg'
 													autoPlay
 													loop
@@ -428,7 +430,7 @@ const Posts = ({
 													onClick={() => setFullScreenImg([link, post])}
 												>
 													<source src={link && PF + 'storage/' + link} />
-												</video>
+												</Video>
 											)
 										)}
 									</>
@@ -500,14 +502,14 @@ const Posts = ({
 											/>
 										) : (
 											videoExtensions.includes(item.split('.')[1]) && (
-												<video
+												<Video
 													className='fullScreenImgBlock'
 													autoPlay
 													loop
 													key={index}
 												>
 													<source src={PF + 'storage/' + item} />
-												</video>
+												</Video>
 											)
 										)}
 									</>
@@ -743,15 +745,16 @@ const Posts = ({
 										/>
 									) : (
 										videoExtensions.includes(link.split('.')[1]) && (
-											<video
+											<Video
 												className='homePostImg'
 												autoPlay
 												loop
 												key={index}
-												onClick={() => setFullScreenImg([link, post])}
+												// onClick={() => setFullScreenImg([link, post])}
+												style={{ width: isReply && '452px' }}
 											>
 												<source src={link && PF + 'storage/' + link} />
-											</video>
+											</Video>
 										)
 									)}
 								</>
@@ -817,14 +820,14 @@ const Posts = ({
 										/>
 									) : (
 										videoExtensions.includes(item.split('.')[1]) && (
-											<video
+											<Video
 												className='fullScreenImgBlock'
 												autoPlay
 												loop
 												key={index}
 											>
 												<source src={PF + 'storage/' + item} />
-											</video>
+											</Video>
 										)
 									)}
 								</>

@@ -1,6 +1,4 @@
-// importing css file, components, custom and react hooks, user context and axios library
-
-import './bookmarks.css'
+import './notFound.css'
 
 import {
 	Sidebar,
@@ -12,14 +10,15 @@ import {
 	VerifiedOrganizations,
 	TwitterCircle,
 	TwitterProfessionals,
-} from '../../../components/index'
-import { useScrollPosition } from '../../../utils/useScrollPosition'
+} from '../../components/index'
 import { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../../context/UserContext'
-import { useLocalStorage } from '../../../utils/useLocalStorage'
+import { useScrollPosition } from '../../utils/useScrollPosition'
+import { UserContext } from '../../context/UserContext'
+import { useLocalStorage } from '../../utils/useLocalStorage'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
-const Bookmarks = ({ isLoading, setIsLoading }) => {
+const NotFound = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
 
 	const [scrollPosition, isScrollingUp] = useScrollPosition()
@@ -28,8 +27,6 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 	const [activeLoginForm, setActiveLoginForm] = useState(false)
 	const [activeVerified, setActiveVerified] = useState(false)
 	const [activeProfessionals, setActiveProfessionals] = useState(false)
-
-	// declaring states of custom input field
 
 	const [activeEdit, setActiveEdit] = useState(false)
 	const [activeEditCircle, setActiveEditCircle] = useState(true)
@@ -45,8 +42,6 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 		? (document.body.style.overflowY = 'hidden')
 		: (document.body.style.overflowY = 'inherit')
 
-	// user data states
-
 	const { user, setUser } = useContext(UserContext)
 	const [userInStorage, setUserInStorage] = useLocalStorage('user')
 
@@ -59,6 +54,8 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 		}
 		fetchUser()
 	}, [userInStorage])
+
+	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
 	return (
 		<div style={{ display: 'flex' }}>
@@ -82,18 +79,17 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 				userInStorage={userInStorage}
 			/>
 			{/* main content in page */}
-			<div className='bookmarks'>
-				<div className='bookmarksContainer'>
-					<div className='bookmarksTop'>
-						<h2 className='boormarksTopTitle'>Bookmarks</h2>
-						<span className='bookmarksUserId'>{user?.userId}</span>
-					</div>
-					<div className='bookmarksBottom'>
-						<h1 className='bookmarksBottomTitle'>Save Tweets for later</h1>
-						<span className='bookmarksBottomText'>
-							Don’t let the good ones fly away! Bookmark Tweets to easily find
-							them again in the future.
-						</span>
+			<div className='notFound'>
+				<div className='not-found-container'>
+					<div className='not-found-content'>
+						<img src={PF + 'logo/logo.png'} alt='' />
+						<h1 className='not-found-heading'>Page not found</h1>
+						<p className='not-found-text'>
+							Sorry, this page does not exist. Please return to the main page.
+						</p>
+						<Link to={'/'} className='not-found-button'>
+							Back to Home
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -137,4 +133,4 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 	)
 }
 
-export default Bookmarks
+export default NotFound

@@ -14,6 +14,8 @@ import { useOutsideClick } from './../../utils/useOutsideClick'
 import { TwitterCircle } from './../index'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { DefaultPlayer as Video } from 'react-html5video'
+import 'react-html5video/dist/styles.css'
 
 const Share = ({
 	activeEdit,
@@ -402,13 +404,13 @@ const Share = ({
 								/>
 							) : (
 								videoExtensions.includes(item[0]?.name.split('.')[1]) && (
-									<video className='shareImg' autoPlay loop>
+									<Video className='shareImg' autoPlay loop>
 										<source
 											src={URL.createObjectURL(
 												uploadedFiles[uploadedFiles.indexOf(item)][0]
 											)}
 										/>
-									</video>
+									</Video>
 								)
 							)}
 						</div>

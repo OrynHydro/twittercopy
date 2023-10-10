@@ -24,6 +24,7 @@ import {
 	useLocation,
 	NavLink,
 	useParams,
+	useNavigate,
 } from 'react-router-dom'
 
 import { Posts } from './../../../components/index'
@@ -58,6 +59,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring location variable using react-router-dom
 
 	const location = useLocation()
+	const navigate = useNavigate()
 
 	// declaring variable that helps to get images from folder directly without importing
 
@@ -155,16 +157,22 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			const findUser = await axios.get(`/users/findByToken/${userInStorage}`)
 			setUser(findUser.data)
 		}
-		fetchUser()
+		!user && fetchUser()
 	}, [userInStorage])
 
 	useEffect(() => {
-		const anotherUser = async () => {
-			const findUser = await axios.get(`/users/findById/${params.userId}`)
-			setAnotherUser(findUser.data)
+		const findAnotherUser = async () => {
+			await axios
+				.get(`/users/findById/${params.userId}`)
+				.then(res => setAnotherUser(res.data))
+				.catch(() => setAnotherUser(undefined))
 		}
-		anotherUser()
+		!anotherUser && findAnotherUser()
 	}, [params.userId])
+
+	useEffect(() => {
+		!location.pathname.match('@') && navigate('/404')
+	}, [location.pathname])
 
 	// sets user data to inputs inside of modal window
 
@@ -210,7 +218,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			}))
 	}, [user])
 
-	user
+	anotherUser
 		? (document.title = `${anotherUser?.username} (${anotherUser?.userId})`)
 		: (document.title = 'Profile / Twitter')
 
@@ -408,17 +416,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			.then(res => setLikedPosts(res.data))
 		setLoadingPosts(false)
 	}
-
-	// const findUserReplies = async () => {
-	// 	setLoadingPosts(true)
-	// 	setActivePosts('replies')
-	// 	setReplies([])
-	// 	await axios
-	// 		.get(`/users/userReplies/${user?._id}`)
-	// 		.then(comments => setReplies(comments.data))
-	// 	setLoadingPosts(false)
-	// }
-
 	// block with changing user birth
 
 	const [activeBirthChange, setActiveBirthChange] = useState(false)
@@ -558,6 +555,8 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setLoadingPosts(false)
 	}
 
+	// console.log(anotherUser === undefined)
+
 	return (
 		<div style={{ display: 'flex' }}>
 			{/* sidebar with modal windows' states */}
@@ -578,697 +577,691 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				user={user}
 				userInStorage={userInStorage}
 			/>
-			<div className='profileMain'>
-				<div className='profileContainer'>
-					{/* top container in profile page */}
-					<div
-						className='profileTop'
-						style={{
-							display:
-								location.pathname === `/${params.userId}/topics` ||
-								location.pathname === `/${params.userId}/lists` ||
-								location.pathname === `/${params.userId}/topics/followed` ||
-								location.pathname ===
-									`/${params.userId}/topics/not_interested` ||
-								location.pathname.match('status')
-									? 'none'
-									: 'block',
-						}}
-					>
-						<h2 className='profileTopTitle'>{anotherUser?.username}</h2>
-						<span className='profileTopTweetsCounter'>
-							{location.pathname === `/${params.userId}/following` ||
-							location.pathname === `/${params.userId}/followers`
-								? `${params.userId}`
-								: activePosts === 'media'
-								? `${postsWithMedia.length} Photos & videos`
-								: activePosts === 'likes' && likedPosts.length === 1
-								? `${likedPosts.length} Like`
-								: activePosts === 'likes' && likedPosts.length > 1
-								? `${likedPosts.length} Likes`
-								: activePosts === 'likes' && likedPosts.length === 0
-								? `0 Likes`
-								: `${userPosts.length} Tweets`}
-						</span>
-					</div>
-					{/* routes to different pages inside profile */}
-					<Routes>
-						<Route
-							path='/followers'
-							element={
-								<ProfileFollowers user={user} anotherUser={anotherUser} />
-							}
-						/>
-						<Route
-							path='/following'
-							element={
-								<ProfileFollowing user={user} anotherUser={anotherUser} />
-							}
-						/>
-						<Route path='/topics' element={<ProfileTopics user={user} />} />
-						<Route
-							path='/topics/followed'
-							element={<ProfileTopics user={user} />}
-						/>
-						<Route
-							path='/topics/not_interested'
-							element={<ProfileTopicsNotInterested user={user} />}
-						/>
-						<Route
-							path='/lists'
-							element={
-								<ProfileLists user={user} setActiveAddList={setActiveAddList} />
-							}
-						/>
-						<Route
-							path='/lists/membership'
-							element={<ProfileListsMembership user={user} />}
-						/>
-						<Route
-							path='/status/:postId'
-							element={
-								<PostPage
-									unfollow={unfollow}
-									setUnfollow={setUnfollow}
-									activeFollowBtn={activeFollowBtn}
-									setActiveFollowBtn={setActiveFollowBtn}
-								/>
-							}
-						/>
-					</Routes>
-					{/* main content in page */}
-					<div
-						className='profileMainBlock'
-						style={{
-							display:
-								location.pathname === `/${params.userId}/following` ||
-								location.pathname === `/${params.userId}/followers` ||
-								location.pathname === `/${params.userId}/topics` ||
-								location.pathname === `/${params.userId}/lists` ||
-								location.pathname === `/${params.userId}/lists/membership` ||
-								location.pathname === `/${params.userId}/topics/followed` ||
-								location.pathname ===
-									`/${params.userId}/topics/not_interested` ||
-								location.pathname.match('status')
-									? 'none'
-									: 'block',
-						}}
-					>
-						{/* displays user cover and avatar */}
-						<div className='profilebackgroundBlock'>
-							<img
-								className='profileBackground'
-								src={
-									user && !anotherUser
-										? PF + 'storage/' + user?.coverPicture
-										: anotherUser &&
-										  anotherUser?.coverPicture &&
-										  PF + 'storage/' + anotherUser?.coverPicture
-								}
-								alt=''
-								onClick={() => openUserCoverFullScreen(true)}
-							/>
-							<div
-								className='profileUserAva'
-								onClick={() => openUserAvaFullScreen(true)}
-							>
-								<img
-									src={
-										user && !anotherUser
-											? PF + 'storage/' + user?.profilePicture
-											: anotherUser && anotherUser?.profilePicture
-											? PF + 'storage/' + anotherUser?.profilePicture
-											: PF + 'icon/noAvatar.png'
-									}
-									alt=''
-								/>
-								<div className='overlay'></div>
-							</div>
+			{user && anotherUser !== undefined ? (
+				<div className='profileMain'>
+					<div className='profileContainer'>
+						{/* top container in profile page */}
+						<div
+							className='profileTop'
+							style={{
+								display:
+									location.pathname === `/${params.userId}/topics` ||
+									location.pathname === `/${params.userId}/lists` ||
+									location.pathname === `/${params.userId}/topics/followed` ||
+									location.pathname ===
+										`/${params.userId}/topics/not_interested` ||
+									location.pathname.match('status')
+										? 'none'
+										: 'block',
+							}}
+						>
+							<h2 className='profileTopTitle'>{anotherUser?.username}</h2>
+							<span className='profileTopTweetsCounter'>
+								{location.pathname === `/${params.userId}/following` ||
+								location.pathname === `/${params.userId}/followers`
+									? `${params.userId}`
+									: activePosts === 'media'
+									? `${postsWithMedia.length} Photos & videos`
+									: activePosts === 'likes' && likedPosts.length === 1
+									? `${likedPosts.length} Like`
+									: activePosts === 'likes' && likedPosts.length > 1
+									? `${likedPosts.length} Likes`
+									: activePosts === 'likes' && likedPosts.length === 0
+									? `0 Likes`
+									: `${userPosts.length} Tweets`}
+							</span>
 						</div>
-						{/* full screen user cover */}
-						{userCoverFullScreen && (
-							<div className='userAvaFullScreen'>
-								<div className='fullScreenImgCross' title='Close'>
-									<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
-								</div>
+						{/* routes to different pages inside profile */}
+						<Routes>
+							<Route
+								path='/followers'
+								element={
+									<ProfileFollowers user={user} anotherUser={anotherUser} />
+								}
+							/>
+							<Route
+								path='/following'
+								element={
+									<ProfileFollowing user={user} anotherUser={anotherUser} />
+								}
+							/>
+							<Route path='/topics' element={<ProfileTopics user={user} />} />
+							<Route
+								path='/topics/followed'
+								element={<ProfileTopics user={user} />}
+							/>
+							<Route
+								path='/topics/not_interested'
+								element={<ProfileTopicsNotInterested user={user} />}
+							/>
+							<Route
+								path='/lists'
+								element={
+									<ProfileLists
+										user={user}
+										setActiveAddList={setActiveAddList}
+									/>
+								}
+							/>
+							<Route
+								path='/lists/membership'
+								element={<ProfileListsMembership user={user} />}
+							/>
+							<Route
+								path='/status/:postId'
+								element={
+									<PostPage
+										unfollow={unfollow}
+										setUnfollow={setUnfollow}
+										activeFollowBtn={activeFollowBtn}
+										setActiveFollowBtn={setActiveFollowBtn}
+									/>
+								}
+							/>
+						</Routes>
+						{/* main content in page */}
+						<div
+							className='profileMainBlock'
+							style={{
+								display:
+									location.pathname === `/${params.userId}/following` ||
+									location.pathname === `/${params.userId}/followers` ||
+									location.pathname === `/${params.userId}/topics` ||
+									location.pathname === `/${params.userId}/lists` ||
+									location.pathname === `/${params.userId}/lists/membership` ||
+									location.pathname === `/${params.userId}/topics/followed` ||
+									location.pathname ===
+										`/${params.userId}/topics/not_interested` ||
+									location.pathname.match('status')
+										? 'none'
+										: 'block',
+							}}
+						>
+							{/* displays user cover and avatar */}
+							<div className='profilebackgroundBlock'>
 								<img
-									className='userAvaImg'
+									className='profileBackground'
 									src={
 										user && !anotherUser
 											? PF + 'storage/' + user?.coverPicture
-											: PF + 'storage/' + anotherUser?.coverPicture
+											: anotherUser &&
+											  anotherUser?.coverPicture &&
+											  PF + 'storage/' + anotherUser?.coverPicture
 									}
-									ref={userCover}
+									alt=''
+									onClick={() => openUserCoverFullScreen(true)}
 								/>
-								<div className='userAvaFullScreenOverlay'></div>
-							</div>
-						)}
-						{/* full screen user avatar */}
-						{userAvaFullScreen && (
-							<div className='userAvaFullScreen'>
-								<div className='fullScreenImgCross' title='Close'>
-									<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
-								</div>
-								<img
-									className='userAvaImg'
-									src={
-										user && !anotherUser
-											? PF + 'storage/' + user?.profilePicture
-											: PF + 'storage/' + anotherUser?.profilePicture
-									}
-									ref={userAvatar}
-								/>
-								<div className='userAvaFullScreenOverlay'></div>
-							</div>
-						)}
-						{/* user's name, id, bio, location, website, followings and followers */}
-						<div className='profileUserInfo'>
-							{anotherUser?.userId === user?.userId ? (
-								<button
-									className='editProfile'
-									onClick={() => setActiveEditProfileBlock(true)}
-								>
-									Edit profile
-								</button>
-							) : (
 								<div
-									className='anotherProfileBlock'
-									style={{
-										left: activeFollowBtn !== 'Follow' ? '370px' : '414px',
-									}}
+									className='profileUserAva'
+									onClick={() => openUserAvaFullScreen(true)}
 								>
-									<button className='editProfileButtons'>
-										<FiMoreHorizontal />
-									</button>
-
-									{activeFollowBtn !== 'Follow' && (
-										<button className='editProfileButtons'>
-											{user?.followers.includes(anotherUser?._id) &&
-											user?.following.includes(anotherUser?._id) ? (
-												<AiOutlineMail />
-											) : (
-												<LuBellPlus />
-											)}
-										</button>
-									)}
-
-									<button
-										className={
-											activeFollowBtn === 'Unfollow'
-												? 'editProfileButtons following redButton'
-												: activeFollowBtn === 'Follow'
-												? 'editProfileButtons following blackButton'
-												: 'editProfileButtons following'
+									<img
+										src={
+											user && !anotherUser
+												? PF + 'storage/' + user?.profilePicture
+												: anotherUser && anotherUser?.profilePicture
+												? PF + 'storage/' + anotherUser?.profilePicture
+												: PF + 'icon/noAvatar.png'
 										}
-										onMouseOver={() => {
-											activeFollowBtn !== 'Follow' &&
-												setActiveFollowBtn('Unfollow')
-										}}
-										onMouseOut={() => {
-											activeFollowBtn !== 'Follow' &&
-												setActiveFollowBtn('Following')
-										}}
-										onClick={() => followUser()}
-									>
-										{activeFollowBtn}
-									</button>
+										alt=''
+									/>
+									<div className='overlay'></div>
+								</div>
+							</div>
+							{/* full screen user cover */}
+							{userCoverFullScreen && (
+								<div className='userAvaFullScreen'>
+									<div className='fullScreenImgCross' title='Close'>
+										<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+									</div>
+									<img
+										className='userAvaImg'
+										src={
+											user && !anotherUser
+												? PF + 'storage/' + user?.coverPicture
+												: PF + 'storage/' + anotherUser?.coverPicture
+										}
+										ref={userCover}
+									/>
+									<div className='userAvaFullScreenOverlay'></div>
 								</div>
 							)}
+							{/* full screen user avatar */}
+							{userAvaFullScreen && (
+								<div className='userAvaFullScreen'>
+									<div className='fullScreenImgCross' title='Close'>
+										<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+									</div>
+									<img
+										className='userAvaImg'
+										src={
+											user && !anotherUser
+												? PF + 'storage/' + user?.profilePicture
+												: PF + 'storage/' + anotherUser?.profilePicture
+										}
+										ref={userAvatar}
+									/>
+									<div className='userAvaFullScreenOverlay'></div>
+								</div>
+							)}
+							{/* user's name, id, bio, location, website, followings and followers */}
+							<div className='profileUserInfo'>
+								{anotherUser?.userId === user?.userId ? (
+									<button
+										className='editProfile'
+										onClick={() => setActiveEditProfileBlock(true)}
+									>
+										Edit profile
+									</button>
+								) : (
+									<div
+										className='anotherProfileBlock'
+										style={{
+											left: activeFollowBtn !== 'Follow' ? '370px' : '414px',
+										}}
+									>
+										<button className='editProfileButtons'>
+											<FiMoreHorizontal />
+										</button>
 
-							<h1
-								className='profileUsername'
-								style={{
-									marginTop:
-										anotherUser?.userId !== user?.userId ? '40px' : '70px',
-								}}
-							>
-								{user && !anotherUser ? user?.username : anotherUser?.username}
-							</h1>
-							<p className='profileUserId'>
-								{user && !anotherUser ? user?.username : anotherUser?.username}
-							</p>
-							<p className='profileBio'>
-								{user && !anotherUser ? user?.bio : anotherUser?.bio}
-							</p>
-							<div className='profileLocationAndJoined'>
-								{user && !anotherUser
-									? user?.location
-									: anotherUser?.location && (
-											<span className='profileUserJoined'>
-												<img src={PF + 'icon/colored/gpsGray.svg'} alt='' />
-												{user && !anotherUser
-													? user?.location
-													: anotherUser?.location}
-											</span>
-									  )}
-								{user && !anotherUser
-									? user?.website
-									: anotherUser?.website && (
-											<span className='profileUserJoined'>
-												<img
-													src={PF + 'icon/common/link.svg'}
-													alt=''
-													style={{ transform: 'rotate(-45deg)' }}
-												/>
-												<a
-													href={
-														user && !anotherUser
-															? user?.website
-															: anotherUser?.website
-													}
-													target='_blank'
-												>
+										{activeFollowBtn !== 'Follow' && (
+											<button className='editProfileButtons'>
+												{user?.followers.includes(anotherUser?._id) &&
+												user?.following.includes(anotherUser?._id) ? (
+													<AiOutlineMail />
+												) : (
+													<LuBellPlus />
+												)}
+											</button>
+										)}
+
+										<button
+											className={
+												activeFollowBtn === 'Unfollow'
+													? 'editProfileButtons following redButton'
+													: activeFollowBtn === 'Follow'
+													? 'editProfileButtons following blackButton'
+													: 'editProfileButtons following'
+											}
+											onMouseOver={() => {
+												activeFollowBtn !== 'Follow' &&
+													setActiveFollowBtn('Unfollow')
+											}}
+											onMouseOut={() => {
+												activeFollowBtn !== 'Follow' &&
+													setActiveFollowBtn('Following')
+											}}
+											onClick={() => followUser()}
+										>
+											{activeFollowBtn}
+										</button>
+									</div>
+								)}
+
+								<h1
+									className='profileUsername'
+									style={{
+										marginTop:
+											anotherUser?.userId !== user?.userId ? '40px' : '70px',
+									}}
+								>
+									{user && !anotherUser
+										? user?.username
+										: anotherUser?.username}
+								</h1>
+								<p className='profileUserId'>
+									{user && !anotherUser
+										? user?.username
+										: anotherUser?.username}
+								</p>
+								<p className='profileBio'>
+									{user && !anotherUser ? user?.bio : anotherUser?.bio}
+								</p>
+								<div className='profileLocationAndJoined'>
+									{user && !anotherUser
+										? user?.location
+										: anotherUser?.location && (
+												<span className='profileUserJoined'>
+													<img src={PF + 'icon/colored/gpsGray.svg'} alt='' />
 													{user && !anotherUser
-														? user?.website
-														: anotherUser?.website}
-												</a>
-											</span>
-									  )}
-								<span className='profileUserJoined'>
-									<img src={PF + 'icon/common/calendarGray.svg'} alt='' />
-									Joined{' '}
-									{moment(user?.createdAt).format('MMMM') +
-										' ' +
-										moment(user?.createdAt).format('YYYY')}
-								</span>
-							</div>
-							<div className='followsBlock'>
-								<Link to={`/${params?.userId}/following`}>
-									<span>
-										<strong>
-											{user && !anotherUser
-												? user?.following.length
-												: anotherUser?.following.length}
-										</strong>{' '}
-										Following
+														? user?.location
+														: anotherUser?.location}
+												</span>
+										  )}
+									{user && !anotherUser
+										? user?.website
+										: anotherUser?.website && (
+												<span className='profileUserJoined'>
+													<img
+														src={PF + 'icon/common/link.svg'}
+														alt=''
+														style={{ transform: 'rotate(-45deg)' }}
+													/>
+													<a
+														href={
+															user && !anotherUser
+																? user?.website
+																: anotherUser?.website
+														}
+														target='_blank'
+													>
+														{user && !anotherUser
+															? user?.website
+															: anotherUser?.website}
+													</a>
+												</span>
+										  )}
+									<span className='profileUserJoined'>
+										<img src={PF + 'icon/common/calendarGray.svg'} alt='' />
+										Joined{' '}
+										{moment(user?.createdAt).format('MMMM') +
+											' ' +
+											moment(user?.createdAt).format('YYYY')}
 									</span>
-								</Link>
-								<Link to={`/${params?.userId}/followers`}>
-									<span>
-										<strong>
-											{user && !anotherUser
-												? user?.followers.length
-												: anotherUser?.followers.length}
-										</strong>{' '}
-										Followers
-									</span>
-								</Link>
+								</div>
+								<div className='followsBlock'>
+									<Link to={`/${params?.userId}/following`}>
+										<span>
+											<strong>
+												{user && !anotherUser
+													? user?.following.length
+													: anotherUser?.following.length}
+											</strong>{' '}
+											Following
+										</span>
+									</Link>
+									<Link to={`/${params?.userId}/followers`}>
+										<span>
+											<strong>
+												{user && !anotherUser
+													? user?.followers.length
+													: anotherUser?.followers.length}
+											</strong>{' '}
+											Followers
+										</span>
+									</Link>
+								</div>
 							</div>
-						</div>
-						{/* switch menu */}
-						<div className='profileSwitchBlock'>
-							<div
-								className={
-									activePosts === 'tweets'
-										? 'profileSwitchItem active'
-										: 'profileSwitchItem'
-								}
-								onClick={findUserPosts}
-							>
-								Tweets
-							</div>
-							<div
-								className={
-									activePosts === 'replies'
-										? 'profileSwitchItem active'
-										: 'profileSwitchItem'
-								}
-								onClick={findUserReplies}
-							>
-								Replies
-							</div>
-							<div
-								className={
-									activePosts === 'media'
-										? 'profileSwitchItem active'
-										: 'profileSwitchItem'
-								}
-								onClick={findUserPostsWithMedia}
-							>
-								Media
-							</div>
-							<div
-								className={
-									activePosts === 'likes'
-										? 'profileSwitchItem active'
-										: 'profileSwitchItem'
-								}
-								onClick={findLikedPosts}
-							>
-								Likes
+							{/* switch menu */}
+							<div className='profileSwitchBlock'>
+								<div
+									className={
+										activePosts === 'tweets'
+											? 'profileSwitchItem active'
+											: 'profileSwitchItem'
+									}
+									onClick={findUserPosts}
+								>
+									Tweets
+								</div>
+								<div
+									className={
+										activePosts === 'replies'
+											? 'profileSwitchItem active'
+											: 'profileSwitchItem'
+									}
+									onClick={findUserReplies}
+								>
+									Replies
+								</div>
+								<div
+									className={
+										activePosts === 'media'
+											? 'profileSwitchItem active'
+											: 'profileSwitchItem'
+									}
+									onClick={findUserPostsWithMedia}
+								>
+									Media
+								</div>
+								<div
+									className={
+										activePosts === 'likes'
+											? 'profileSwitchItem active'
+											: 'profileSwitchItem'
+									}
+									onClick={findLikedPosts}
+								>
+									Likes
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				{/* edit user data modal window */}
-				<div
-					className='editProfileBlock'
-					style={{ display: !activeEditProfileBlock && 'none' }}
-				>
-					<div className='editProfileContainer'>
-						<div className='editProfileTop'>
-							<div
-								className='editProfileCross'
-								title='Close'
-								onClick={() => setActiveEditProfileBlock(false)}
-							>
-								<img src={PF + 'icon/utility/x.svg'} alt='' />
-							</div>
-							<h1>Edit profile</h1>
-							<button onClick={saveUserData}>Save</button>
-						</div>
-						{/* edit cover */}
-						<div className='editProfileBackgroundBlock'>
-							{currentCover === 'none' ? (
-								false
-							) : currentCover && !currentCover.match('undefined') ? (
-								<div className='currentCover'>
-									<img
-										src={PF + 'storage/' + currentCover}
-										alt=''
-										className='coverImg'
-									/>
-									<div className='currentCoverOverlay'></div>
+					{/* edit user data modal window */}
+					<div
+						className='editProfileBlock'
+						style={{ display: !activeEditProfileBlock && 'none' }}
+					>
+						<div className='editProfileContainer'>
+							<div className='editProfileTop'>
+								<div
+									className='editProfileCross'
+									title='Close'
+									onClick={() => setActiveEditProfileBlock(false)}
+								>
+									<img src={PF + 'icon/utility/x.svg'} alt='' />
 								</div>
-							) : (
-								user?.coverPicture && (
+								<h1>Edit profile</h1>
+								<button onClick={saveUserData}>Save</button>
+							</div>
+							{/* edit cover */}
+							<div className='editProfileBackgroundBlock'>
+								{currentCover === 'none' ? (
+									false
+								) : currentCover && !currentCover.match('undefined') ? (
 									<div className='currentCover'>
 										<img
-											src={PF + 'storage/' + user?.coverPicture}
+											src={PF + 'storage/' + currentCover}
 											alt=''
 											className='coverImg'
 										/>
 										<div className='currentCoverOverlay'></div>
 									</div>
-								)
-							)}
-							<div className='editProfileBackgroundAddPhotoIcons'>
-								<label
-									htmlFor='userCover'
-									className='editProfileBackgroundAddPhotoBlock'
-								>
-									<img src={PF + 'icon/common/camera.svg'} alt='' />
-									<input
-										type='file'
-										hidden
-										id='userCover'
-										onChange={e => changeUserCover(e)}
-									/>
-								</label>
-								{currentCover === 'none' ? (
-									false
-								) : currentCover && !currentCover.match('undefined') ? (
-									<div
-										className='editProfileBackgroundAddPhotoBlock'
-										onClick={() => setCurrentCover()}
-									>
-										<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
-									</div>
 								) : (
 									user?.coverPicture && (
-										<div
-											className='editProfileBackgroundAddPhotoBlock'
-											onClick={() => {
-												setCurrentCover('none')
-											}}
-										>
-											<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+										<div className='currentCover'>
+											<img
+												src={PF + 'storage/' + user?.coverPicture}
+												alt=''
+												className='coverImg'
+											/>
+											<div className='currentCoverOverlay'></div>
 										</div>
 									)
 								)}
+								<div className='editProfileBackgroundAddPhotoIcons'>
+									<label
+										htmlFor='userCover'
+										className='editProfileBackgroundAddPhotoBlock'
+									>
+										<img src={PF + 'icon/common/camera.svg'} alt='' />
+										<input
+											type='file'
+											hidden
+											id='userCover'
+											onChange={e => changeUserCover(e)}
+										/>
+									</label>
+									{currentCover === 'none' ? (
+										false
+									) : currentCover && !currentCover.match('undefined') ? (
+										<div
+											className='editProfileBackgroundAddPhotoBlock'
+											onClick={() => setCurrentCover()}
+										>
+											<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+										</div>
+									) : (
+										user?.coverPicture && (
+											<div
+												className='editProfileBackgroundAddPhotoBlock'
+												onClick={() => {
+													setCurrentCover('none')
+												}}
+											>
+												<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+											</div>
+										)
+									)}
+								</div>
 							</div>
-						</div>
-						{/* edit avatar */}
-						<div className='editProfileUserAvaBlock'>
-							<img
-								className='userAvaImg'
-								src={
-									currentAva
-										? PF + 'storage/' + currentAva
-										: !user?.profilePicture
-										? PF + 'icon/noAvatar.png'
-										: PF + 'storage/' + user?.profilePicture
-								}
-								alt=''
-							/>
-							<div className='editProfileUserAvaOverlay'>
-								<label
-									className='editProfileBackgroundAddPhotoBlock'
-									htmlFor='avaInput'
+							{/* edit avatar */}
+							<div className='editProfileUserAvaBlock'>
+								<img
+									className='userAvaImg'
+									src={
+										currentAva
+											? PF + 'storage/' + currentAva
+											: !user?.profilePicture
+											? PF + 'icon/noAvatar.png'
+											: PF + 'storage/' + user?.profilePicture
+									}
+									alt=''
+								/>
+								<div className='editProfileUserAvaOverlay'>
+									<label
+										className='editProfileBackgroundAddPhotoBlock'
+										htmlFor='avaInput'
+									>
+										<input
+											type='file'
+											id='avaInput'
+											hidden
+											onChange={e => changeUserAvatar(e)}
+										/>
+										<img src={PF + 'icon/common/camera.svg'} alt='' />
+									</label>
+								</div>
+							</div>
+							{/* edit name, bio, location and website */}
+							<div className='editProfileInputs'>
+								<Input
+									inputState={inputEditName}
+									setInputState={setInputEditName}
+								/>
+
+								<Input
+									inputState={inputEditBio}
+									setInputState={setInputEditBio}
+								/>
+
+								<Input
+									inputState={inputEditLocation}
+									setInputState={setInputEditLocation}
+								/>
+
+								<Input
+									inputState={inputEditWebsite}
+									setInputState={setInputEditWebsite}
+								/>
+
+								{/* edit birth date */}
+
+								<div
+									className='birthDate'
+									style={{ display: !activeBirthChange ? 'block' : 'none' }}
 								>
-									<input
-										type='file'
-										id='avaInput'
-										hidden
-										onChange={e => changeUserAvatar(e)}
-									/>
-									<img src={PF + 'icon/common/camera.svg'} alt='' />
-								</label>
-							</div>
-						</div>
-						{/* edit name, bio, location and website */}
-						<div className='editProfileInputs'>
-							<Input
-								inputState={inputEditName}
-								setInputState={setInputEditName}
-							/>
-
-							<Input
-								inputState={inputEditBio}
-								setInputState={setInputEditBio}
-							/>
-
-							<Input
-								inputState={inputEditLocation}
-								setInputState={setInputEditLocation}
-							/>
-
-							<Input
-								inputState={inputEditWebsite}
-								setInputState={setInputEditWebsite}
-							/>
-
-							{/* edit birth date */}
-
-							<div
-								className='birthDate'
-								style={{ display: !activeBirthChange ? 'block' : 'none' }}
-							>
-								<div className='birthDateTop'>
-									<span className='birthDateTitle'>Birth date</span>
-									<span className='middleDot'>·</span>
-									<span
-										className='birdtDateEdit'
-										onClick={() => setActiveBirthChange(true)}
-									>
-										Edit
-									</span>
-								</div>
-								<div className='birthDateBottom'>
-									{moment(user?.birth.split('.')[1]).format('MMMM') +
-										' ' +
-										user?.birth.split('.')[0] +
-										', ' +
-										user?.birth.split('.')[2]}
-								</div>
-							</div>
-							<div
-								className='birthDateChanging'
-								style={{ display: activeBirthChange ? 'block' : 'none' }}
-							>
-								<div className='birthDateTop'>
-									<span
-										className='birthDateTitle'
-										style={{ fontWeight: '700', color: '#0f1419' }}
-									>
-										Birth date
-									</span>
-									<span className='middleDot'>·</span>
-									<span
-										className='birdtDateEdit'
-										onClick={() => setActiveBirthChange(false)}
-									>
-										Cancel
-									</span>
-								</div>
-								<div className='birthDateChangingDesc'>
-									<p>
-										This should be the date of birth of the person using the
-										account. Even if you’re making an account for your business,
-										event, or cat.
-										<br />
-										<br />
-										Twitter uses your age to customize your experience,
-										including ads, as explained in our{' '}
-										<span>Privacy Policy</span>.
-									</p>
-								</div>
-								{/* inputs that changes user's birth date */}
-								<div className='formBottomInputBlock'>
-									<div
-										ref={monthSelect}
-										className='formBottomSelectBlock'
-										style={{ borderColor: activeMonth ? '#1D9BF0' : '#CFD9DE' }}
-									>
-										<label
-											style={{ color: activeMonth ? '#1D9BF0' : '#536471' }}
-											htmlFor='month'
-											onClick={() => setActiveMonth(true)}
+									<div className='birthDateTop'>
+										<span className='birthDateTitle'>Birth date</span>
+										<span className='middleDot'>·</span>
+										<span
+											className='birdtDateEdit'
+											onClick={() => setActiveBirthChange(true)}
 										>
-											Month
-										</label>
-										<select id='month' onClick={() => setActiveMonth(true)}>
-											{getList('month')}
-										</select>
-										<svg
-											className='selectChevron'
-											xmlns='http://www.w3.org/2000/svg'
-											width='50'
-											height='50'
-											viewBox='0 0 24 24'
-											fill='none'
-											stroke={activeMonth ? '#1D9BF0' : '#494E51'}
-											strokeWidth='1.5'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-										>
-											<polyline points='6 9 12 15 18 9'></polyline>
-										</svg>
+											Edit
+										</span>
 									</div>
-									<div
-										ref={daySelect}
-										className='formBottomSelectBlock'
-										style={{
-											borderColor: activeDay ? '#1D9BF0' : '#CFD9DE',
-											width: '96px',
-										}}
-									>
-										<label
-											style={{ color: activeDay ? '#1D9BF0' : '#536471' }}
-											htmlFor='day'
-											onClick={() => setActiveDay(true)}
-										>
-											Day
-										</label>
-										<select
-											id='day'
-											style={{ width: '90px' }}
-											onClick={() => setActiveDay(true)}
-										>
-											{getList('day')}
-										</select>
-										<svg
-											className='selectChevron'
-											xmlns='http://www.w3.org/2000/svg'
-											width='50'
-											height='50'
-											viewBox='0 0 24 24'
-											fill='none'
-											stroke={activeDay ? '#1D9BF0' : '#494E51'}
-											strokeWidth='1.5'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-										>
-											<polyline points='6 9 12 15 18 9'></polyline>
-										</svg>
+									<div className='birthDateBottom'>
+										{moment(user?.birth.split('.')[1]).format('MMMM') +
+											' ' +
+											user?.birth.split('.')[0] +
+											', ' +
+											user?.birth.split('.')[2]}
 									</div>
-									<div
-										ref={yearSelect}
-										className='formBottomSelectBlock'
-										style={{
-											borderColor: activeYear ? '#1D9BF0' : '#CFD9DE',
-											width: '118px',
-										}}
-									>
-										<label
-											style={{ color: activeYear ? '#1D9BF0' : '#536471' }}
-											htmlFor='year'
-											onClick={() => setActiveYear(true)}
+								</div>
+								<div
+									className='birthDateChanging'
+									style={{ display: activeBirthChange ? 'block' : 'none' }}
+								>
+									<div className='birthDateTop'>
+										<span
+											className='birthDateTitle'
+											style={{ fontWeight: '700', color: '#0f1419' }}
 										>
-											Year
-										</label>
-										<select
-											id='year'
-											style={{ width: '118px' }}
-											onClick={() => setActiveYear(true)}
+											Birth date
+										</span>
+										<span className='middleDot'>·</span>
+										<span
+											className='birdtDateEdit'
+											onClick={() => setActiveBirthChange(false)}
 										>
-											{getList('year')}
-										</select>
-										<svg
-											className='selectChevron'
-											xmlns='http://www.w3.org/2000/svg'
-											width='50'
-											height='50'
-											viewBox='0 0 24 24'
-											fill='none'
-											stroke={activeYear ? '#1D9BF0' : '#494E51'}
-											strokeWidth='1.5'
-											strokeLinecap='round'
-											strokeLinejoin='round'
+											Cancel
+										</span>
+									</div>
+									<div className='birthDateChangingDesc'>
+										<p>
+											This should be the date of birth of the person using the
+											account. Even if you’re making an account for your
+											business, event, or cat.
+											<br />
+											<br />
+											Twitter uses your age to customize your experience,
+											including ads, as explained in our{' '}
+											<span>Privacy Policy</span>.
+										</p>
+									</div>
+									{/* inputs that changes user's birth date */}
+									<div className='formBottomInputBlock'>
+										<div
+											ref={monthSelect}
+											className='formBottomSelectBlock'
+											style={{
+												borderColor: activeMonth ? '#1D9BF0' : '#CFD9DE',
+											}}
 										>
-											<polyline points='6 9 12 15 18 9'></polyline>
-										</svg>
+											<label
+												style={{ color: activeMonth ? '#1D9BF0' : '#536471' }}
+												htmlFor='month'
+												onClick={() => setActiveMonth(true)}
+											>
+												Month
+											</label>
+											<select id='month' onClick={() => setActiveMonth(true)}>
+												{getList('month')}
+											</select>
+											<svg
+												className='selectChevron'
+												xmlns='http://www.w3.org/2000/svg'
+												width='50'
+												height='50'
+												viewBox='0 0 24 24'
+												fill='none'
+												stroke={activeMonth ? '#1D9BF0' : '#494E51'}
+												strokeWidth='1.5'
+												strokeLinecap='round'
+												strokeLinejoin='round'
+											>
+												<polyline points='6 9 12 15 18 9'></polyline>
+											</svg>
+										</div>
+										<div
+											ref={daySelect}
+											className='formBottomSelectBlock'
+											style={{
+												borderColor: activeDay ? '#1D9BF0' : '#CFD9DE',
+												width: '96px',
+											}}
+										>
+											<label
+												style={{ color: activeDay ? '#1D9BF0' : '#536471' }}
+												htmlFor='day'
+												onClick={() => setActiveDay(true)}
+											>
+												Day
+											</label>
+											<select
+												id='day'
+												style={{ width: '90px' }}
+												onClick={() => setActiveDay(true)}
+											>
+												{getList('day')}
+											</select>
+											<svg
+												className='selectChevron'
+												xmlns='http://www.w3.org/2000/svg'
+												width='50'
+												height='50'
+												viewBox='0 0 24 24'
+												fill='none'
+												stroke={activeDay ? '#1D9BF0' : '#494E51'}
+												strokeWidth='1.5'
+												strokeLinecap='round'
+												strokeLinejoin='round'
+											>
+												<polyline points='6 9 12 15 18 9'></polyline>
+											</svg>
+										</div>
+										<div
+											ref={yearSelect}
+											className='formBottomSelectBlock'
+											style={{
+												borderColor: activeYear ? '#1D9BF0' : '#CFD9DE',
+												width: '118px',
+											}}
+										>
+											<label
+												style={{ color: activeYear ? '#1D9BF0' : '#536471' }}
+												htmlFor='year'
+												onClick={() => setActiveYear(true)}
+											>
+												Year
+											</label>
+											<select
+												id='year'
+												style={{ width: '118px' }}
+												onClick={() => setActiveYear(true)}
+											>
+												{getList('year')}
+											</select>
+											<svg
+												className='selectChevron'
+												xmlns='http://www.w3.org/2000/svg'
+												width='50'
+												height='50'
+												viewBox='0 0 24 24'
+												fill='none'
+												stroke={activeYear ? '#1D9BF0' : '#494E51'}
+												strokeWidth='1.5'
+												strokeLinecap='round'
+												strokeLinejoin='round'
+											>
+												<polyline points='6 9 12 15 18 9'></polyline>
+											</svg>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						<div
+							className='overlay'
+							onClick={() => setActiveEditProfileBlock(false)}
+						/>
 					</div>
+					{/* container with posts (user's or liked by user) */}
 					<div
-						className='overlay'
-						onClick={() => setActiveEditProfileBlock(false)}
-					/>
-				</div>
-				{/* container with posts (user's or liked by user) */}
-				<div
-					style={{
-						display:
-							location.pathname === `/${user?.userId}/following` ||
-							location.pathname === `/${user?.userId}/followers` ||
-							location.pathname === `/${user?.userId}/topics` ||
-							location.pathname === `/${user?.userId}/lists` ||
-							location.pathname.match('status')
-								? 'none'
-								: 'block',
-					}}
-				>
-					{loadingPosts ? (
-						<PostsLoader />
-					) : activePosts === 'tweets' && userPosts?.length !== 0 ? (
-						userPosts.map(
-							(post, index) =>
-								post?.originalPost === null && (
-									<Posts
-										key={index}
-										post={post}
-										more={PF + 'icon/utility/moreHorizontal.svg'}
-										moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-										currentUser={user}
-										isUserPosts={post.userId === user?._id ? true : false}
-										activeFollowBtn={activeFollowBtn}
-										setActiveFollowBtn={setActiveFollowBtn}
-										unfollow={unfollow}
-										setUnfollow={setUnfollow}
-									/>
-								)
-						)
-					) : activePosts === 'likes' && likedPosts?.length !== 0 ? (
-						likedPosts?.map((post, index) => (
-							<Posts
-								key={index}
-								post={post}
-								more={PF + 'icon/utility/moreHorizontal.svg'}
-								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-								currentUser={user}
-								isUserPosts={post.user._id === user?._id ? true : false}
-								activeFollowBtn={activeFollowBtn}
-								setActiveFollowBtn={setActiveFollowBtn}
-								unfollow={unfollow}
-								setUnfollow={setUnfollow}
-							/>
-						))
-					) : activePosts === 'replies' && replies.length !== 0 ? (
-						replies?.map((post, index) => (
-							<>
+						style={{
+							display:
+								location.pathname === `/${user?.userId}/following` ||
+								location.pathname === `/${user?.userId}/followers` ||
+								location.pathname === `/${user?.userId}/topics` ||
+								location.pathname === `/${user?.userId}/lists` ||
+								location.pathname.match('status')
+									? 'none'
+									: 'block',
+						}}
+					>
+						{loadingPosts ? (
+							<PostsLoader />
+						) : activePosts === 'tweets' && userPosts?.length !== 0 ? (
+							userPosts.map(
+								(post, index) =>
+									post?.originalPost === null && (
+										<Posts
+											key={index}
+											post={post}
+											more={PF + 'icon/utility/moreHorizontal.svg'}
+											moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+											currentUser={user}
+											isUserPosts={post.userId === user?._id ? true : false}
+											activeFollowBtn={activeFollowBtn}
+											setActiveFollowBtn={setActiveFollowBtn}
+											unfollow={unfollow}
+											setUnfollow={setUnfollow}
+										/>
+									)
+							)
+						) : activePosts === 'likes' && likedPosts?.length !== 0 ? (
+							likedPosts?.map((post, index) => (
 								<Posts
 									key={index}
 									post={post}
@@ -1280,56 +1273,107 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									setActiveFollowBtn={setActiveFollowBtn}
 									unfollow={unfollow}
 									setUnfollow={setUnfollow}
-									isReply={'original'}
 								/>
-								{post.replies.map(
-									(reply, index2) =>
-										reply.userId === user._id && (
-											<div style={{ position: 'relative' }}>
-												<hr className='verticalLine' />
-												<Posts
-													key={index + index2}
-													post={reply}
-													more={PF + 'icon/utility/moreHorizontal.svg'}
-													moreActive={
-														PF + 'icon/utility/moreHorizontalActive.svg'
-													}
-													currentUser={user}
-													isUserPosts={
-														reply.user._id === user?._id ? true : false
-													}
-													activeFollowBtn={activeFollowBtn}
-													setActiveFollowBtn={setActiveFollowBtn}
-													unfollow={unfollow}
-													setUnfollow={setUnfollow}
-													isReply={'reply'}
-												/>
-											</div>
-										)
-								)}
-								<hr className='postPageHr' style={{ marginTop: '20px' }} />
-							</>
-						))
-					) : (
-						activePosts === 'media' &&
-						postsWithMedia.length !== 0 &&
-						postsWithMedia?.map((post, index) => (
-							<Posts
-								key={index}
-								post={post}
-								more={PF + 'icon/utility/moreHorizontal.svg'}
-								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-								currentUser={user}
-								isUserPosts={post.user._id === user?._id ? true : false}
-								activeFollowBtn={activeFollowBtn}
-								setActiveFollowBtn={setActiveFollowBtn}
-								unfollow={unfollow}
-								setUnfollow={setUnfollow}
-							/>
-						))
-					)}
+							))
+						) : activePosts === 'replies' && replies.length !== 0 ? (
+							replies?.map((post, index) => (
+								<>
+									<Posts
+										key={index}
+										post={post}
+										more={PF + 'icon/utility/moreHorizontal.svg'}
+										moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+										currentUser={user}
+										isUserPosts={post.user._id === user?._id ? true : false}
+										activeFollowBtn={activeFollowBtn}
+										setActiveFollowBtn={setActiveFollowBtn}
+										unfollow={unfollow}
+										setUnfollow={setUnfollow}
+										isReply={'original'}
+									/>
+									{post.replies.map(
+										(reply, index2) =>
+											reply.userId === user._id && (
+												<div style={{ position: 'relative' }}>
+													<hr className='verticalLine' />
+													<Posts
+														key={index + index2}
+														post={reply}
+														more={PF + 'icon/utility/moreHorizontal.svg'}
+														moreActive={
+															PF + 'icon/utility/moreHorizontalActive.svg'
+														}
+														currentUser={user}
+														isUserPosts={
+															reply.user._id === user?._id ? true : false
+														}
+														activeFollowBtn={activeFollowBtn}
+														setActiveFollowBtn={setActiveFollowBtn}
+														unfollow={unfollow}
+														setUnfollow={setUnfollow}
+														isReply={'reply'}
+													/>
+												</div>
+											)
+									)}
+									<hr className='postPageHr' style={{ marginTop: '20px' }} />
+								</>
+							))
+						) : (
+							activePosts === 'media' &&
+							postsWithMedia.length !== 0 &&
+							postsWithMedia?.map((post, index) => (
+								<Posts
+									key={index}
+									post={post}
+									more={PF + 'icon/utility/moreHorizontal.svg'}
+									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+									currentUser={user}
+									isUserPosts={post.user._id === user?._id ? true : false}
+									activeFollowBtn={activeFollowBtn}
+									setActiveFollowBtn={setActiveFollowBtn}
+									unfollow={unfollow}
+									setUnfollow={setUnfollow}
+								/>
+							))
+						)}
+					</div>
 				</div>
-			</div>
+			) : (
+				<div className='profileMain'>
+					<div className='profileContainer' style={{ width: '600px' }}>
+						<div className='profileTop'>
+							<h2 className='profileTopTitle'>Profile</h2>
+						</div>
+						<div className='profileMainBlock'>
+							<div className='profilebackgroundBlock'>
+								<div className='profileUserAva'>
+									<div
+										style={{
+											backgroundColor: '#f7f9f9',
+											width: '133px',
+											height: '133px',
+											borderRadius: '50%',
+											border: '5px solid #fff',
+										}}
+									/>
+								</div>
+							</div>
+							<div className='profileUserInfo' style={{ marginTop: '100px' }}>
+								<h1 className='profileUsername' style={{ marginTop: '-30px' }}>
+									{params.userId}
+								</h1>
+							</div>
+							<div className='accNotExistWrap'>
+								<div className='accNotExistContainer'>
+									<h1>This account doesn’t exist</h1>
+									<p>Try searching for another.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 			{/* rightbar with trends */}
 			<div>
 				<Actual registered />

@@ -8,3 +8,4 @@ export { default as Notifications } from './registered/notifications/Notificatio
 export { default as Messages } from './registered/messages/Messages.jsx'
 export { default as Bookmarks } from './registered/bookmarks/Bookmarks.jsx'
 export { default as Profile } from './registered/profile/Profile.jsx'
+export { default as NotFound } from './notFound/NotFound.jsx'

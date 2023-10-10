@@ -1,6 +1,11 @@
 // importing browser router's components to navigate in website
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Navigate,
+} from 'react-router-dom'
 
 // importing css that works in every component
 
@@ -18,6 +23,7 @@ import {
 	Messages,
 	Bookmarks,
 	Profile,
+	NotFound,
 } from './pages/index'
 
 // importing custom hook
@@ -151,6 +157,13 @@ function App() {
 									<Profile isLoading={isLoading} setIsLoading={setIsLoading} />
 								}
 							/>
+							<Route
+								path='/404'
+								element={
+									<NotFound isLoading={isLoading} setIsLoading={setIsLoading} />
+								}
+							/>
+							<Route path='*' element={<Navigate to='/404' replace />} />
 						</Routes>
 					</>
 				)}
