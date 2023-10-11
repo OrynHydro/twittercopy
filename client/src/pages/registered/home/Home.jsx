@@ -75,7 +75,7 @@ const Home = ({ isLoading, setIsLoading }) => {
 				console.log(err)
 			}
 		}
-		!userPosts && getTimeline()
+		userPosts.length === 0 && getTimeline()
 	}, [user, user?.userId])
 
 	return (

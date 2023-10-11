@@ -75,7 +75,6 @@ const NotFound = ({ isLoading, setIsLoading }) => {
 			<div>
 				<Actual registered />
 				<WhoToFollow />
-				test
 			</div>
 		</Layout>
 	)

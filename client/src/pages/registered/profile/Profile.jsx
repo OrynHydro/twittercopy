@@ -152,7 +152,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				.then(res => setAnotherUser(res.data))
 				.catch(() => setAnotherUser(undefined))
 		}
-		!anotherUser && findAnotherUser()
+		findAnotherUser()
 	}, [params.userId])
 
 	useEffect(() => {
@@ -521,7 +521,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setActivePosts('replies')
 		setReplies([])
 		await axios
-			.get(`/users/userReplies/${user?._id}`)
+			.get(`/users/userReplies/${anotherUser?._id}`)
 			.then(comments => setReplies(comments.data))
 		setLoadingPosts(false)
 	}
@@ -535,13 +535,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setActivePosts('media')
 		setPostsWithMedia([])
 		await axios
-			.get(`/users/media/${user?._id}`)
+			.get(`/users/media/${anotherUser?._id}`)
 			.then(posts => setPostsWithMedia(posts.data))
 		setLoadingPosts(false)
 	}
-
-	// console.log(anotherUser === undefined)
-
 	return (
 		<Layout
 			isLoading={isLoading}
@@ -1265,7 +1262,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									/>
 									{post.replies.map(
 										(reply, index2) =>
-											reply.userId === user._id && (
+											reply.userId === anotherUser._id && (
 												<div style={{ position: 'relative' }}>
 													<hr className='verticalLine' />
 													<Posts
@@ -1275,7 +1272,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 														moreActive={
 															PF + 'icon/utility/moreHorizontalActive.svg'
 														}
-														currentUser={user}
+														currentUser={anotherUser}
 														isUserPosts={
 															reply.user._id === user?._id ? true : false
 														}
