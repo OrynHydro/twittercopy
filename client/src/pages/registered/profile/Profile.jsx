@@ -14,6 +14,7 @@ import {
 	TwitterProfessionals,
 	PostsLoader,
 	Input,
+	Layout,
 } from '../../../components/index'
 import { useEffect, useState, useContext } from 'react'
 import {
@@ -49,11 +50,6 @@ import PostPage from './postPage/PostPage'
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
 
-	const [activeTwitterBlue, setActiveTwitterBlue] = useState(false)
-	const [activeLogOut, setActiveLogOut] = useState(false)
-	const [activeLoginForm, setActiveLoginForm] = useState(false)
-	const [activeVerified, setActiveVerified] = useState(false)
-
 	const [activeAddList, setActiveAddList] = useState(false)
 
 	// declaring location variable using react-router-dom
@@ -67,20 +63,9 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	// removes scrollbar when modal windows are open
 
-	activeLogOut ||
-	activeLoginForm ||
-	activeTwitterBlue ||
-	activeVerified ||
 	activeAddList
 		? (document.body.style.overflowY = 'hidden')
 		: (document.body.style.overflowY = 'inherit')
-
-	const [activeEdit, setActiveEdit] = useState(false)
-	const [activeEditCircle, setActiveEditCircle] = useState(true)
-	const [activeEditRec, setActiveEditRec] = useState(false)
-	const [activeEditInput, setActiveEditInput] = useState(false)
-	const [hasValue, setHasValue] = useState(false)
-	const [activeProfessionals, setActiveProfessionals] = useState(false)
 
 	// declaring states of custom input fields
 
@@ -558,25 +543,12 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	// console.log(anotherUser === undefined)
 
 	return (
-		<div style={{ display: 'flex' }}>
-			{/* sidebar with modal windows' states */}
-			<Sidebar
-				registered
-				activeTwitterBlue={activeTwitterBlue}
-				setActiveTwitterBlue={setActiveTwitterBlue}
-				activeLogOut={activeLogOut}
-				setActiveLogOut={setActiveLogOut}
-				activeLoginForm={activeLoginForm}
-				setActiveLoginForm={setActiveLoginForm}
-				activeVerified={activeVerified}
-				setActiveVerified={setActiveVerified}
-				setActiveEdit={setActiveEdit}
-				setActiveProfessionals={setActiveProfessionals}
-				isLoading={isLoading}
-				setIsLoading={setIsLoading}
-				user={user}
-				userInStorage={userInStorage}
-			/>
+		<Layout
+			isLoading={isLoading}
+			setIsLoading={setIsLoading}
+			user={user}
+			userInStorage={userInStorage}
+		>
 			{user && anotherUser !== undefined ? (
 				<div className='profileMain'>
 					<div className='profileContainer'>
@@ -1374,41 +1346,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 					</div>
 				</div>
 			)}
-			{/* rightbar with trends */}
-			<div>
-				<Actual registered />
-				<WhoToFollow />
-			</div>
-			{/* modal windows */}
-			<TwitterBlue
-				active={activeTwitterBlue}
-				setActive={setActiveTwitterBlue}
-			/>
-			<LogoutForm active={activeLogOut} setActive={setActiveLogOut} />
-			<LoginForm
-				activeForm={activeLoginForm}
-				setActiveForm={setActiveLoginForm}
-			/>
-			<VerifiedOrganizations
-				active={activeVerified}
-				setActive={setActiveVerified}
-			/>
-			<TwitterCircle
-				activeEdit={activeEdit}
-				setActiveEdit={setActiveEdit}
-				activeEditCircle={activeEditCircle}
-				setActiveEditCircle={setActiveEditCircle}
-				activeEditRec={activeEditRec}
-				setActiveEditRec={setActiveEditRec}
-				activeEditInput={activeEditInput}
-				setActiveEditInput={setActiveEditInput}
-				hasValue={hasValue}
-				setHasValue={setHasValue}
-			/>
-			<TwitterProfessionals
-				active={activeProfessionals}
-				setActive={setActiveProfessionals}
-			/>
 			{/* creating new list */}
 			<form className={activeAddList ? 'addListBlock active' : 'addListBlock'}>
 				<div className='addListBlockContainer'>
@@ -1464,7 +1401,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				</div>
 				<div className='overlay' onClick={() => setActiveAddList(false)}></div>
 			</form>
-		</div>
+		</Layout>
 	)
 }
 

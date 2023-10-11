@@ -17,24 +17,17 @@ import { UserContext } from '../../context/UserContext'
 import { useLocalStorage } from '../../utils/useLocalStorage'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import Layout from '../../components/layout/Layout'
 
 const NotFound = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
 
-	const [scrollPosition, isScrollingUp] = useScrollPosition()
 	const [activeTwitterBlue, setActiveTwitterBlue] = useState(false)
 	const [activeLogOut, setActiveLogOut] = useState(false)
 	const [activeLoginForm, setActiveLoginForm] = useState(false)
 	const [activeVerified, setActiveVerified] = useState(false)
-	const [activeProfessionals, setActiveProfessionals] = useState(false)
 
-	const [activeEdit, setActiveEdit] = useState(false)
-	const [activeEditCircle, setActiveEditCircle] = useState(true)
-	const [activeEditRec, setActiveEditRec] = useState(false)
-	const [activeEditInput, setActiveEditInput] = useState(false)
-	const [hasValue, setHasValue] = useState(false)
-
-	document.title = 'Bookmarks / Twitter'
+	document.title = 'Page not found / Twitter'
 
 	// removes scrollbar when modal windows are open
 
@@ -52,33 +45,18 @@ const NotFound = ({ isLoading, setIsLoading }) => {
 			const findUser = await axios.get(`/users/findByToken/${userInStorage}`)
 			setUser(findUser.data)
 		}
-		fetchUser()
-	}, [userInStorage])
+		!user && fetchUser()
+	}, [user, userInStorage])
 
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
 	return (
-		<div style={{ display: 'flex' }}>
-			{/* sidebar with modal windows' states */}
-
-			<Sidebar
-				registered
-				activeTwitterBlue={activeTwitterBlue}
-				setActiveTwitterBlue={setActiveTwitterBlue}
-				activeLogOut={activeLogOut}
-				setActiveLogOut={setActiveLogOut}
-				activeLoginForm={activeLoginForm}
-				setActiveLoginForm={setActiveLoginForm}
-				activeVerified={activeVerified}
-				setActiveVerified={setActiveVerified}
-				setActiveEdit={setActiveEdit}
-				setActiveProfessionals={setActiveProfessionals}
-				isLoading={isLoading}
-				setIsLoading={setIsLoading}
-				user={user}
-				userInStorage={userInStorage}
-			/>
-			{/* main content in page */}
+		<Layout
+			isLoading={isLoading}
+			setIsLoading={setIsLoading}
+			user={user}
+			userInStorage={userInStorage}
+		>
 			<div className='notFound'>
 				<div className='not-found-container'>
 					<div className='not-found-content'>
@@ -97,39 +75,9 @@ const NotFound = ({ isLoading, setIsLoading }) => {
 			<div>
 				<Actual registered />
 				<WhoToFollow />
+				test
 			</div>
-
-			{/* modal windows */}
-			<TwitterBlue
-				active={activeTwitterBlue}
-				setActive={setActiveTwitterBlue}
-			/>
-			<LogoutForm active={activeLogOut} setActive={setActiveLogOut} />
-			<LoginForm
-				activeForm={activeLoginForm}
-				setActiveForm={setActiveLoginForm}
-			/>
-			<VerifiedOrganizations
-				active={activeVerified}
-				setActive={setActiveVerified}
-			/>
-			<TwitterCircle
-				activeEdit={activeEdit}
-				setActiveEdit={setActiveEdit}
-				activeEditCircle={activeEditCircle}
-				setActiveEditCircle={setActiveEditCircle}
-				activeEditRec={activeEditRec}
-				setActiveEditRec={setActiveEditRec}
-				activeEditInput={activeEditInput}
-				setActiveEditInput={setActiveEditInput}
-				hasValue={hasValue}
-				setHasValue={setHasValue}
-			/>
-			<TwitterProfessionals
-				active={activeProfessionals}
-				setActive={setActiveProfessionals}
-			/>
-		</div>
+		</Layout>
 	)
 }
 

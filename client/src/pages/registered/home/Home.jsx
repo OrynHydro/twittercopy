@@ -3,20 +3,13 @@
 import './home.css'
 
 import {
-	Sidebar,
 	Actual,
 	WhoToFollow,
 	Share,
-	TwitterBlue,
-	LogoutForm,
-	LoginForm,
-	VerifiedOrganizations,
-	TwitterProfessionals,
-	Loading,
 	PostsLoader,
+	Layout,
 } from '../../../components/index'
 import { useState, useEffect, useContext } from 'react'
-import { useScrollPosition } from '../../../utils/useScrollPosition'
 
 import { Posts } from './../../../components/index'
 import { UserContext } from '../../../context/UserContext'
@@ -32,15 +25,6 @@ const Home = ({ isLoading, setIsLoading }) => {
 
 	const [activeForYou, setActiveForYou] = useState(true)
 	const [activeFollowing, setActiveFollowing] = useState(false)
-
-	// declaring states of modal windows
-
-	const [activeTwitterBlue, setActiveTwitterBlue] = useState(false)
-	const [activeLogOut, setActiveLogOut] = useState(false)
-	const [activeLoginForm, setActiveLoginForm] = useState(false)
-	const [activeVerified, setActiveVerified] = useState(false)
-	const [activeProfessionals, setActiveProfessionals] = useState(false)
-
 	// declaring states of custom input field
 
 	const [activeEdit, setActiveEdit] = useState(false)
@@ -52,12 +36,6 @@ const Home = ({ isLoading, setIsLoading }) => {
 	document.title = 'Home / Twitter'
 
 	// removes scrollbar when modal windows are open
-
-	activeLogOut ||
-	activeLoginForm ||
-	activeTwitterBlue ||
-	activeVerified ||
-	activeProfessionals ||
 	activeEdit
 		? (document.body.style.overflowY = 'hidden')
 		: (document.body.style.overflowY = 'inherit')
@@ -79,8 +57,8 @@ const Home = ({ isLoading, setIsLoading }) => {
 			const findUser = await axios.get(`/users/findByToken/${userInStorage}`)
 			setUser(findUser.data)
 		}
-		fetchUser()
-	}, [userInStorage])
+		!user && fetchUser()
+	}, [user, userInStorage])
 
 	// fetches timeline from database
 
@@ -97,33 +75,16 @@ const Home = ({ isLoading, setIsLoading }) => {
 				console.log(err)
 			}
 		}
-		getTimeline()
-	}, [user?.userId])
+		!userPosts && getTimeline()
+	}, [user, user?.userId])
 
 	return (
-		<div style={{ display: 'flex', position: 'relative' }}>
-			{/* sidebar with modal windows' states */}
-
-			<Sidebar
-				registered
-				activeTwitterBlue={activeTwitterBlue}
-				setActiveTwitterBlue={setActiveTwitterBlue}
-				activeLogOut={activeLogOut}
-				setActiveLogOut={setActiveLogOut}
-				activeLoginForm={activeLoginForm}
-				setActiveLoginForm={setActiveLoginForm}
-				activeVerified={activeVerified}
-				setActiveVerified={setActiveVerified}
-				setActiveEdit={setActiveEdit}
-				setActiveProfessionals={setActiveProfessionals}
-				isLoading={isLoading}
-				setIsLoading={setIsLoading}
-				user={user}
-				userInStorage={userInStorage}
-			/>
-
-			{/* main content in page */}
-
+		<Layout
+			isLoading={isLoading}
+			setIsLoading={setIsLoading}
+			user={user}
+			userInStorage={userInStorage}
+		>
 			<div className='home'>
 				<div className='homeTopbar'>
 					<h1 className='homeTopbarTitle'>Home</h1>
@@ -196,25 +157,7 @@ const Home = ({ isLoading, setIsLoading }) => {
 				<Actual registered />
 				<WhoToFollow />
 			</div>
-			{/* modal windows */}
-			<TwitterBlue
-				active={activeTwitterBlue}
-				setActive={setActiveTwitterBlue}
-			/>
-			<LogoutForm active={activeLogOut} setActive={setActiveLogOut} />
-			<LoginForm
-				activeForm={activeLoginForm}
-				setActiveForm={setActiveLoginForm}
-			/>
-			<VerifiedOrganizations
-				active={activeVerified}
-				setActive={setActiveVerified}
-			/>
-			<TwitterProfessionals
-				active={activeProfessionals}
-				setActive={setActiveProfessionals}
-			/>
-		</div>
+		</Layout>
 	)
 }
 
