@@ -172,6 +172,17 @@ const Sidebar = ({
 														? `/${user?.userId}/lists`
 														: null
 												}
+												onClick={() => {
+													setActiveMoreItem(
+														item.id === activeMoreItem ? null : item.id
+													)
+													setActiveVerified(
+														item.title === 'Verified Orgs' ? true : false
+													)
+													setActiveEdit(
+														item.title === 'Twitter Circle' ? true : false
+													)
+												}}
 											>
 												<div
 													className={
@@ -179,17 +190,6 @@ const Sidebar = ({
 															? 'sidebarMoreBlockItem containsItems'
 															: 'sidebarMoreBlockItem'
 													}
-													onClick={() => {
-														setActiveMoreItem(
-															item.id === activeMoreItem ? null : item.id
-														)
-														setActiveVerified(
-															item.title === 'Verified Orgs' ? true : false
-														)
-														setActiveEdit(
-															item.title === 'Twitter Circle' ? true : false
-														)
-													}}
 												>
 													<img
 														className='sidebarMoreBlockImg'

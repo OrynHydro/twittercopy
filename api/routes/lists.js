@@ -39,7 +39,12 @@ router.get(`/userLists/:userDbId`, async (req, res) => {
 				},
 			},
 		])
-		res.status(200).json(user)
+
+		const populatedUser = await User.populate(user, {
+			path: 'followedLists.followers',
+		})
+
+		res.status(200).json(populatedUser)
 	} catch (err) {
 		res.status(500).json(err)
 	}

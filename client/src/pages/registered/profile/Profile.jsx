@@ -16,7 +16,7 @@ import {
 	Input,
 	Layout,
 } from '../../../components/index'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useRef } from 'react'
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -152,8 +152,8 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				.then(res => setAnotherUser(res.data))
 				.catch(() => setAnotherUser(undefined))
 		}
-		params.userId !== user?.userId && findAnotherUser()
-	}, [params.userId, user?.userId])
+		params.userId !== anotherUser?.userId && findAnotherUser()
+	}, [params.userId, anotherUser?.userId])
 
 	useEffect(() => {
 		!location.pathname.match('@') && navigate('/404')
@@ -539,6 +539,23 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			.then(posts => setPostsWithMedia(posts.data))
 		setLoadingPosts(false)
 	}
+
+	const [isChecked, setIsChecked] = useState(false)
+
+	const createList = async () => {
+		if (!inputName.hasValue) return
+		try {
+			await axios.post(`/lists`, {
+				name: inputName.value,
+				desc: inputDesc.value,
+				creator: user?._id,
+			})
+			// .then(res => navigate(`/${res.data._id}`))
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	return (
 		<Layout
 			isLoading={isLoading}
@@ -1358,15 +1375,14 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						</div>
 						<button
 							disabled={
-								inputName.hasValue === false && inputName.value.length === 1
-									? true
-									: null
+								!inputName.hasValue && inputName.value.length <= 1 ? true : null
 							}
 							className={
-								inputName.hasValue === false && inputName.value.length === 1
+								!inputName.hasValue && inputName.value.length <= 1
 									? 'addListNextBtn disabled'
 									: 'addListNextBtn'
 							}
+							onClick={createList}
 						>
 							Next
 						</button>
@@ -1391,7 +1407,11 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								</span>
 							</div>
 							<div className='checkboxBlock'>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									defaultChecked={isChecked}
+									onClick={() => setIsChecked(!isChecked)}
+								/>
 							</div>
 						</div>
 					</div>

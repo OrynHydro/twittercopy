@@ -392,7 +392,7 @@
 }
 
 .profileListsTextContainer {
-    padding: 12px 16px;
+    padding: 12px 0;
 }
 
 
@@ -409,6 +409,7 @@
     font-weight: 800;
     line-height: 24px;
     color: var(--black);
+    padding: 0px 12px;
 }
 
 .listsBlock {
@@ -576,6 +577,7 @@
 
 .addListNextBtn.disabled {
     background-color: #87898C;
+    cursor: default;
 }
 
 
@@ -1140,4 +1142,115 @@
     font-weight: 400;
     line-height: 20px;
     color: var(--gray);
+}
+
+
+
+
+.listItem {
+    display: flex;
+    align-items: center;
+    transition: 0.2s ease;
+}
+
+.listItem:hover {
+    background-color: #F7F7F7;
+}
+
+.listItemContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+}
+
+.listItemLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listItemImg {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.listItemInfo {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 0px;
+}
+
+.listItemInfoTop {
+    display: flex;
+    align-items: center;
+}
+
+.listItemTitle {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.listItemInfoBottom {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.listItemInfoBottomCreatorAvatar {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.listItemInfoBottomUsername {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--black);
+}
+
+.listItemInfoBottomUserId {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+    position: relative;
+}
+
+.listItemPinBlock {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+}
+
+.listItemPinBlock:hover {
+    background-color: #E1EEF6;
+}
+
+.listItemInfoBottomSomeAva {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 28px;
+}
+
+.listItemInfoBottomSomeAva .listItemInfoBottomCreatorAvatar {
+    position: relative;
+    left: 10px;
+    border: 1px solid #fff;
+}
+
+.listItemInfoBottomCreatorAvatar+.listItemInfoBottomCreatorAvatar {
+    margin-left: -23px; 
 }
