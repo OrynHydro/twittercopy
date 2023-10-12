@@ -6,11 +6,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
 
 import axios from 'axios'
-import { UserContext } from '../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 
 import emailjs from '@emailjs/browser'
-import { useLocalStorage } from '../../utils/useLocalStorage'
-import Input from '../input/Input'
+import { useLocalStorage } from '../../../utils/useLocalStorage'
+import { Input } from '../../index'
 
 const LoginForm = ({ activeForm, setActiveForm }) => {
 	// declaring variable that helps to get images from folder directly without importing

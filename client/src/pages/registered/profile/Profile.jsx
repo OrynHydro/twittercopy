@@ -152,8 +152,8 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				.then(res => setAnotherUser(res.data))
 				.catch(() => setAnotherUser(undefined))
 		}
-		findAnotherUser()
-	}, [params.userId])
+		params.userId !== user?.userId && findAnotherUser()
+	}, [params.userId, user?.userId])
 
 	useEffect(() => {
 		!location.pathname.match('@') && navigate('/404')

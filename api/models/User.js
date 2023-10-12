@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema(
 	{
 		username: {
 			type: String,
-			require: true,
+			required: true,
 			max: 50,
 			unique: true,
 		},
@@ -57,10 +57,6 @@ const UserSchema = new mongoose.Schema(
 		},
 		birth: {
 			type: String,
-		},
-		bio: {
-			type: String,
-			max: 160,
 		},
 		token: {
 			type: String,

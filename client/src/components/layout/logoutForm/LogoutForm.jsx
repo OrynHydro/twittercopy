@@ -2,8 +2,8 @@
 
 import './logoutForm.css'
 import { useContext } from 'react'
-import { UserContext } from '../../context/UserContext'
-import { useLocalStorage } from '../../utils/useLocalStorage'
+import { UserContext } from '../../../context/UserContext'
+import { useLocalStorage } from '../../../utils/useLocalStorage'
 import { useNavigate } from 'react-router-dom'
 
 const LogoutForm = ({ active, setActive }) => {

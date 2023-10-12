@@ -1,6 +1,7 @@
 // importing router using ExpressJS, users and posts model, and bcrypt
 
 const router = require('express').Router()
+const List = require('../models/List')
 const Post = require('../models/Post')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
@@ -259,6 +260,26 @@ router.get(`/media/:userDbId`, async (req, res) => {
 			originalPost: null,
 		}).populate('user')
 		res.status(200).json(postsWithMedia)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// add/remove user to/from list
+router.put(`/addToList/:listId`, async (req, res) => {
+	try {
+		const list = await List.findById(req.params.listId)
+		if (!list.members.includes(req.body.userDbId)) {
+			await list.updateOne({
+				$push: { members: req.body.userDbId },
+			})
+			res.status(200).json('User successfuly added to list')
+		} else {
+			await list.updateOne({
+				$pull: { members: req.body.userDbId },
+			})
+			res.status(200).json('User successfuly removed from list')
+		}
 	} catch (err) {
 		res.status(500).json(err)
 	}

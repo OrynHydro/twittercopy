@@ -4,8 +4,8 @@ import './twitterProfessionals.css'
 
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
-import { Categories } from '../../helpers/categories'
-import Input from '../input/Input'
+import { Categories } from '../../../helpers/categories'
+import { Input } from './../../index'
 
 const TwitterProfessionals = ({ active, setActive }) => {
 	// declaring variable that helps to get images from folder directly without importing
@@ -30,34 +30,12 @@ const TwitterProfessionals = ({ active, setActive }) => {
 		maxCount: 160,
 	})
 
-	const [activeInput, setActiveInput] = useState(false)
-	const [hasValue, setHasValue] = useState(false)
-	const [activeLabelBlue, setActiveLabelBlue] = useState(false)
-	const [activeLabelGray, setActiveLabelGray] = useState(false)
-	const [inputValue, setInputValue] = useState('')
+	// const [activeInput, setActiveInput] = useState(false)
+	// const [hasValue, setHasValue] = useState(false)
+	// const [activeLabelBlue, setActiveLabelBlue] = useState(false)
+	// const [activeLabelGray, setActiveLabelGray] = useState(false)
+	// const [inputValue, setInputValue] = useState('')
 	const [radioInputHasValue, setRadioInputHasValue] = useState(false)
-
-	// custom input change state
-
-	useEffect(() => {
-		if (activeInput) {
-			setActiveLabelBlue(true)
-			setActiveLabelGray(false)
-		}
-		if (hasValue && !activeInput) {
-			setActiveLabelGray(true)
-			setActiveLabelBlue(false)
-		}
-		if (!hasValue && !activeInput) {
-			setActiveLabelGray(false)
-			setActiveLabelBlue(false)
-		}
-	})
-
-	const handleInputChange = e => {
-		setHasValue(true)
-		setInputValue(e.target.value)
-	}
 
 	const input = useRef()
 	const [activeCategoryInput, setActiveCategoryInput] = useState(false)
@@ -141,59 +119,26 @@ const TwitterProfessionals = ({ active, setActive }) => {
 							Add a business description or personal bio to switch to a
 							professional account.
 						</p>
-						<div
-							className={
-								activeInput
-									? 'customInputBlock active'
-									: 'customInputBlock nameInput'
-							}
-							onClick={() => setActiveInput(true)}
-							onBlur={() => setActiveInput(false)}
-						>
-							<span
-								className='customInputCounter'
-								style={{ display: activeInput ? 'inline' : 'none' }}
-							>
-								{hasValue === false && inputValue.length === 1
-									? 0
-									: inputValue.length}{' '}
-								/ 160
-							</span>
-							<label
-								className={
-									activeLabelBlue
-										? 'customInputLabel activeBlue'
-										: activeLabelGray
-										? 'customInputLabel active'
-										: 'customInputLabel'
-								}
-								htmlFor='nameInput'
-							>
-								Add a description here
-							</label>
-							<textarea
-								maxLength={160}
-								id='nameInput'
-								type='text'
-								className='customInput'
-								onChange={e =>
-									e.target.value ? handleInputChange(e) : setHasValue(false)
-								}
-							/>
-						</div>
-						{/* <Input inputState={inputState} setInputState={setInputState} /> */}
+
+						<Input inputState={inputState} setInputState={setInputState} />
 						<button
 							className='professionalsAgreeBtn'
 							style={{
 								marginTop: '350px',
 								background:
-									hasValue && inputValue.length > 0 ? '#0f1419' : '#87898C',
+									inputState.hasValue && inputState.value.length > 0
+										? '#0f1419'
+										: '#87898C',
 							}}
 							onClick={() => {
 								setActiveDesc(false)
 								setActiveCategory(true)
 							}}
-							disabled={hasValue && inputValue.length > 0 ? false : true}
+							disabled={
+								inputState.hasValue && inputState.value.length > 0
+									? false
+									: true
+							}
 						>
 							Next
 						</button>

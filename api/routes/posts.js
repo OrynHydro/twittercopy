@@ -1,10 +1,9 @@
 // importing router using ExpressJS, users and posts model
 
 const router = require('express').Router()
+const List = require('../models/List')
 const Post = require('../models/Post')
 const User = require('../models/User')
-
-const mongoose = require('mongoose')
 
 // create post
 router.post('/', async (req, res) => {
@@ -139,37 +138,6 @@ router.put(`/:postDbId/reply/:userDbId`, async (req, res) => {
 		res.status(500).json(err)
 	}
 })
-
-// router.get('/replies/:originalPostId', async (req, res) => {
-// 	try {
-// 		const originalPostId = req.params.originalPostId
-
-// 		const replies = await Post.aggregate([
-// 			{
-// 				$match: {
-// 					_id: originalPostId,
-// 				},
-// 			},
-// 			{
-// 				$unwind: {
-// 					path: '$replies',
-// 				},
-// 			},
-// 			{
-// 				$lookup: {
-// 					from: 'post',
-// 					localField: 'replies',
-// 					foreignField: '_id',
-// 					as: 'populatedReplies',
-// 				},
-// 			},
-// 		])
-
-// 		res.status(200).json(replies)
-// 	} catch (err) {
-// 		console.error(err)
-// 	}
-// })
 
 // get post with replies
 router.get(`/replies/:originalPostId`, async (req, res) => {

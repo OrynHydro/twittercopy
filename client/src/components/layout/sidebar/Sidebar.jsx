@@ -8,8 +8,8 @@ import {
 	sidebarUnregistered,
 	sidebarRegistered,
 	sidebarMore,
-} from './../../helpers/sidebar'
-import { useOutsideClick } from '../../utils/useOutsideClick'
+} from './../../../helpers/sidebar'
+import { useOutsideClick } from '../../../utils/useOutsideClick'
 
 // states of modal windows and user
 

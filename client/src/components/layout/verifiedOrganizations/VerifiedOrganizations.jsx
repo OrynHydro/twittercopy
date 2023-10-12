@@ -1,7 +1,7 @@
 // import css, navigation component and object of arrays
 
 import './verifiedOrganizations.css'
-import { verifiedListItems } from '../../helpers/verified'
+import { verifiedListItems } from '../../../helpers/verified'
 import { Link } from 'react-router-dom'
 
 const VerifiedOrganizations = ({ active, setActive }) => {
