@@ -4,6 +4,7 @@ const User = require('../models/User')
 const List = require('../models/List')
 const mongoose = require('mongoose')
 
+// create list
 router.post('/', async (req, res) => {
 	const newList = await new List(req.body)
 	try {
@@ -14,6 +15,7 @@ router.post('/', async (req, res) => {
 	}
 })
 
+// find all user's lists
 router.get(`/userLists/:userDbId`, async (req, res) => {
 	try {
 		const user = await User.aggregate([
@@ -50,6 +52,7 @@ router.get(`/userLists/:userDbId`, async (req, res) => {
 	}
 })
 
+// find posts of list's members
 router.get(`/membersPosts/:id`, async (req, res) => {
 	try {
 		const list = await List.aggregate([
@@ -95,10 +98,33 @@ router.get(`/membersPosts/:id`, async (req, res) => {
 	}
 })
 
+// find list
 router.get('/findList/:listId', async (req, res) => {
 	try {
 		const list = await List.findById(req.params.listId)
 		res.status(200).json(list)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// update list
+router.put('/update/:listId', async (req, res) => {
+	try {
+		await List.findByIdAndUpdate(req.params.listId, {
+			$set: req.body,
+		})
+		res.status(200).json('List was updated')
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// delete list
+router.delete('/:listId/delete', async (req, res) => {
+	try {
+		await List.findByIdAndDelete(req.params.listId)
+		res.status(200).json('List deleted')
 	} catch (err) {
 		res.status(500).json(err)
 	}

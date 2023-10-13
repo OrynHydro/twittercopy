@@ -1246,17 +1246,17 @@
     display: flex;
     align-items: center;
     position: relative;
-    width: 28px;
+    width: 33px;
 }
 
 .listItemInfoBottomSomeAva .listItemInfoBottomCreatorAvatar {
     position: relative;
-    left: 10px;
+    left: 15px;
     border: 1px solid #fff;
 }
 
 .listItemInfoBottomCreatorAvatar+.listItemInfoBottomCreatorAvatar {
-    margin-left: -23px; 
+    margin-left: -26px; 
 }
 
 .listItemMembers {

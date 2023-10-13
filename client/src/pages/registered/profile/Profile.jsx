@@ -381,7 +381,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	userAvaFullScreen || userCoverFullScreen
 		? (document.body.style.overflowY = 'hidden')
-		: (document.body.style.overflowY = 'hiddeb')
+		: (document.body.style.overflowY = 'scroll')
 
 	if (!activeEditProfileBlock && currentCover === 'none')
 		setCurrentCover(anotherUser?.coverPicture)
