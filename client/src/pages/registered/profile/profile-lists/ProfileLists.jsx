@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { useOutsideClick } from '../../../../utils/useOutsideClick'
 import axios from 'axios'
 import { BsPin } from 'react-icons/bs'
+import { PostsLoader } from './../../../../components/index'
 
 export const ProfileLists = ({ user, setActiveAddList }) => {
 	const [activeLists, setActiveLists] = useState(false)
@@ -18,7 +19,10 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 
 	const [userLists, setUserLists] = useState([])
 
+	const [isLoadingLists, setIsLoadingLists] = useState(true)
+
 	useEffect(() => {
+		// setIsLoadingLists(true)
 		const fetchUserLists = async () => {
 			await axios
 				.get(`/lists/userLists/${user?._id}`)
@@ -27,11 +31,11 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 						res.data[0].createdLists?.concat(res.data[0].followedLists)
 					)
 				)
+				.catch(() => setUserLists(undefined))
+			setIsLoadingLists(false)
 		}
 		userLists.length === 0 && fetchUserLists()
 	}, [userLists.length])
-
-	console.log(userLists)
 
 	const formatNumber = number => {
 		if (number >= 1000000) {
@@ -85,14 +89,16 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 				<hr className='settingsHr' />
 				<div className='profileListsTextContainer'>
 					<h1 className='profileListsTitle'>Your Lists</h1>
-					{userLists.length === 0 ? (
+					{userLists.length === undefined ? (
 						<p className='profileListsText'>
 							You haven't created or followed any Lists. When you do, they'll
 							show up here.
 						</p>
+					) : isLoadingLists ? (
+						<PostsLoader />
 					) : (
 						userLists.map((list, index) => (
-							<Link className='listItem' key={index}>
+							<Link className='listItem' key={index} to={`/lists/${list._id}`}>
 								<div className='listItemContainer'>
 									<div className='listItemLeft'>
 										<img
@@ -113,7 +119,10 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 											</div>
 
 											{list.creator === user?._id ? (
-												<div className='listItemInfoBottom'>
+												<Link
+													className='listItemInfoBottom'
+													to={`/${user?.userId}`}
+												>
 													<img
 														src={PF + 'storage/' + user.profilePicture}
 														alt=''
@@ -125,7 +134,7 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 													<span className='listItemInfoBottomUserId'>
 														{user.userId}
 													</span>
-												</div>
+												</Link>
 											) : (
 												<div className='listItemInfoBottom'>
 													<div className='listItemInfoBottomSomeAva'>

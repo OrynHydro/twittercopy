@@ -24,6 +24,7 @@ import {
 	Bookmarks,
 	Profile,
 	NotFound,
+	ListPage,
 } from './pages/index'
 
 // importing custom hook
@@ -164,6 +165,12 @@ function App() {
 								}
 							/>
 							<Route path='*' element={<Navigate to='/404' replace />} />
+							<Route
+								path='/lists/:listId'
+								element={
+									<ListPage isLoading={isLoading} setIsLoading={setIsLoading} />
+								}
+							/>
 						</Routes>
 					</>
 				)}

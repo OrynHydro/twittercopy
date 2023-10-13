@@ -66,7 +66,38 @@ router.get(`/membersPosts/:id`, async (req, res) => {
 					as: 'membersPosts',
 				},
 			},
+			{
+				$unwind: {
+					path: '$membersPosts',
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+			{
+				$match: {
+					'membersPosts.originalPost': null,
+				},
+			},
+			{
+				$group: {
+					_id: '$_id',
+					membersPosts: { $push: '$membersPosts' },
+				},
+			},
 		])
+
+		const populatedList = await User.populate(list, {
+			path: 'membersPosts.user',
+		})
+
+		res.status(200).json(populatedList)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+router.get('/findList/:listId', async (req, res) => {
+	try {
+		const list = await List.findById(req.params.listId)
 		res.status(200).json(list)
 	} catch (err) {
 		res.status(500).json(err)

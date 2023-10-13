@@ -1,0 +1,53 @@
+.profileTop {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.listPageData {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.listPageName {
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 24px;
+	color: var(--black);
+}
+
+.listItemInfoBottom.listPageUser .listItemInfoBottomUsername,
+.listItemInfoBottom.listPageUser .listItemInfoBottomUserId {
+	font-size: 15px;
+	line-height: 20px;
+}
+
+.listItemInfoBottom.listPageUser img {
+	width: 20px;
+	height: 20px;
+}
+
+.listPageMembersAndFollowers {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16px;
+	color: var(--gray);
+}
+
+.listPageMembersAndFollowers strong {
+	color: var(--black);
+}
+
+.listPageData .editProfileButtons.following {
+	margin: 20px 0px;
+}
+
+.postPageHr.listPageHr {
+	width: 100%;
+}

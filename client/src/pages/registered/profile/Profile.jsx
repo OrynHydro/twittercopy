@@ -1418,6 +1418,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				</div>
 				<div className='overlay' onClick={() => setActiveAddList(false)}></div>
 			</form>
+			<div>
+				<Actual registered />
+				<WhoToFollow />
+			</div>
 		</Layout>
 	)
 }

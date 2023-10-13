@@ -153,6 +153,7 @@ const Posts = ({
 	setUnfollow,
 	postPage,
 	isReply,
+	listPage,
 }) => {
 	// declaring state of more icon
 
@@ -320,6 +321,19 @@ const Posts = ({
 	const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg']
 
 	const videoExtensions = ['mp4', 'webm', 'ogv', 'avi', 'mkv', 'mov']
+
+	useEffect(() => {
+		if (!unfollow) return
+		if (!listPage) return
+		setActiveFollowBtn('Follow')
+		setUnfollow(false)
+		currentUser.following = currentUser.following.filter(
+			item => item !== post.user?._id
+		)
+		post.user.followers = post.user?.followers.filter(
+			item => item !== post.user?._id
+		)
+	}, [unfollow, listPage])
 
 	if (postPage)
 		return (

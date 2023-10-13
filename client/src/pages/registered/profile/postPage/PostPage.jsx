@@ -15,7 +15,6 @@ const PostPage = ({
 	setActiveFollowBtn,
 }) => {
 	const [post, setPost] = useState(null)
-	const [postReplies, setPostReplies] = useState([])
 
 	const params = useParams()
 

@@ -26,8 +26,6 @@ const Layout = ({ isLoading, setIsLoading, children, user, userInStorage }) => {
 	const [activeEditInput, setActiveEditInput] = useState(false)
 	const [hasValue, setHasValue] = useState(false)
 
-	document.title = 'Bookmarks / Twitter'
-
 	// removes scrollbar when modal windows are open
 
 	activeLogOut || activeLoginForm || activeTwitterBlue || activeVerified

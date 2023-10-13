@@ -1216,6 +1216,10 @@
     color: var(--black);
 }
 
+.listItemInfoBottomUsername:hover {
+    text-decoration: underline;
+}
+
 .listItemInfoBottomUserId {
     font-size: 13px;
     font-weight: 400;
@@ -1253,4 +1257,12 @@
 
 .listItemInfoBottomCreatorAvatar+.listItemInfoBottomCreatorAvatar {
     margin-left: -23px; 
+}
+
+.listItemMembers {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--gray);
+    margin-left: 5px;
 }
