@@ -101,7 +101,7 @@ router.get(`/membersPosts/:id`, async (req, res) => {
 // find list
 router.get('/findList/:listId', async (req, res) => {
 	try {
-		const list = await List.findById(req.params.listId)
+		const list = await List.findById(req.params.listId).populate('creator')
 		res.status(200).json(list)
 	} catch (err) {
 		res.status(500).json(err)
@@ -125,6 +125,46 @@ router.delete('/:listId/delete', async (req, res) => {
 	try {
 		await List.findByIdAndDelete(req.params.listId)
 		res.status(200).json('List deleted')
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// follow list
+router.put('/:listId/follow', async (req, res) => {
+	const userId = req.body.userDbId
+	const listId = req.params.listId
+
+	try {
+		const list = await List.findById(listId)
+
+		if (list.followers.includes(userId)) {
+			await list.updateOne({ $pull: { followers: userId } })
+			res.status(200).json('Unfollowed')
+		} else {
+			await list.updateOne({ $push: { followers: userId } })
+			res.status(200).json('Followed')
+		}
+	} catch (err) {
+		return res.status(500).json(err)
+	}
+})
+
+// add/remove user to/from list
+router.put(`/addToList/:listId`, async (req, res) => {
+	try {
+		const list = await List.findById(req.params.listId)
+		if (!list.members.includes(req.body.userDbId)) {
+			await list.updateOne({
+				$push: { members: req.body.userDbId },
+			})
+			res.status(200).json('User successfuly added to list')
+		} else {
+			await list.updateOne({
+				$pull: { members: req.body.userDbId },
+			})
+			res.status(200).json('User successfuly removed from list')
+		}
 	} catch (err) {
 		res.status(500).json(err)
 	}

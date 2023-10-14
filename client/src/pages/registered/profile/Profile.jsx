@@ -250,6 +250,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	const [currentCover, setCurrentCover] = useState()
 
+	const [coverListFile, setCoverListFile] = useState()
+
+	const [currentListCover, setCurrentListCover] = useState()
+
 	// functions that changes current user avatar (not in the database)
 
 	const changeUserAvatar = async e => {
@@ -293,6 +297,28 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			await axios.post(`/upload`, formData)
 
 			setCurrentCover(fileName)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	const changeListCover = async e => {
+		try {
+			setCoverListFile(e.target.files[0])
+
+			const formData = new FormData()
+			const fileName =
+				'c' +
+				Math.random().toString(16).slice(2) +
+				'.' +
+				e.target.files[0]?.name.split('.')[1]
+
+			formData.append('name', fileName)
+			formData.append('files', e.target.files[0])
+
+			await axios.post(`/upload`, formData)
+
+			setCurrentListCover(fileName)
 		} catch (err) {
 			console.log(err)
 		}
@@ -549,6 +575,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				name: inputName.value,
 				desc: inputDesc.value,
 				creator: user?._id,
+				coverPicture: currentListCover,
 			})
 			// .then(res => navigate(`/${res.data._id}`))
 		} catch (err) {
@@ -1388,9 +1415,45 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						</button>
 					</div>
 					{/* list's cover */}
-					<div className='addListImgBlock'>
-						<div className='addListIcon' title='Add photo'>
-							<img src={PF + 'icon/common/camera.svg'} alt='' />
+					<div
+						className='editProfileBackgroundBlock'
+						style={{ position: 'relative' }}
+					>
+						{currentListCover === null
+							? false
+							: currentListCover && (
+									<div className='currentCover'>
+										<img
+											src={PF + 'storage/' + currentListCover}
+											alt=''
+											className='coverImg'
+										/>
+										<div className='currentCoverOverlay'></div>
+									</div>
+							  )}
+						<div className='editProfileBackgroundAddPhotoIcons'>
+							<label
+								htmlFor='listCover'
+								className='editProfileBackgroundAddPhotoBlock'
+							>
+								<img src={PF + 'icon/common/camera.svg'} alt='' />
+								<input
+									type='file'
+									hidden
+									id='listCover'
+									onChange={e => changeListCover(e)}
+								/>
+							</label>
+							{currentCover === null
+								? false
+								: currentListCover && (
+										<div
+											className='editProfileBackgroundAddPhotoBlock'
+											onClick={() => setCurrentListCover()}
+										>
+											<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+										</div>
+								  )}
 						</div>
 					</div>
 					{/* list's name and desc */}

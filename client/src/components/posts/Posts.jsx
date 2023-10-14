@@ -41,7 +41,15 @@ const PostMoreItem = ({
 	unfollow,
 	setUnfollow,
 }) => {
+	const addUserToList = async () => {
+		// await axios.put(`/lists/addToList/`)
+	}
+
 	const followUser = async title => {
+		if (title === 'Add/remove') {
+			addUserToList()
+			return
+		}
 		if (title !== 'Follow') return
 		if (currentUser?.following.includes(postAuthor?._id)) {
 			try {

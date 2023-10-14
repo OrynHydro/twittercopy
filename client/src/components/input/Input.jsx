@@ -150,7 +150,7 @@ const Input = ({ inputState, setInputState }) => {
 				{inputState.name}
 			</label>
 			<input
-				maxLength={inputState.maxLength}
+				maxLength={inputState.maxCount}
 				id={inputState.name}
 				type={
 					inputState.name === 'Email'

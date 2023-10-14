@@ -34,8 +34,8 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 				.catch(() => setUserLists(undefined))
 			setIsLoadingLists(false)
 		}
-		userLists.length === 0 && fetchUserLists()
-	}, [userLists.length])
+		userLists?.length === 0 && fetchUserLists()
+	}, [userLists?.length])
 
 	const formatNumber = number => {
 		if (number >= 1000000) {
@@ -89,7 +89,7 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 				<hr className='settingsHr' />
 				<div className='profileListsTextContainer'>
 					<h1 className='profileListsTitle'>Your Lists</h1>
-					{userLists.length === undefined ? (
+					{userLists === undefined ? (
 						<p className='profileListsText'>
 							You haven't created or followed any Lists. When you do, they'll
 							show up here.
@@ -102,7 +102,7 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 								<div className='listItemContainer'>
 									<div className='listItemLeft'>
 										<img
-											src={PF + 'defaultListCover.png'}
+											src={PF + 'storage/' + list?.coverPicture}
 											alt=''
 											className='listItemImg'
 										/>

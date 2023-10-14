@@ -265,24 +265,4 @@ router.get(`/media/:userDbId`, async (req, res) => {
 	}
 })
 
-// add/remove user to/from list
-router.put(`/addToList/:listId`, async (req, res) => {
-	try {
-		const list = await List.findById(req.params.listId)
-		if (!list.members.includes(req.body.userDbId)) {
-			await list.updateOne({
-				$push: { members: req.body.userDbId },
-			})
-			res.status(200).json('User successfuly added to list')
-		} else {
-			await list.updateOne({
-				$pull: { members: req.body.userDbId },
-			})
-			res.status(200).json('User successfuly removed from list')
-		}
-	} catch (err) {
-		res.status(500).json(err)
-	}
-})
-
 module.exports = router

@@ -180,6 +180,34 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 		activeEditList && (document.body.style.overflowY = 'hidden')
 	}, [activeEditList])
 
+	const [followListBtn, setFollowListBtn] = useState('Follow')
+
+	useEffect(() => {
+		list?.followers.includes(user?._id)
+			? setFollowListBtn('Following')
+			: setFollowListBtn('Follow')
+	}, [list?.followers, user?._id])
+
+	const followList = async () => {
+		try {
+			await axios
+				.put(`/lists/${list?._id}/follow`, {
+					userDbId: user?._id,
+				})
+				.then(res => {
+					if (res.data === 'Unfollowed') {
+						setFollowListBtn('Follow')
+						list.followers = list.followers.filter(item => item !== user?._id)
+					} else if (res.data === 'Followed') {
+						setFollowListBtn('Following')
+						list.followers.push(user?._id)
+					}
+				})
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	return (
 		<Layout
 			isLoading={isLoading}
@@ -191,7 +219,9 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 				<div className='profileTop listTopItem'>
 					<div className='profileTopTextBlock'>
 						<h2 className='profileTopTitle'>{list?.name || 'List'}</h2>
-						<span className='profileTopTweetsCounter'>{user?.userId}</span>
+						<span className='profileTopTweetsCounter'>
+							{list?.creator.userId}
+						</span>
 					</div>
 					<div className='profileTopIconBlock'>
 						<div className='profileTopIcon'>
@@ -208,21 +238,25 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 							? PF + 'defaultListCover.png'
 							: PF + 'storage/' + list?.coverPicture
 					}
-					style={{ marginTop: '53px', height: '200px', width: '100%' }}
+					className='listCoverImg'
 				/>
 				<div className='listPageData'>
 					<h2 className='listPageName'>{list?.name || 'List'}</h2>
 					<Link
 						className='listItemInfoBottom listPageUser'
-						to={`/${user?.userId}`}
+						to={`/${list?.creator.userId}`}
 					>
 						<img
-							src={PF + 'storage/' + user?.profilePicture}
+							src={PF + 'storage/' + list?.creator.profilePicture}
 							alt=''
 							className='listItemInfoBottomCreatorAvatar'
 						/>
-						<p className='listItemInfoBottomUsername'>{user?.username}</p>
-						<span className='listItemInfoBottomUserId'>{user?.userId}</span>
+						<p className='listItemInfoBottomUsername'>
+							{list?.creator.username}
+						</p>
+						<span className='listItemInfoBottomUserId'>
+							{list?.creator.userId}
+						</span>
 					</Link>
 					<div className='listPageMembersAndFollowers'>
 						<span>
@@ -238,15 +272,36 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 								: ' Follower'}
 						</span>
 					</div>
-					<button
-						className='editProfileButtons following'
-						onClick={() => setActiveEditList(true)}
-					>
-						Edit List
-					</button>
+					{list?.creator._id === user?._id ? (
+						<button
+							className='editProfileButtons following'
+							onClick={() => setActiveEditList(true)}
+						>
+							Edit List
+						</button>
+					) : (
+						<button
+							className={
+								followListBtn === 'Unfollow'
+									? 'editProfileButtons following redButton'
+									: followListBtn === 'Follow'
+									? 'editProfileButtons following blackButton'
+									: 'editProfileButtons following'
+							}
+							onMouseOver={() => {
+								followListBtn !== 'Follow' && setFollowListBtn('Unfollow')
+							}}
+							onMouseOut={() => {
+								followListBtn !== 'Follow' && setFollowListBtn('Following')
+							}}
+							onClick={() => followList()}
+						>
+							{followListBtn}
+						</button>
+					)}
 				</div>
 				<hr className='postPageHr listPageHr' />
-				{membersPosts.length === 0 && list?.members !== 0 ? (
+				{membersPosts.length === 0 && list?.members.length !== 0 ? (
 					<PostsLoader />
 				) : membersPosts.length > 0 ? (
 					membersPosts.map((post, index) => (
@@ -265,9 +320,12 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 						/>
 					))
 				) : (
-					<>
-						Waiting for posts Posts from people in this List will show up here.
-					</>
+					<div className='listPageNoPosts'>
+						<div className='listPageNoPostsContainer'>
+							<h1>Waiting for posts</h1>
+							<span>Posts from people in this List will show up here.</span>
+						</div>
+					</div>
 				)}
 				<div
 					className={activeEditList ? 'addListBlock active' : 'addListBlock'}
