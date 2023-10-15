@@ -1,11 +1,12 @@
 // lists pages inside of profile
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useOutsideClick } from '../../../../utils/useOutsideClick'
 import axios from 'axios'
 import { BsPin } from 'react-icons/bs'
 import { PostsLoader } from './../../../../components/index'
+import ListItem from '../listItem/ListItem'
 
 export const ProfileLists = ({ user, setActiveAddList }) => {
 	const [activeLists, setActiveLists] = useState(false)
@@ -37,23 +38,34 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 		userLists?.length === 0 && fetchUserLists()
 	}, [userLists?.length])
 
-	const formatNumber = number => {
-		if (number >= 1000000) {
-			return (number / 1000000).toFixed(1) + 'M'
-		} else if (number >= 1000) {
-			return (number / 1000).toFixed(1) + 'K'
-		} else {
-			return number.toString()
-		}
-	}
+	const [activeInputEdit, setActiveInputEdit] = useState(false)
 
 	return (
 		<div className='profileLists'>
 			<div className='profileTop'>
-				<div className='profileTopTextBlock'>
-					<h2 className='profileTopTitle'>Lists</h2>
-					<span className='profileTopTweetsCounter'>{user?.userId}</span>
-				</div>
+				<form
+					className='actualSearchBlockForm'
+					onFocus={() => setActiveInputEdit(true)}
+					onBlur={() => setActiveInputEdit(false)}
+				>
+					<img
+						src={
+							activeInputEdit
+								? PF + 'icon/utility/searchActive.svg'
+								: PF + 'icon/utility/search.svg'
+						}
+						alt=''
+					/>
+					<input
+						placeholder='Search Lists'
+						className={
+							activeInputEdit
+								? 'actualSearchBlockFormInput active'
+								: 'actualSearchBlockFormInput'
+						}
+					/>
+				</form>
+
 				<div className='profileTopIconBlock'>
 					<div
 						className='profileTopIcon'
@@ -98,108 +110,7 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 						<PostsLoader />
 					) : (
 						userLists.map((list, index) => (
-							<Link className='listItem' key={index} to={`/lists/${list._id}`}>
-								<div className='listItemContainer'>
-									<div className='listItemLeft'>
-										<img
-											src={PF + 'storage/' + list?.coverPicture}
-											alt=''
-											className='listItemImg'
-										/>
-										<div className='listItemInfo'>
-											<div className='listItemInfoTop'>
-												<h3 className='listItemTitle'>{list.name}</h3>
-												<span className='listItemMembers'>
-													{list.members.length === 0
-														? ''
-														: list.members.length === 1
-														? ' · 1 member'
-														: ` · ${list.members.length} members`}
-												</span>
-											</div>
-
-											{list.creator === user?._id ? (
-												<Link
-													className='listItemInfoBottom'
-													to={`/${user?.userId}`}
-												>
-													<img
-														src={PF + 'storage/' + user.profilePicture}
-														alt=''
-														className='listItemInfoBottomCreatorAvatar'
-													/>
-													<p className='listItemInfoBottomUsername'>
-														{user.username}
-													</p>
-													<span className='listItemInfoBottomUserId'>
-														{user.userId}
-													</span>
-												</Link>
-											) : (
-												<div className='listItemInfoBottom'>
-													<div className='listItemInfoBottomSomeAva'>
-														<img
-															src={
-																PF +
-																'storage/' +
-																list.followers[0].profilePicture
-															}
-															alt=''
-															className='listItemInfoBottomCreatorAvatar'
-														/>
-														<img
-															src={
-																PF +
-																'storage/' +
-																list.followers[1].profilePicture
-															}
-															alt=''
-															className='listItemInfoBottomCreatorAvatar'
-														/>
-														<img
-															src={
-																PF +
-																'storage/' +
-																list.followers[2].profilePicture
-															}
-															alt=''
-															className='listItemInfoBottomCreatorAvatar'
-														/>
-													</div>
-
-													<span
-														className='listItemInfoBottomUserId'
-														style={{ left: '0px' }}
-													>
-														{formatNumber(list.followers.length)} followers
-														including{' '}
-														{list.followers.find(following =>
-															user.following.includes(following._id)
-														)?.userId ||
-															list.followers.reduce((maxUser, currentUser) => {
-																const maxFollowersCount =
-																	maxUser.followers.length || 0
-																const currentFollowersCount =
-																	currentUser.followers.length || 0
-
-																if (currentFollowersCount > maxFollowersCount) {
-																	return currentUser
-																} else {
-																	return maxUser
-																}
-															}).followers.length}
-													</span>
-												</div>
-											)}
-										</div>
-									</div>
-									<div className='listItemRight'>
-										<div className='listItemPinBlock'>
-											<BsPin color={'#1d9bf0'} fontSize={20} />
-										</div>
-									</div>
-								</div>
-							</Link>
+							<ListItem list={list} key={index} user={user} />
 						))
 					)}
 				</div>

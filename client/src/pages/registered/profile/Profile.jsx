@@ -600,6 +600,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 								display:
 									location.pathname === `/${params.userId}/topics` ||
 									location.pathname === `/${params.userId}/lists` ||
+									location.pathname === `/${params.userId}/lists/membership` ||
 									location.pathname === `/${params.userId}/topics/followed` ||
 									location.pathname ===
 										`/${params.userId}/topics/not_interested` ||

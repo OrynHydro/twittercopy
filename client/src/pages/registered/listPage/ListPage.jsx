@@ -15,6 +15,9 @@ import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
 import Layout from '../../../components/layout/Layout'
 import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useOutsideClick } from '../../../utils/useOutsideClick'
+import { RxCrossCircled } from 'react-icons/rx'
+import { listSharePopup } from '../../../helpers/listSharePopup'
 
 const ListPage = ({ isLoading, setIsLoading }) => {
 	// user data states
@@ -208,6 +211,26 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 		}
 	}
 
+	const [morePopupActive, setMorePopupActive] = useState(false)
+
+	const morePopup = useOutsideClick(() => setMorePopupActive(false))
+
+	const [sharePopupActive, setSharePopupActive] = useState(false)
+
+	const sharePopup = useOutsideClick(() => setSharePopupActive(false))
+
+	const clickToShareItem = item => {
+		if (item.img === 'link.svg') {
+			navigator.clipboard.writeText(
+				`http://localhost:3000/lists/${params.listId}`
+			)
+			setActiveAlert(true)
+			setTimeout(() => setActiveAlert(false), 5000)
+		}
+	}
+
+	const [activeAlert, setActiveAlert] = useState(false)
+
 	return (
 		<Layout
 			isLoading={isLoading}
@@ -224,11 +247,63 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 						</span>
 					</div>
 					<div className='profileTopIconBlock'>
-						<div className='profileTopIcon'>
+						<div
+							className='profileTopIcon'
+							onClick={() => setSharePopupActive(true)}
+						>
 							<img src={PF + 'icon/common/share.svg'} alt='' />
 						</div>
-						<div className='profileTopIcon'>
+						<div
+							className={
+								sharePopupActive ? 'sharePopupBlock active' : 'sharePopupBlock'
+							}
+							ref={sharePopup}
+						>
+							<div className='sharePopupContainer'>
+								{listSharePopup.map(item => (
+									<div
+										className='sharePopupItem'
+										onClick={() => {
+											setSharePopupActive(false)
+											clickToShareItem(item)
+										}}
+										key={item.id}
+									>
+										<img
+											src={PF + 'icon/common/' + item.img}
+											style={{
+												transform: item.img === 'link.svg' && 'rotate(-45deg)',
+											}}
+											alt=''
+										/>
+										<h2>{item.text}</h2>
+									</div>
+								))}
+							</div>
+						</div>
+						<div
+							className='profileTopIcon'
+							onClick={() => setMorePopupActive(true)}
+						>
 							<img src={PF + 'icon/utility/moreHorizontal.svg'} alt='' />
+						</div>
+						<div
+							className={
+								morePopupActive ? 'morePopupBlock active' : 'morePopupBlock'
+							}
+							ref={morePopup}
+							onClick={() => setMorePopupActive(false)}
+						>
+							<div className='morePopupContainer'>
+								<RxCrossCircled fontSize={30} />
+								<div className='morePopupTextBlock'>
+									<h2>Don’t show these posts in For you</h2>
+									<span>
+										Top posts from this List will no longer show up in your For
+										you timeline.
+									</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -511,6 +586,9 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 						className='overlay'
 						onClick={() => setDeleteListModal(false)}
 					></div>
+				</div>
+				<div className={activeAlert ? 'alertBlock active' : 'alertBlock'}>
+					Copied to clipboard
 				</div>
 			</div>
 			{/* rightbar with trends */}

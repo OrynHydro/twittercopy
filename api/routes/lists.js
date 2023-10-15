@@ -170,4 +170,59 @@ router.put(`/addToList/:listId`, async (req, res) => {
 	}
 })
 
+// find all user member lists
+router.get(`/memberLists/:userDbId`, async (req, res) => {
+	try {
+		const user = await User.aggregate([
+			{
+				$match: {
+					_id: new mongoose.Types.ObjectId(req.params.userDbId),
+				},
+			},
+			{
+				$lookup: {
+					from: 'lists',
+					localField: '_id',
+					foreignField: 'members',
+					as: 'memberLists',
+				},
+			},
+			{
+				$unwind: '$memberLists',
+			},
+			{
+				$lookup: {
+					from: 'users', // Assuming 'users' is the name of your users collection
+					localField: 'memberLists.followers',
+					foreignField: '_id',
+					as: 'memberLists.followers',
+				},
+			},
+			{
+				$lookup: {
+					from: 'users', // Assuming 'users' is the name of your users collection
+					localField: 'memberLists.creator',
+					foreignField: '_id',
+					as: 'memberLists.creator',
+				},
+			},
+			{
+				$group: {
+					_id: '$_id',
+					memberLists: { $push: '$memberLists' },
+				},
+			},
+		])
+
+		// Нулевой элемент массива 'creator' для каждого элемента 'memberLists'
+		user[0].memberLists.forEach(list => {
+			list.creator = list.creator[0]
+		})
+
+		res.status(200).json(user[0].memberLists)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
 module.exports = router

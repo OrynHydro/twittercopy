@@ -1,0 +1,109 @@
+import { BsPin } from 'react-icons/bs'
+import { Link } from 'react-router-dom'
+
+const ListItem = ({ list, user, noPin }) => {
+	const PF = process.env.REACT_APP_PUBLIC_FOLDER
+	const formatNumber = number => {
+		if (number >= 1000000) {
+			return (number / 1000000).toFixed(1) + 'M'
+		} else if (number >= 1000) {
+			return (number / 1000).toFixed(1) + 'K'
+		} else {
+			return number.toString()
+		}
+	}
+
+	return (
+		<Link className='listItem' to={`/lists/${list._id}`}>
+			<div className='listItemContainer'>
+				<div className='listItemLeft'>
+					<img
+						src={PF + 'storage/' + list?.coverPicture}
+						alt=''
+						className='listItemImg'
+					/>
+					<div className='listItemInfo'>
+						<div className='listItemInfoTop'>
+							<h3 className='listItemTitle'>{list.name}</h3>
+							<span className='listItemMembers'>
+								{list.members.length === 0
+									? ''
+									: list.members.length === 1
+									? ' · 1 member'
+									: ` · ${list.members.length} members`}
+							</span>
+						</div>
+
+						{list.creator === user?._id || list.followers.length === 0 ? (
+							<Link className='listItemInfoBottom' to={`/${user?.userId}`}>
+								<img
+									src={
+										!list.creator?.profilePicture
+											? PF + 'storage/' + user.profilePicture
+											: PF + 'storage/' + list.creator?.profilePicture
+									}
+									alt=''
+									className='listItemInfoBottomCreatorAvatar'
+								/>
+								<p className='listItemInfoBottomUsername'>
+									{list.creator.username || user?.username}
+								</p>
+								<span className='listItemInfoBottomUserId'>
+									{list.creator.userId || user?.userId}
+								</span>
+							</Link>
+						) : (
+							<div className='listItemInfoBottom'>
+								<div className='listItemInfoBottomSomeAva'>
+									<img
+										src={PF + 'storage/' + list.followers[0].profilePicture}
+										alt=''
+										className='listItemInfoBottomCreatorAvatar'
+									/>
+									<img
+										src={PF + 'storage/' + list.followers[1].profilePicture}
+										alt=''
+										className='listItemInfoBottomCreatorAvatar'
+									/>
+									<img
+										src={PF + 'storage/' + list.followers[2].profilePicture}
+										alt=''
+										className='listItemInfoBottomCreatorAvatar'
+									/>
+								</div>
+
+								<span
+									className='listItemInfoBottomUserId'
+									style={{ left: '0px' }}
+								>
+									{formatNumber(list.followers.length)} followers including{' '}
+									{list.followers.find(following =>
+										user.following.includes(following._id)
+									)?.userId ||
+										list.followers.reduce((maxUser, currentUser) => {
+											const maxFollowersCount = maxUser.followers.length || 0
+											const currentFollowersCount =
+												currentUser.followers.length || 0
+
+											if (currentFollowersCount > maxFollowersCount) {
+												return currentUser
+											} else {
+												return maxUser
+											}
+										}).followers.length}
+								</span>
+							</div>
+						)}
+					</div>
+				</div>
+				<div className='listItemRight' style={{ display: noPin && 'none' }}>
+					<div className='listItemPinBlock'>
+						<BsPin color={'#1d9bf0'} fontSize={20} />
+					</div>
+				</div>
+			</div>
+		</Link>
+	)
+}
+
+export default ListItem
