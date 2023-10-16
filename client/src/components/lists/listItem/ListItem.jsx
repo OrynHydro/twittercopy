@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { BsPin, BsPinFill } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
+import ListPopup from '../listPopup/ListPopup'
 
 const ListItem = ({ list, user, noPin }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -39,6 +40,8 @@ const ListItem = ({ list, user, noPin }) => {
 			setPinned(true)
 	}, [user?.pinnedLists, list])
 
+	const [activePopup, setActivePopup] = useState(false)
+
 	return (
 		<Link className='listItem' to={`/lists/${list._id}`}>
 			<div className='listItemContainer'>
@@ -49,7 +52,11 @@ const ListItem = ({ list, user, noPin }) => {
 						className='listItemImg'
 					/>
 					<div className='listItemInfo'>
-						<div className='listItemInfoTop'>
+						<div
+							className='listItemInfoTop'
+							onMouseOver={() => setTimeout(() => setActivePopup(true), 500)}
+							onMouseOut={() => setTimeout(() => setActivePopup(false), 500)}
+						>
 							<h3 className='listItemTitle'>{list.name}</h3>
 							<span className='listItemMembers'>
 								{list.members.length === 0
@@ -58,6 +65,7 @@ const ListItem = ({ list, user, noPin }) => {
 									? ' · 1 member'
 									: ` · ${list.members.length} members`}
 							</span>
+							<ListPopup list={list} user={user} opened={activePopup} />
 						</div>
 
 						{list.creator === user?._id || list.followers.length === 0 ? (
@@ -67,7 +75,7 @@ const ListItem = ({ list, user, noPin }) => {
 										!list.creator?.profilePicture && !user?.profilePicture
 											? PF + 'icon/noAvatar.png'
 											: list.creator?.profilePicture
-											? PF + 'storage/' + user.profilePicture
+											? PF + 'storage/' + user?.profilePicture
 											: PF + 'storage/' + list.creator?.profilePicture
 									}
 									alt=''
@@ -84,17 +92,17 @@ const ListItem = ({ list, user, noPin }) => {
 							<div className='listItemInfoBottom'>
 								<div className='listItemInfoBottomSomeAva'>
 									<img
-										src={PF + 'storage/' + list.followers[0].profilePicture}
+										src={PF + 'storage/' + list.followers[0]?.profilePicture}
 										alt=''
 										className='listItemInfoBottomCreatorAvatar'
 									/>
 									<img
-										src={PF + 'storage/' + list.followers[1].profilePicture}
+										src={PF + 'storage/' + list.followers[1]?.profilePicture}
 										alt=''
 										className='listItemInfoBottomCreatorAvatar'
 									/>
 									<img
-										src={PF + 'storage/' + list.followers[2].profilePicture}
+										src={PF + 'storage/' + list.followers[2]?.profilePicture}
 										alt=''
 										className='listItemInfoBottomCreatorAvatar'
 									/>

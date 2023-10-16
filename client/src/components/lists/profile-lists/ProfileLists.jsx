@@ -30,10 +30,10 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 				.get(`/lists/userLists/${user?._id}`)
 				.then(res =>
 					setUserLists(
-						res.data[0].createdLists.length === 0 &&
-							res.data[0].followedLists.length === 0
+						res.data.createdLists?.length === 0 &&
+							res.data.followedLists?.length === 0
 							? undefined
-							: res.data[0].createdLists?.concat(res.data[0].followedLists)
+							: res.data.createdLists?.concat(res.data.followedLists)
 					)
 				)
 				.catch(() => setUserLists(undefined))
@@ -99,7 +99,7 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 				{user?.pinnedLists.length > 0 ? (
 					<div style={{ marginTop: '20px' }}>
 						{user?.pinnedLists.map((item, index) => (
-							<PinnedListItem list={item} key={index} />
+							<PinnedListItem list={item} key={index} user={user} />
 						))}
 					</div>
 				) : (

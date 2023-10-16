@@ -466,20 +466,20 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 											/>
 											<div className='currentCoverOverlay'></div>
 										</div>
-									) : list?.coverPicture ? (
+									) : currentCover !== undefined ? (
 										<div className='currentCover'>
 											<img
-												src={PF + 'storage/' + list?.coverPicture}
+												src={PF + 'storage/' + currentCover}
 												alt=''
 												className='coverImg'
 											/>
 											<div className='currentCoverOverlay'></div>
 										</div>
 									) : (
-										currentCover !== undefined && (
+										list?.coverPicture && (
 											<div className='currentCover'>
 												<img
-													src={PF + 'storage/' + currentCover}
+													src={PF + 'storage/' + list?.coverPicture}
 													alt=''
 													className='coverImg'
 												/>

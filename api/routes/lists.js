@@ -40,13 +40,77 @@ router.get(`/userLists/:userDbId`, async (req, res) => {
 					as: 'followedLists',
 				},
 			},
+			{
+				$match: {
+					$or: [
+						{ $expr: { $ne: [{ $size: '$createdLists' }, 0] } },
+						{ $expr: { $ne: [{ $size: '$followedLists' }, 0] } },
+					],
+				},
+			},
+			{
+				$unwind: {
+					path: '$createdLists',
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+			{
+				$unwind: {
+					path: '$followedLists',
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'createdLists.creator',
+					foreignField: '_id',
+					as: 'createdLists.creator',
+				},
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'followedLists.creator',
+					foreignField: '_id',
+					as: 'followedLists.creator',
+				},
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'createdLists.followers',
+					foreignField: '_id',
+					as: 'createdLists.followers',
+				},
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'followedLists.followers',
+					foreignField: '_id',
+					as: 'followedLists.followers',
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					createdLists: { $push: '$createdLists' },
+					followedLists: { $push: '$followedLists' },
+				},
+			},
 		])
 
-		const populatedUser = await User.populate(user, {
-			path: 'followedLists.followers',
-		})
+		if (user[0].followedLists[0].creator.length === 0) {
+			user[0].followedLists = []
+		}
 
-		res.status(200).json(populatedUser)
+		if (user[0].createdLists[0].creator.length === 0) {
+			user[0].createdLists = []
+		}
+
+		res.status(200).json(user[0])
 	} catch (err) {
 		res.status(500).json(err)
 	}

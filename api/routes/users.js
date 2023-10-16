@@ -89,7 +89,10 @@ router.delete('/:id', async (req, res) => {
 router.get('/findByDbId/:id', async (req, res) => {
 	const userId = req.params.id
 	try {
-		const user = await User.findById(userId)
+		const user = await User.findById(userId).populate({
+			path: 'pinnedLists',
+			populate: { path: 'creator' },
+		})
 		const { password, updatedAt, ...other } = user._doc
 		res.status(200).json(other)
 	} catch (err) {
