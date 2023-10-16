@@ -3,9 +3,9 @@ import './postPage.css'
 import { BiMessageRoundedDetail } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { Posts, PostsLoader, Share } from '../../../../components'
-import { UserContext } from '../../../../context/UserContext'
-import { useLocalStorage } from '../../../../utils/useLocalStorage'
+import { Posts, PostsLoader, Share } from '../..'
+import { UserContext } from '../../../context/UserContext'
+import { useLocalStorage } from '../../../utils/useLocalStorage'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 const PostPage = ({

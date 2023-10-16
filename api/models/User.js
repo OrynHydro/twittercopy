@@ -62,14 +62,16 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		likedPosts: {
-			type: Array,
-			default: [],
+		pinnedPost: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Post',
 		},
-		postReplies: {
-			type: Array,
-			default: [],
-		},
+		pinnedLists: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'List',
+			},
+		],
 	},
 	{ timestamps: true }
 )

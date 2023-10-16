@@ -24,8 +24,9 @@ import {
 	Bookmarks,
 	Profile,
 	NotFound,
-	ListPage,
 } from './pages/index'
+
+import { ListPage } from './components/index'
 
 // importing custom hook
 

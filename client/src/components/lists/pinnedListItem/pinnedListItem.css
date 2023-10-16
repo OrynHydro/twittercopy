@@ -1,0 +1,32 @@
+.pinnedListItem {
+	transition: 0.2s ease;
+	cursor: pointer;
+	display: block;
+	width: 104px;
+}
+
+.pinnedListItem:hover {
+	background-color: #f7f7f8;
+}
+
+.pinnedListItemContainer {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 5px;
+	padding: 12px;
+}
+
+.pinnedListItemContainer img {
+	width: 68px;
+	height: 68px;
+	object-fit: cover;
+	border-radius: 12px;
+}
+
+.pinnedListItemContainer p {
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 16px;
+	color: var(--black);
+}

@@ -1,4 +1,6 @@
-import { BsPin } from 'react-icons/bs'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { BsPin, BsPinFill } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 
 const ListItem = ({ list, user, noPin }) => {
@@ -12,6 +14,30 @@ const ListItem = ({ list, user, noPin }) => {
 			return number.toString()
 		}
 	}
+
+	const pinList = async e => {
+		e.preventDefault()
+		try {
+			await axios
+				.put(`/users/pinList/${user?._id}`, {
+					listId: list?._id,
+				})
+				.then(res =>
+					res.data === 'Pinned'
+						? setPinned(true)
+						: res.data === 'Unpinned' && setPinned(false)
+				)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	const [pinned, setPinned] = useState(false)
+
+	useEffect(() => {
+		user?.pinnedLists.some(pinnedList => pinnedList._id === list._id) &&
+			setPinned(true)
+	}, [user?.pinnedLists, list])
 
 	return (
 		<Link className='listItem' to={`/lists/${list._id}`}>
@@ -38,7 +64,9 @@ const ListItem = ({ list, user, noPin }) => {
 							<Link className='listItemInfoBottom' to={`/${user?.userId}`}>
 								<img
 									src={
-										!list.creator?.profilePicture
+										!list.creator?.profilePicture && !user?.profilePicture
+											? PF + 'icon/noAvatar.png'
+											: list.creator?.profilePicture
 											? PF + 'storage/' + user.profilePicture
 											: PF + 'storage/' + list.creator?.profilePicture
 									}
@@ -97,8 +125,12 @@ const ListItem = ({ list, user, noPin }) => {
 					</div>
 				</div>
 				<div className='listItemRight' style={{ display: noPin && 'none' }}>
-					<div className='listItemPinBlock'>
-						<BsPin color={'#1d9bf0'} fontSize={20} />
+					<div className='listItemPinBlock' onClick={e => pinList(e)}>
+						{pinned ? (
+							<BsPinFill color={'#1d9bf0'} fontSize={20} />
+						) : (
+							<BsPin color={'#1d9bf0'} fontSize={20} />
+						)}
 					</div>
 				</div>
 			</div>

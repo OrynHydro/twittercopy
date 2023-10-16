@@ -129,9 +129,11 @@ router.put(`/:postDbId/reply/:userDbId`, async (req, res) => {
 		const originalPost = await Post.findByIdAndUpdate(req.params.postDbId, {
 			$push: { replies: req.body.replyId },
 		})
-		const currentUser = await User.findByIdAndUpdate(req.params.userDbId, {
-			$push: { postReplies: req.body.replyId },
-		})
+		// const currentUser = await User.findByIdAndUpdate(req.params.userDbId, {
+		// 	$push: { postReplies: req.body.replyId },
+		// })
+
+		const currentUser = await User.findByIdAndUpdate(req.params.userDbId)
 
 		res.status(200).json([originalPost, currentUser])
 	} catch (err) {

@@ -232,8 +232,8 @@ const Posts = ({
 	}
 
 	useEffect(() => {
-		setIsLiked(currentUser?.likedPosts.includes(post?._id))
-	}, [currentUser?.likedPosts, post?._id])
+		setIsLiked(post?.likes.includes(currentUser?._id))
+	}, [post?.likes, currentUser?._id])
 
 	// adding a view to post
 
@@ -260,7 +260,8 @@ const Posts = ({
 
 	const [deleteModal, setDeleteModal] = useState(false)
 
-	const deletePost = async () => {
+	const deletePost = async e => {
+		e.preventDefault()
 		try {
 			if (post?.likes.includes(currentUser?._id)) {
 				await axios.put(`/posts/${post?._id}/like`, {
@@ -940,15 +941,27 @@ const Posts = ({
 						timeline of any accounts that follow you, and from search results.{' '}
 					</p>
 					<div className='buttonBlock'>
-						<button className='deleteBtn' onClick={deletePost}>
+						<button className='deleteBtn' onClick={e => deletePost}>
 							Delete
 						</button>
-						<button className='cancelBtn' onClick={() => setDeleteModal(false)}>
+						<button
+							className='cancelBtn'
+							onClick={e => {
+								e.preventDefault()
+								setDeleteModal(false)
+							}}
+						>
 							Cancel
 						</button>
 					</div>
 				</div>
-				<div className='overlay' onClick={() => setDeleteModal(false)}></div>
+				<div
+					className='overlay'
+					onClick={e => {
+						e.preventDefault()
+						setDeleteModal(false)
+					}}
+				></div>
 			</div>
 		</Link>
 	)

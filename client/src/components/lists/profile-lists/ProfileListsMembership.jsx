@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { PostsLoader } from '../../../../components'
+import { PostsLoader } from '../..'
 import ListItem from '../listItem/ListItem'
 import axios from 'axios'
 

@@ -192,7 +192,7 @@ router.get(`/memberLists/:userDbId`, async (req, res) => {
 			},
 			{
 				$lookup: {
-					from: 'users', // Assuming 'users' is the name of your users collection
+					from: 'users',
 					localField: 'memberLists.followers',
 					foreignField: '_id',
 					as: 'memberLists.followers',
@@ -200,7 +200,7 @@ router.get(`/memberLists/:userDbId`, async (req, res) => {
 			},
 			{
 				$lookup: {
-					from: 'users', // Assuming 'users' is the name of your users collection
+					from: 'users',
 					localField: 'memberLists.creator',
 					foreignField: '_id',
 					as: 'memberLists.creator',
@@ -208,13 +208,12 @@ router.get(`/memberLists/:userDbId`, async (req, res) => {
 			},
 			{
 				$group: {
-					_id: '$_id',
+					_id: null,
 					memberLists: { $push: '$memberLists' },
 				},
 			},
 		])
 
-		// Нулевой элемент массива 'creator' для каждого элемента 'memberLists'
 		user[0].memberLists.forEach(list => {
 			list.creator = list.creator[0]
 		})

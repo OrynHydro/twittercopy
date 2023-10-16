@@ -43,9 +43,9 @@ import { ProfileFollowing } from './profile-follow/ProfileFollowing'
 import { ProfileFollowers } from './profile-follow/ProfileFollowers'
 import { ProfileTopics } from './profile-topics/ProfileTopics'
 import { ProfileTopicsNotInterested } from './profile-topics/ProfileTopicsNotInterested'
-import { ProfileLists } from './profile-lists/ProfileLists'
-import { ProfileListsMembership } from './profile-lists/ProfileListsMembership'
-import PostPage from './postPage/PostPage'
+import { ProfileLists } from '../../../components/lists/profile-lists/ProfileLists'
+import { ProfileListsMembership } from '../../../components/lists/profile-lists/ProfileListsMembership'
+import PostPage from '../../../components/posts/postPage/PostPage'
 
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows

@@ -34,7 +34,11 @@ router.put('/:userId/update', async (req, res) => {
 // get user by token
 router.get('/findByToken/:token', async (req, res) => {
 	try {
-		const user = await User.findOne({ token: req.params.token })
+		const user = await User.findOne({ token: req.params.token }).populate({
+			path: 'pinnedLists',
+			populate: { path: 'creator' },
+		})
+
 		const { password, updatedAt, ...other } = user?._doc
 		res.status(200).json(other)
 	} catch (err) {
@@ -213,13 +217,11 @@ router.get('/followers/:userId', async (req, res) => {
 })
 
 // get user's liked posts
-router.get('/userLikedPosts/:dbId', async (req, res) => {
-	const userId = req.params.dbId
+router.get('/userLikedPosts/:userDbId', async (req, res) => {
+	const userId = req.params.userDbId
 	try {
-		const user = await User.findById(userId)
-
 		const likedPostsWithAuthors = await Post.find({
-			_id: { $in: user.likedPosts },
+			likes: { $in: userId },
 		})
 			.sort({ createdAt: -1 })
 			.populate('user')
@@ -240,7 +242,6 @@ router.get('/userReplies/:userId', async (req, res) => {
 			},
 		}).populate('user')
 
-		// Для каждого поста в массиве postsWithUserReplies, выполните populate('replies.user')
 		for (const post of postsWithUserReplies) {
 			await post.populate({ path: 'replies', populate: { path: 'user' } })
 		}
@@ -260,6 +261,46 @@ router.get(`/media/:userDbId`, async (req, res) => {
 			originalPost: null,
 		}).populate('user')
 		res.status(200).json(postsWithMedia)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// pin post
+router.put('/pinPost/:userDbId', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.userDbId)
+		if (user.pinnedPost !== req.body.postId) {
+			await user.updateOne({
+				pinnedPost: req.body.postId,
+			})
+			res.status(200).json('Pinned')
+		} else {
+			await user.updateOne({
+				pinnedPost: null,
+			})
+			res.status(200).json('Unpinned')
+		}
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// pin list
+router.put('/pinList/:userDbId', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.userDbId)
+		if (!user.pinnedLists.includes(req.body.listId)) {
+			await user.updateOne({
+				$push: { pinnedLists: req.body.listId },
+			})
+			res.status(200).json('Pinned')
+		} else {
+			await user.updateOne({
+				$pull: { pinnedLists: req.body.listId },
+			})
+			res.status(200).json('Unpinned')
+		}
 	} catch (err) {
 		res.status(500).json(err)
 	}
