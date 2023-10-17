@@ -27,6 +27,7 @@ import UserPopup from '../userPopup/UserPopup'
 import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
 import { BsPinFill } from 'react-icons/bs'
+import AddUserModal from '../lists/addUserModal/AddUserModal'
 
 const Posts = ({
 	post,
@@ -233,6 +234,8 @@ const Posts = ({
 	useEffect(() => {
 		currentUser?.pinnedPost === post?._id && setIsPinned(true)
 	}, [currentUser?.pinnedPost, post?._id])
+
+	const [activeAddUser, setActiveAddUser] = useState(false)
 
 	if (postPage)
 		return (
@@ -485,6 +488,8 @@ const Posts = ({
 									user={currentUser}
 									isPinned={isPinned}
 									setIsPinned={setIsPinned}
+									activeAddUser={activeAddUser}
+									setActiveAddUser={setActiveAddUser}
 								/>
 						  ))
 						: postMoreNotUserItem.map((item, id) => (
@@ -500,6 +505,8 @@ const Posts = ({
 									setUnfollow={setUnfollow}
 									post={post}
 									user={currentUser}
+									activeAddUser={activeAddUser}
+									setActiveAddUser={setActiveAddUser}
 								/>
 						  ))}
 				</div>
@@ -816,6 +823,8 @@ const Posts = ({
 								user={currentUser}
 								isPinned={isPinned}
 								setIsPinned={setIsPinned}
+								activeAddUser={activeAddUser}
+								setActiveAddUser={setActiveAddUser}
 							/>
 					  ))
 					: postMoreNotUserItem.map((item, id) => (
@@ -831,6 +840,8 @@ const Posts = ({
 								setUnfollow={setUnfollow}
 								post={post}
 								user={currentUser}
+								activeAddUser={activeAddUser}
+								setActiveAddUser={setActiveAddUser}
 							/>
 					  ))}
 			</div>
@@ -870,6 +881,11 @@ const Posts = ({
 					}}
 				></div>
 			</div>
+			<AddUserModal
+				active={activeAddUser}
+				setActive={setActiveAddUser}
+				user={currentUser}
+			/>
 		</Link>
 	)
 }

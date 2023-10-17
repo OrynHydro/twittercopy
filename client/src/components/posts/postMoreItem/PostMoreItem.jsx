@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { BsPinFill } from 'react-icons/bs'
+import AddUserModal from '../../lists/addUserModal/AddUserModal'
 
 const PostMoreItem = ({
 	title,
@@ -15,6 +16,8 @@ const PostMoreItem = ({
 	user,
 	isPinned,
 	setIsPinned,
+	activeAddUser,
+	setActiveAddUser,
 }) => {
 	const addUserToList = async () => {
 		// await axios.put(`/lists/addToList/`)
@@ -67,7 +70,8 @@ const PostMoreItem = ({
 	const postMoreItemAction = async (title, e) => {
 		e.preventDefault()
 		if (title === 'Add/remove') {
-			addUserToList()
+			// addUserToList()
+			setActiveAddUser(true)
 		}
 		if (title === 'Pin to your profile') {
 			pinPost()
@@ -115,6 +119,12 @@ const PostMoreItem = ({
 							{title} {userId} from Lists
 						</span>
 					)}
+					<AddUserModal
+						active={activeAddUser}
+						setActive={setActiveAddUser}
+						user={user}
+						postAuthor={post?.user._id}
+					/>
 				</div>
 			) : (
 				<div

@@ -1,0 +1,55 @@
+.addUserModal {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	display: none;
+	z-index: 10000;
+	cursor: default;
+}
+
+.addUserModal.active {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.addUserModal .overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.addUserModalBlock {
+	width: 600px;
+	height: 650px;
+	background-color: #fff;
+	z-index: 10001;
+	border-radius: 16px;
+}
+
+.addUserModalTop {
+	padding: 8px 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.createNewListBlock {
+	width: 100%;
+	padding: 12px 16px;
+	transition: 0.2s ease;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--blue);
+}
+
+.createNewListBlock:hover {
+	background-color: #f7f7f8;
+}

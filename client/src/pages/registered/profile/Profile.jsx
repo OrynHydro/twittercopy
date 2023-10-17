@@ -46,6 +46,7 @@ import { ProfileTopicsNotInterested } from './profile-topics/ProfileTopicsNotInt
 import { ProfileLists } from '../../../components/lists/profile-lists/ProfileLists'
 import { ProfileListsMembership } from '../../../components/lists/profile-lists/ProfileListsMembership'
 import PostPage from '../../../components/posts/postPage/PostPage'
+import CreateListModal from '../../../components/lists/createListModal/CreateListModal'
 
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
@@ -68,24 +69,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		: (document.body.style.overflowY = 'inherit')
 
 	// declaring states of custom input fields
-
-	const [inputName, setInputName] = useState({
-		active: false,
-		hasValue: false,
-		label: '',
-		value: '',
-		maxCount: 25,
-		name: 'Name',
-	})
-
-	const [inputDesc, setInputDesc] = useState({
-		active: false,
-		hasValue: false,
-		label: '',
-		value: '',
-		maxCount: 100,
-		name: 'Description',
-	})
 
 	const [inputEditName, setInputEditName] = useState({
 		active: false,
@@ -262,10 +245,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	const [currentCover, setCurrentCover] = useState()
 
-	const [coverListFile, setCoverListFile] = useState()
-
-	const [currentListCover, setCurrentListCover] = useState()
-
 	// functions that changes current user avatar (not in the database)
 
 	const changeUserAvatar = async e => {
@@ -309,28 +288,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			await axios.post(`/upload`, formData)
 
 			setCurrentCover(fileName)
-		} catch (err) {
-			console.log(err)
-		}
-	}
-
-	const changeListCover = async e => {
-		try {
-			setCoverListFile(e.target.files[0])
-
-			const formData = new FormData()
-			const fileName =
-				'c' +
-				Math.random().toString(16).slice(2) +
-				'.' +
-				e.target.files[0]?.name.split('.')[1]
-
-			formData.append('name', fileName)
-			formData.append('files', e.target.files[0])
-
-			await axios.post(`/upload`, formData)
-
-			setCurrentListCover(fileName)
 		} catch (err) {
 			console.log(err)
 		}
@@ -436,20 +393,16 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setLikedPosts([])
 		try {
 			await axios.get(`/users/userLikedPosts/${anotherUser?._id}`).then(res => {
-				const likedPosts = res.data
+				let likedPosts = res.data
+				const pinnedPost = likedPosts.find(
+					item => user?.pinnedPost === item._id
+				)
 
-				const pinnedPostValue = user?.pinnedPost
-				if (pinnedPostValue) {
-					const index = likedPosts.findIndex(
-						item => item._id === pinnedPostValue
-					)
-					if (index !== -1) {
-						const pinnedPost = likedPosts.splice(index, 1)[0]
-						likedPosts.unshift(pinnedPost)
-					}
+				if (pinnedPost) {
+					likedPosts = likedPosts.filter(item => user?.pinnedPost !== item._id)
+					likedPosts.unshift(pinnedPost)
+					setLikedPosts(likedPosts)
 				}
-
-				setLikedPosts(likedPosts)
 			})
 		} catch (error) {
 			console.log(error)
@@ -587,8 +540,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		}
 	}
 
-	// const [pinnedPost, setPinnedPost] = useState('')
-
 	const findPinnedPost = async () => {
 		await axios
 			.get(`/posts/${user?.pinnedPost}`)
@@ -620,24 +571,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			console.log(error)
 		}
 		setLoadingPosts(false)
-	}
-
-	const [isChecked, setIsChecked] = useState(false)
-
-	const createList = async () => {
-		if (!inputName.hasValue) return
-		try {
-			await axios
-				.post(`/lists`, {
-					name: inputName.value,
-					desc: inputDesc.value,
-					creator: user?._id,
-					coverPicture: currentListCover,
-				})
-				.then(res => navigate(`/${res.data._id}`))
-		} catch (err) {
-			console.log(err)
-		}
 	}
 
 	return (
@@ -1472,100 +1405,11 @@ const Profile = ({ isLoading, setIsLoading }) => {
 					</div>
 				</div>
 			)}
-			{/* creating new list */}
-			<form className={activeAddList ? 'addListBlock active' : 'addListBlock'}>
-				<div className='addListBlockContainer'>
-					<div className='addListTop'>
-						<div className='addListTopLeft'>
-							<div
-								className='addListCrossBlock'
-								onClick={() => setActiveAddList(false)}
-							>
-								<img src={PF + 'icon/utility/x.svg'} alt='' />
-							</div>
-							<span className='addListTitle'>Create a new List</span>
-						</div>
-						<button
-							disabled={
-								!inputName.hasValue && inputName.value.length <= 1 ? true : null
-							}
-							className={
-								!inputName.hasValue && inputName.value.length <= 1
-									? 'addListNextBtn disabled'
-									: 'addListNextBtn'
-							}
-							onClick={createList}
-						>
-							Next
-						</button>
-					</div>
-					{/* list's cover */}
-					<div
-						className='editProfileBackgroundBlock'
-						style={{ position: 'relative' }}
-					>
-						{currentListCover === null
-							? false
-							: currentListCover && (
-									<div className='currentCover'>
-										<img
-											src={PF + 'storage/' + currentListCover}
-											alt=''
-											className='coverImg'
-										/>
-										<div className='currentCoverOverlay'></div>
-									</div>
-							  )}
-						<div className='editProfileBackgroundAddPhotoIcons'>
-							<label
-								htmlFor='listCover'
-								className='editProfileBackgroundAddPhotoBlock'
-							>
-								<img src={PF + 'icon/common/camera.svg'} alt='' />
-								<input
-									type='file'
-									hidden
-									id='listCover'
-									onChange={e => changeListCover(e)}
-								/>
-							</label>
-							{currentCover === null
-								? false
-								: currentListCover && (
-										<div
-											className='editProfileBackgroundAddPhotoBlock'
-											onClick={() => setCurrentListCover()}
-										>
-											<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
-										</div>
-								  )}
-						</div>
-					</div>
-					{/* list's name and desc */}
-					<div className='addListForm'>
-						<Input inputState={inputName} setInputState={setInputName} />
-
-						<Input inputState={inputDesc} setInputState={setInputDesc} />
-
-						<div className='addListRadioInputBlock'>
-							<div className='addListRadioInputBlockTextBlock'>
-								<span className='addListRadioInputBlockText'>Make private</span>
-								<span className='addListRadioInputBlockAddition'>
-									When you make a List private, only you can see it.
-								</span>
-							</div>
-							<div className='checkboxBlock'>
-								<input
-									type='checkbox'
-									defaultChecked={isChecked}
-									onClick={() => setIsChecked(!isChecked)}
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className='overlay' onClick={() => setActiveAddList(false)}></div>
-			</form>
+			<CreateListModal
+				user={user}
+				activeAddList={activeAddList}
+				setActiveAddList={setActiveAddList}
+			/>
 			<div>
 				<Actual registered />
 				<WhoToFollow />

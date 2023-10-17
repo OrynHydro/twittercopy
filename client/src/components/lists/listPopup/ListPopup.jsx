@@ -41,7 +41,7 @@ const ListPopup = ({ list, user, opened, pinnedItem }) => {
 		<div
 			className='listPopup'
 			style={{
-				opacity: opened ? '1' : '0',
+				display: opened ? 'block' : 'none',
 				zIndex: opened ? '1000' : '-1',
 				top: pinnedItem && '150px',
 			}}

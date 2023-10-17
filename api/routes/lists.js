@@ -280,4 +280,62 @@ router.get(`/memberLists/:userDbId`, async (req, res) => {
 	}
 })
 
+// find created lists
+router.get(`/createdLists/:userDbId`, async (req, res) => {
+	try {
+		const user = await User.aggregate([
+			{
+				$match: {
+					_id: new mongoose.Types.ObjectId(req.params.userDbId),
+				},
+			},
+			{
+				$lookup: {
+					from: 'lists',
+					localField: '_id',
+					foreignField: 'creator',
+					as: 'createdLists',
+				},
+			},
+			{
+				$unwind: {
+					path: '$createdLists',
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'createdLists.creator',
+					foreignField: '_id',
+					as: 'createdLists.creator',
+				},
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'createdLists.followers',
+					foreignField: '_id',
+					as: 'createdLists.followers',
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					createdLists: { $push: '$createdLists' },
+				},
+			},
+		])
+
+		if (user[0].createdLists[0].creator.length === 0) {
+			user[0].createdLists = []
+		}
+
+		res.status(200).json(user[0])
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
 module.exports = router

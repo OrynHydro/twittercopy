@@ -3,8 +3,17 @@ import { useEffect, useState } from 'react'
 import { BsPin, BsPinFill } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 import ListPopup from '../listPopup/ListPopup'
+import { AiOutlineCheck } from 'react-icons/ai'
 
-const ListItem = ({ list, user, noPin }) => {
+const ListItem = ({
+	list,
+	user,
+	noPin,
+	addUser,
+	setActiveAddUser,
+	chosenLists,
+	setChosenLists,
+}) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const formatNumber = number => {
 		if (number >= 1000000) {
@@ -36,14 +45,25 @@ const ListItem = ({ list, user, noPin }) => {
 	const [pinned, setPinned] = useState(false)
 
 	useEffect(() => {
-		user?.pinnedLists.some(pinnedList => pinnedList._id === list._id) &&
+		!addUser &&
+			user?.pinnedLists.some(pinnedList => pinnedList._id === list._id) &&
 			setPinned(true)
-	}, [user?.pinnedLists, list])
+	}, [user?.pinnedLists, list, addUser])
 
 	const [activePopup, setActivePopup] = useState(false)
 
 	return (
-		<Link className='listItem' to={`/lists/${list._id}`}>
+		<Link
+			className='listItem'
+			to={addUser ? false : `/lists/${list._id}`}
+			onClick={() =>
+				addUser && chosenLists.includes(list?._id)
+					? setChosenLists(chosenLists.filter(id => id !== list?._id))
+					: addUser &&
+					  !chosenLists.includes(list?._id) &&
+					  setChosenLists([...chosenLists, list?._id])
+			}
+		>
 			<div className='listItemContainer'>
 				<div className='listItemLeft'>
 					<img
@@ -69,7 +89,11 @@ const ListItem = ({ list, user, noPin }) => {
 						</div>
 
 						{list.creator === user?._id || list?.followers?.length === 0 ? (
-							<Link className='listItemInfoBottom' to={`/${user?.userId}`}>
+							<Link
+								className='listItemInfoBottom'
+								to={addUser ? false : `/${user?.userId}`}
+								onClick={() => addUser && setActiveAddUser(false)}
+							>
 								<img
 									src={
 										!list.creator?.profilePicture && !user?.profilePicture
@@ -133,13 +157,22 @@ const ListItem = ({ list, user, noPin }) => {
 					</div>
 				</div>
 				<div className='listItemRight' style={{ display: noPin && 'none' }}>
-					<div className='listItemPinBlock' onClick={e => pinList(e)}>
-						{pinned ? (
-							<BsPinFill color={'#1d9bf0'} fontSize={20} />
-						) : (
-							<BsPin color={'#1d9bf0'} fontSize={20} />
-						)}
-					</div>
+					{!addUser ? (
+						<div className='listItemPinBlock' onClick={e => pinList(e)}>
+							{pinned ? (
+								<BsPinFill color={'#1d9bf0'} fontSize={20} />
+							) : (
+								<BsPin color={'#1d9bf0'} fontSize={20} />
+							)}
+						</div>
+					) : (
+						chosenLists.includes(list?._id) && (
+							<AiOutlineCheck
+								color='var(--blue)'
+								style={{ position: 'relative', right: '10px' }}
+							/>
+						)
+					)}
 				</div>
 			</div>
 		</Link>
