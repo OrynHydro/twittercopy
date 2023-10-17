@@ -68,7 +68,7 @@ const ListItem = ({ list, user, noPin }) => {
 							<ListPopup list={list} user={user} opened={activePopup} />
 						</div>
 
-						{list.creator === user?._id || list.followers.length === 0 ? (
+						{list.creator === user?._id || list?.followers?.length === 0 ? (
 							<Link className='listItemInfoBottom' to={`/${user?.userId}`}>
 								<img
 									src={

@@ -33,7 +33,9 @@ const ListPopup = ({ list, user, opened, pinnedItem }) => {
 		}
 	}
 
-	console.log(list?.creator)
+	useEffect(() => {
+		if (list?.creator.length === 1) list.creator = list.creator[0]
+	}, [list?.creator.length])
 
 	return (
 		<div
@@ -55,24 +57,14 @@ const ListPopup = ({ list, user, opened, pinnedItem }) => {
 				<div className='listPopupCreator'>
 					<img
 						src={
-							list.creator[0]?.profilePicture
-								? PF + 'storage/' + list.creator[0]?.profilePicture
-								: list.creator[0]?.profilePicture
+							list.creator?.profilePicture
 								? PF + 'storage/' + list.creator?.profilePicture
 								: PF + 'icon/noAvatar.png'
 						}
 						alt=''
 					/>
-					<span>
-						{list.creator[0]?.username
-							? list.creator[0]?.username
-							: list.creator?.username}
-					</span>
-					<p>
-						{list.creator[0]?.userId
-							? list.creator[0]?.userId
-							: list.creator?.userId}
-					</p>
+					<span>{list.creator?.username}</span>
+					<p>{list.creator?.userId}</p>
 				</div>
 				<div className='listPopupMembersFollowers'>
 					<span>
@@ -96,6 +88,9 @@ const ListPopup = ({ list, user, opened, pinnedItem }) => {
 							? 'editProfileButtons following blackButton'
 							: 'editProfileButtons following'
 					}
+					style={{
+						display: list?.creator && list?.creator._id === user?._id && 'none',
+					}}
 					onMouseOver={() => {
 						followListBtn !== 'Follow' && setFollowListBtn('Unfollow')
 					}}

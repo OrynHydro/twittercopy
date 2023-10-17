@@ -219,11 +219,23 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			const userAllPosts = await axios.get(
 				`/posts/allUserPosts/${anotherUser?.userId.split('@')[1]}`
 			)
-			setUserPosts(
-				userAllPosts.data.sort((p1, p2) => {
-					return new Date(p2.createdAt) - new Date(p1.createdAt)
-				})
-			)
+
+			const sortedUserPosts = userAllPosts.data.sort((p1, p2) => {
+				return new Date(p2.createdAt) - new Date(p1.createdAt)
+			})
+
+			const pinnedPostValue = user?.pinnedPost
+			if (pinnedPostValue) {
+				const index = sortedUserPosts.findIndex(
+					item => item._id === pinnedPostValue
+				)
+				if (index !== -1) {
+					const pinnedPost = sortedUserPosts.splice(index, 1)[0]
+					sortedUserPosts.unshift(pinnedPost)
+				}
+			}
+
+			setUserPosts(sortedUserPosts)
 		} catch (err) {
 			console.log(err)
 		}
@@ -422,11 +434,29 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setLoadingPosts(true)
 		setActivePosts('likes')
 		setLikedPosts([])
-		await axios
-			.get(`/users/userLikedPosts/${anotherUser?._id}`)
-			.then(res => setLikedPosts(res.data))
+		try {
+			await axios.get(`/users/userLikedPosts/${anotherUser?._id}`).then(res => {
+				const likedPosts = res.data
+
+				const pinnedPostValue = user?.pinnedPost
+				if (pinnedPostValue) {
+					const index = likedPosts.findIndex(
+						item => item._id === pinnedPostValue
+					)
+					if (index !== -1) {
+						const pinnedPost = likedPosts.splice(index, 1)[0]
+						likedPosts.unshift(pinnedPost)
+					}
+				}
+
+				setLikedPosts(likedPosts)
+			})
+		} catch (error) {
+			console.log(error)
+		}
 		setLoadingPosts(false)
 	}
+
 	// block with changing user birth
 
 	const [activeBirthChange, setActiveBirthChange] = useState(false)
@@ -543,13 +573,26 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const [replies, setReplies] = useState([])
 
 	const findUserReplies = async () => {
-		setLoadingPosts(true)
-		setActivePosts('replies')
-		setReplies([])
+		try {
+			setLoadingPosts(true)
+			setActivePosts('replies')
+			setReplies([])
+			await axios
+				.get(`/users/userReplies/${anotherUser?._id}`)
+				.then(comments => setReplies(comments.data))
+			await findPinnedPost()
+			setLoadingPosts(false)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	// const [pinnedPost, setPinnedPost] = useState('')
+
+	const findPinnedPost = async () => {
 		await axios
-			.get(`/users/userReplies/${anotherUser?._id}`)
-			.then(comments => setReplies(comments.data))
-		setLoadingPosts(false)
+			.get(`/posts/${user?.pinnedPost}`)
+			.then(res => setReplies(prev => [res.data, ...prev]))
 	}
 
 	const [loadingPosts, setLoadingPosts] = useState(true)
@@ -560,9 +603,22 @@ const Profile = ({ isLoading, setIsLoading }) => {
 		setLoadingPosts(true)
 		setActivePosts('media')
 		setPostsWithMedia([])
-		await axios
-			.get(`/users/media/${anotherUser?._id}`)
-			.then(posts => setPostsWithMedia(posts.data))
+		try {
+			const posts = await axios.get(`/users/media/${anotherUser?._id}`)
+
+			const pinnedPostValue = user?.pinnedPost
+			if (pinnedPostValue) {
+				const index = posts.data.findIndex(item => item._id === pinnedPostValue)
+				if (index !== -1) {
+					const pinnedPost = posts.data.splice(index, 1)[0]
+					posts.data.unshift(pinnedPost)
+				}
+			}
+
+			setPostsWithMedia(posts.data)
+		} catch (error) {
+			console.log(error)
+		}
 		setLoadingPosts(false)
 	}
 
@@ -571,13 +627,14 @@ const Profile = ({ isLoading, setIsLoading }) => {
 	const createList = async () => {
 		if (!inputName.hasValue) return
 		try {
-			await axios.post(`/lists`, {
-				name: inputName.value,
-				desc: inputDesc.value,
-				creator: user?._id,
-				coverPicture: currentListCover,
-			})
-			// .then(res => navigate(`/${res.data._id}`))
+			await axios
+				.post(`/lists`, {
+					name: inputName.value,
+					desc: inputDesc.value,
+					creator: user?._id,
+					coverPicture: currentListCover,
+				})
+				.then(res => navigate(`/${res.data._id}`))
 		} catch (err) {
 			console.log(err)
 		}
@@ -1292,45 +1349,72 @@ const Profile = ({ isLoading, setIsLoading }) => {
 						) : activePosts === 'replies' && replies.length !== 0 ? (
 							replies?.map((post, index) => (
 								<>
-									<Posts
-										key={index}
-										post={post}
-										more={PF + 'icon/utility/moreHorizontal.svg'}
-										moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-										currentUser={user}
-										isUserPosts={post.user._id === user?._id ? true : false}
-										activeFollowBtn={activeFollowBtn}
-										setActiveFollowBtn={setActiveFollowBtn}
-										unfollow={unfollow}
-										setUnfollow={setUnfollow}
-										isReply={'original'}
-									/>
-									{post.replies.map(
-										(reply, index2) =>
-											reply.userId === anotherUser._id && (
-												<div style={{ position: 'relative' }}>
-													<hr className='verticalLine' />
-													<Posts
-														key={index + index2}
-														post={reply}
-														more={PF + 'icon/utility/moreHorizontal.svg'}
-														moreActive={
-															PF + 'icon/utility/moreHorizontalActive.svg'
-														}
-														currentUser={anotherUser}
-														isUserPosts={
-															reply.user._id === user?._id ? true : false
-														}
-														activeFollowBtn={activeFollowBtn}
-														setActiveFollowBtn={setActiveFollowBtn}
-														unfollow={unfollow}
-														setUnfollow={setUnfollow}
-														isReply={'reply'}
-													/>
-												</div>
-											)
+									{user?.pinnedPost === post._id ? (
+										<>
+											<Posts
+												key={index}
+												post={post}
+												more={PF + 'icon/utility/moreHorizontal.svg'}
+												moreActive={
+													PF + 'icon/utility/moreHorizontalActive.svg'
+												}
+												currentUser={user}
+												isUserPosts={post.user._id === user?._id ? true : false}
+												activeFollowBtn={activeFollowBtn}
+												setActiveFollowBtn={setActiveFollowBtn}
+												unfollow={unfollow}
+												setUnfollow={setUnfollow}
+											/>
+											<hr className='postPageHr' />
+										</>
+									) : (
+										<>
+											<Posts
+												key={index}
+												post={post}
+												more={PF + 'icon/utility/moreHorizontal.svg'}
+												moreActive={
+													PF + 'icon/utility/moreHorizontalActive.svg'
+												}
+												currentUser={user}
+												isUserPosts={post.user._id === user?._id ? true : false}
+												activeFollowBtn={activeFollowBtn}
+												setActiveFollowBtn={setActiveFollowBtn}
+												unfollow={unfollow}
+												setUnfollow={setUnfollow}
+												isReply={'original'}
+											/>
+											{post.replies.map(
+												(reply, index2) =>
+													reply.userId === anotherUser._id && (
+														<div style={{ position: 'relative' }}>
+															<hr className='verticalLine' />
+															<Posts
+																key={index + index2}
+																post={reply}
+																more={PF + 'icon/utility/moreHorizontal.svg'}
+																moreActive={
+																	PF + 'icon/utility/moreHorizontalActive.svg'
+																}
+																currentUser={anotherUser}
+																isUserPosts={
+																	reply.user._id === user?._id ? true : false
+																}
+																activeFollowBtn={activeFollowBtn}
+																setActiveFollowBtn={setActiveFollowBtn}
+																unfollow={unfollow}
+																setUnfollow={setUnfollow}
+																isReply={'reply'}
+															/>
+														</div>
+													)
+											)}
+											<hr
+												className='postPageHr'
+												style={{ marginTop: '20px' }}
+											/>
+										</>
 									)}
-									<hr className='postPageHr' style={{ marginTop: '20px' }} />
 								</>
 							))
 						) : (

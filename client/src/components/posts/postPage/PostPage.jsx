@@ -3,7 +3,7 @@ import './postPage.css'
 import { BiMessageRoundedDetail } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { Posts, PostsLoader, Share } from '../..'
+import { Posts, PostsLoader, Share } from '../../index'
 import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -30,8 +30,8 @@ const PostPage = ({
 			const findUser = await axios.get(`/users/findByToken/${userInStorage}`)
 			setUser(findUser.data)
 		}
-		fetchUser()
-	}, [userInStorage])
+		!user && fetchUser()
+	}, [user, userInStorage])
 
 	const findPost = async () => {
 		await axios
@@ -73,20 +73,21 @@ const PostPage = ({
 						postPage
 					/>
 					<Share user={user} postPage originalPost={post?._id} />
-					{post?.replies.map((reply, index) => (
-						<Posts
-							key={index}
-							post={reply}
-							more={PF + 'icon/utility/moreHorizontal.svg'}
-							moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-							currentUser={user}
-							isUserPosts={reply.user?._id === user?._id ? true : false}
-							activeFollowBtn={activeFollowBtn}
-							setActiveFollowBtn={setActiveFollowBtn}
-							unfollow={unfollow}
-							setUnfollow={setUnfollow}
-						/>
-					))}
+					{post?.replies.length !== 0 &&
+						post?.replies.map((reply, index) => (
+							<Posts
+								key={index}
+								post={reply}
+								more={PF + 'icon/utility/moreHorizontal.svg'}
+								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+								currentUser={user}
+								isUserPosts={reply.user?._id === user?._id ? true : false}
+								activeFollowBtn={activeFollowBtn}
+								setActiveFollowBtn={setActiveFollowBtn}
+								unfollow={unfollow}
+								setUnfollow={setUnfollow}
+							/>
+						))}
 				</>
 			) : (
 				<PostsLoader />

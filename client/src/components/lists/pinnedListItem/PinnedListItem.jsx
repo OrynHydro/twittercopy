@@ -8,8 +8,6 @@ const PinnedListItem = ({ list, user }) => {
 
 	const [activePopup, setActivePopup] = useState(false)
 
-	console.log(list)
-
 	return (
 		<Link
 			to={`/lists/${list._id}`}

@@ -41,14 +41,6 @@ router.get(`/userLists/:userDbId`, async (req, res) => {
 				},
 			},
 			{
-				$match: {
-					$or: [
-						{ $expr: { $ne: [{ $size: '$createdLists' }, 0] } },
-						{ $expr: { $ne: [{ $size: '$followedLists' }, 0] } },
-					],
-				},
-			},
-			{
 				$unwind: {
 					path: '$createdLists',
 					preserveNullAndEmptyArrays: true,

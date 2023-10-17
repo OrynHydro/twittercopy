@@ -63,8 +63,8 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 		},
 		pinnedPost: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Post',
+			type: String,
+			default: '',
 		},
 		pinnedLists: [
 			{

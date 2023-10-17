@@ -529,8 +529,9 @@ const Share = ({
 						multiple
 						hidden
 						accept={
-							!inputMediaState.isAcceptVideos &&
-							imageExtensions.map(ext => `image/${ext}`).join(',')
+							!inputMediaState.isAcceptVideos
+								? imageExtensions.map(ext => `image/${ext}`).join(',')
+								: true
 						}
 						disabled={inputMediaState.hasVideo}
 					/>

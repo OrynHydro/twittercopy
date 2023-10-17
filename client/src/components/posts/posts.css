@@ -460,3 +460,19 @@
 .homePostBottom.replyBottom {
     width: 450px;
 }
+
+.pinnedBlock {
+    position: relative;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 5px;
+}
+
+.pinnedBlock span {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--gray);
+}

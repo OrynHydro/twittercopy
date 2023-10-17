@@ -20,7 +20,15 @@ router.post('/', async (req, res) => {
 router.put('/:id/update', async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id)
+
+		if (req.body.replyId) {
+			await post.updateOne({
+				$pull: { replies: req.body.replyId },
+			})
+		}
+
 		await post.updateOne({ $set: req.body })
+
 		res.status(200).json('Post has been updated')
 	} catch (err) {
 		res.status(500).json(err)
@@ -44,11 +52,9 @@ router.put('/:id/like', async (req, res) => {
 		const post = await Post.findById(req.params.id)
 		if (!post.likes.includes(req.body.userId)) {
 			await post.updateOne({ $push: { likes: req.body.userId } })
-			await user.updateOne({ $push: { likedPosts: post._id } })
 			res.status(200).json('Post has been liked')
 		} else {
 			await post.updateOne({ $pull: { likes: req.body.userId } })
-			await user.updateOne({ $pull: { likedPosts: post._id } })
 			res.status(200).json('Post has been unliked')
 		}
 	} catch (err) {
@@ -94,9 +100,7 @@ router.get('/allUserPosts/:userId', async (req, res) => {
 		const user = await User.findOne({ userId: '@' + req.params.userId })
 		const posts = await Post.find({
 			userId: user._id,
-			// originalPost: null,
 		}).populate('user')
-		// const retweetedPosts = await Post.find({ retweets: [user._id, ...anotherRetweets] })
 		res.status(200).json(posts)
 	} catch (err) {
 		res.status(500).json(err)
@@ -129,9 +133,6 @@ router.put(`/:postDbId/reply/:userDbId`, async (req, res) => {
 		const originalPost = await Post.findByIdAndUpdate(req.params.postDbId, {
 			$push: { replies: req.body.replyId },
 		})
-		// const currentUser = await User.findByIdAndUpdate(req.params.userDbId, {
-		// 	$push: { postReplies: req.body.replyId },
-		// })
 
 		const currentUser = await User.findByIdAndUpdate(req.params.userDbId)
 

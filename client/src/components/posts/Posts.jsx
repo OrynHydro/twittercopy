@@ -9,7 +9,8 @@ import {
 } from '../../helpers/postMoreItems'
 
 import Posticons from './posticons/Posticons'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import PostMoreItem from './postMoreItem/PostMoreItem'
+import { Link, useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import 'react-loading-skeleton/dist/skeleton.css'
 import axios from 'axios'
@@ -25,129 +26,7 @@ import { useOutsideClick } from '../../utils/useOutsideClick'
 import UserPopup from '../userPopup/UserPopup'
 import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
-
-const PostMoreItem = ({
-	title,
-	icon,
-	userId,
-	setDeleteModal,
-	setPopupWindow,
-	isUserPosts,
-	currentUser,
-	userDbId,
-	postAuthor,
-	activeFollowBtn,
-	setActiveFollowBtn,
-	unfollow,
-	setUnfollow,
-}) => {
-	const addUserToList = async () => {
-		// await axios.put(`/lists/addToList/`)
-	}
-
-	const followUser = async title => {
-		if (title === 'Add/remove') {
-			addUserToList()
-			return
-		}
-		if (title !== 'Follow') return
-		if (currentUser?.following.includes(postAuthor?._id)) {
-			try {
-				await axios.put(`/users/${postAuthor?._id}/unfollow`, {
-					userId: currentUser?._id,
-				})
-				currentUser.following = currentUser.following.filter(
-					item => item !== userDbId
-				)
-				postAuthor.followers = postAuthor?.followers.filter(
-					item => item !== currentUser?._id
-				)
-				setActiveFollowBtn('Follow')
-				setUnfollow(true)
-				setPopupWindow(false)
-			} catch (err) {
-				console.log(err)
-			}
-		} else if (!currentUser?.following.includes(postAuthor?._id)) {
-			try {
-				await axios.put(`/users/${postAuthor?._id}/follow`, {
-					userId: currentUser?._id,
-				})
-				currentUser.following.push(postAuthor?._id)
-				postAuthor.followers.push(currentUser?._id)
-				setActiveFollowBtn('Following')
-				setPopupWindow(false)
-			} catch (err) {
-				console.log(err)
-			}
-		}
-	}
-
-	// useEffect(() => {
-	// 	currentUser?.following.includes(postAuthor?._id) && activeFollowBtn
-	// 		? setActiveFollowBtn('Following')
-	// 		: activeFollowBtn && setActiveFollowBtn('Follow')
-	// }, [currentUser?.following, postAuthor?._id, activeFollowBtn])
-
-	return (
-		<>
-			{isUserPosts ? (
-				<div
-					className={
-						title === 'Delete' ? 'popupWindowItem special' : 'popupWindowItem'
-					}
-					onClick={e => {
-						title === 'Delete' && setDeleteModal(true)
-						title === 'Delete' && setPopupWindow(false)
-						e.preventDefault()
-					}}
-				>
-					{title === 'Highlight on your profile' ||
-					title === 'Pin to your profile' ? (
-						<>{icon}</>
-					) : (
-						<img src={icon} alt='' />
-					)}
-
-					{title !== 'Add/remove' ? (
-						<span>{title}</span>
-					) : (
-						<span>
-							{title} {userId} from Lists
-						</span>
-					)}
-				</div>
-			) : (
-				<div
-					className={'popupWindowItem'}
-					onClick={e => {
-						followUser(title)
-						e.preventDefault()
-					}}
-				>
-					<>{icon}</>
-					{title === 'Add/remove' ? (
-						<span>
-							{title} {postAuthor?.userId} from Lists
-						</span>
-					) : title === 'Mute' || title === 'Block' ? (
-						<span>
-							{title} {postAuthor?.userId}
-						</span>
-					) : title === 'Follow' ? (
-						<span>
-							{activeFollowBtn !== 'Follow'
-								? `Unfollow ${postAuthor.userId}`
-								: `Follow ${postAuthor.userId}`}
-						</span>
-					) : (
-						<span>{title}</span>
-					)}
-				</div>
-			)}
-		</>
-	)
-}
+import { BsPinFill } from 'react-icons/bs'
 
 const Posts = ({
 	post,
@@ -268,6 +147,11 @@ const Posts = ({
 					userId: currentUser?._id,
 				})
 			}
+			if (post?.originalPost) {
+				await axios.put(`/posts/${post?.originalPost}/update`, {
+					replyId: post?._id,
+				})
+			}
 			await axios.delete(`/posts/${post?._id}/delete`)
 			document.location.reload()
 		} catch (err) {
@@ -343,6 +227,12 @@ const Posts = ({
 			item => item !== post.user?._id
 		)
 	}, [unfollow, listPage])
+
+	const [isPinned, setIsPinned] = useState(false)
+
+	useEffect(() => {
+		currentUser?.pinnedPost === post?._id && setIsPinned(true)
+	}, [currentUser?.pinnedPost, post?._id])
 
 	if (postPage)
 		return (
@@ -588,10 +478,13 @@ const Posts = ({
 									key={id}
 									title={item.title}
 									icon={item.icon}
-									userId={post?.user?.userId}
 									setDeleteModal={setDeleteModal}
 									setPopupWindow={setPopupWindow}
 									isUserPosts={isUserPosts}
+									post={post}
+									user={currentUser}
+									isPinned={isPinned}
+									setIsPinned={setIsPinned}
 								/>
 						  ))
 						: postMoreNotUserItem.map((item, id) => (
@@ -599,14 +492,14 @@ const Posts = ({
 									key={id}
 									title={item.title}
 									icon={item.icon}
-									postAuthor={post?.user}
 									setDeleteModal={setDeleteModal}
 									setPopupWindow={setPopupWindow}
-									currentUser={currentUser}
 									activeFollowBtn={activeFollowBtn}
 									setActiveFollowBtn={setActiveFollowBtn}
 									unfollow={unfollow}
 									setUnfollow={setUnfollow}
+									post={post}
+									user={currentUser}
 								/>
 						  ))}
 				</div>
@@ -628,7 +521,10 @@ const Posts = ({
 							</button>
 							<button
 								className='cancelBtn'
-								onClick={() => setDeleteModal(false)}
+								onClick={() => {
+									setDeleteModal(false)
+									setPopupWindow(true)
+								}}
 							>
 								Cancel
 							</button>
@@ -653,6 +549,12 @@ const Posts = ({
 			>
 				{isReply === 'original' && (
 					<hr className='verticalLine' style={{ top: '70px' }} />
+				)}
+				{isPinned && (
+					<div className='pinnedBlock'>
+						<BsPinFill color='#536471' fontSize={16} />
+						<span>Pinned</span>
+					</div>
 				)}
 				{/* user avatar, name, id and when post was created */}
 				<div className='homePostTop'>
@@ -910,6 +812,10 @@ const Posts = ({
 								setDeleteModal={setDeleteModal}
 								setPopupWindow={setPopupWindow}
 								isUserPosts={isUserPosts}
+								post={post}
+								user={currentUser}
+								isPinned={isPinned}
+								setIsPinned={setIsPinned}
 							/>
 					  ))
 					: postMoreNotUserItem.map((item, id) => (
@@ -917,14 +823,14 @@ const Posts = ({
 								key={id}
 								title={item.title}
 								icon={item.icon}
-								postAuthor={post?.user}
 								setDeleteModal={setDeleteModal}
 								setPopupWindow={setPopupWindow}
-								currentUser={currentUser}
 								activeFollowBtn={activeFollowBtn}
 								setActiveFollowBtn={setActiveFollowBtn}
 								unfollow={unfollow}
 								setUnfollow={setUnfollow}
+								post={post}
+								user={currentUser}
 							/>
 					  ))}
 			</div>
@@ -941,7 +847,7 @@ const Posts = ({
 						timeline of any accounts that follow you, and from search results.{' '}
 					</p>
 					<div className='buttonBlock'>
-						<button className='deleteBtn' onClick={e => deletePost}>
+						<button className='deleteBtn' onClick={e => deletePost(e)}>
 							Delete
 						</button>
 						<button
@@ -949,6 +855,7 @@ const Posts = ({
 							onClick={e => {
 								e.preventDefault()
 								setDeleteModal(false)
+								setPopupWindow(true)
 							}}
 						>
 							Cancel

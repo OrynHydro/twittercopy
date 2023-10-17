@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PostsLoader } from '../../../../components'
+import { PostsLoader } from '../../../../components/index'
 import { FollowItem } from './follow-item/FollowItem'
 
 export const ProfileFollowing = ({ user, anotherUser }) => {

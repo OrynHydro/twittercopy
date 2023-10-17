@@ -89,10 +89,7 @@ router.delete('/:id', async (req, res) => {
 router.get('/findByDbId/:id', async (req, res) => {
 	const userId = req.params.id
 	try {
-		const user = await User.findById(userId).populate({
-			path: 'pinnedLists',
-			populate: { path: 'creator' },
-		})
+		const user = await User.findById(userId)
 		const { password, updatedAt, ...other } = user._doc
 		res.status(200).json(other)
 	} catch (err) {
@@ -229,6 +226,13 @@ router.get('/userLikedPosts/:userDbId', async (req, res) => {
 			.sort({ createdAt: -1 })
 			.populate('user')
 
+		const user = await User.findById(req.params.userDbId)
+		if (user.pinnedPost.length > 0) {
+			const pinnedPost = await Post.findById(user.pinnedPost)
+			pinnedPost.user = user
+			likedPostsWithAuthors.unshift(pinnedPost)
+		}
+
 		res.status(200).json(likedPostsWithAuthors)
 	} catch (err) {
 		res.status(500).json(err)
@@ -263,6 +267,13 @@ router.get(`/media/:userDbId`, async (req, res) => {
 			img: { $ne: [] },
 			originalPost: null,
 		}).populate('user')
+		const user = await User.findById(req.params.userDbId)
+		if (user.pinnedPost.length > 0) {
+			const pinnedPost = await Post.findById(user.pinnedPost)
+			pinnedPost.user = user
+			postsWithMedia.unshift(pinnedPost)
+		}
+
 		res.status(200).json(postsWithMedia)
 	} catch (err) {
 		res.status(500).json(err)
@@ -308,5 +319,4 @@ router.put('/pinList/:userDbId', async (req, res) => {
 		res.status(500).json(err)
 	}
 })
-
 module.exports = router
