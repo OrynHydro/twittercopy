@@ -97,7 +97,7 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 			<div className='profileListsMain'>
 				<h1 className='profileListsTitle'>Pinned Lists</h1>
 				{user?.pinnedLists.length > 0 ? (
-					<div style={{ marginTop: '20px' }}>
+					<div className='pinnedListsBlock'>
 						{user?.pinnedLists.map((item, index) => (
 							<PinnedListItem list={item} key={index} user={user} />
 						))}

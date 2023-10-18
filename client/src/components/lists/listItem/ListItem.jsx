@@ -13,6 +13,7 @@ const ListItem = ({
 	setActiveAddUser,
 	chosenLists,
 	setChosenLists,
+	activeAddUser,
 }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const formatNumber = number => {
@@ -57,10 +58,11 @@ const ListItem = ({
 			className='listItem'
 			to={addUser ? false : `/lists/${list._id}`}
 			onClick={() =>
-				addUser && chosenLists.includes(list?._id)
+				addUser && chosenLists.includes(list._id) && activeAddUser
 					? setChosenLists(chosenLists.filter(id => id !== list?._id))
 					: addUser &&
-					  !chosenLists.includes(list?._id) &&
+					  !chosenLists.includes(list._id) &&
+					  activeAddUser &&
 					  setChosenLists([...chosenLists, list?._id])
 			}
 		>

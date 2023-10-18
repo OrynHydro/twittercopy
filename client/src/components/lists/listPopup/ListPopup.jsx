@@ -39,12 +39,13 @@ const ListPopup = ({ list, user, opened, pinnedItem }) => {
 
 	return (
 		<div
-			className='listPopup'
-			style={{
-				display: opened ? 'block' : 'none',
-				zIndex: opened ? '1000' : '-1',
-				top: pinnedItem && '150px',
-			}}
+			className={
+				opened && pinnedItem
+					? 'listPopup active pinnedItem'
+					: opened && !pinnedItem
+					? 'listPopup active'
+					: 'listPopup'
+			}
 			onClick={e => e.preventDefault()}
 		>
 			<img

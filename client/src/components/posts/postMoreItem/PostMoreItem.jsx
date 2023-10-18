@@ -19,10 +19,6 @@ const PostMoreItem = ({
 	activeAddUser,
 	setActiveAddUser,
 }) => {
-	const addUserToList = async () => {
-		// await axios.put(`/lists/addToList/`)
-	}
-
 	const pinPost = async () => {
 		await axios
 			.put(`/users/pinPost/${user._id}`, {
@@ -70,7 +66,6 @@ const PostMoreItem = ({
 	const postMoreItemAction = async (title, e) => {
 		e.preventDefault()
 		if (title === 'Add/remove') {
-			// addUserToList()
 			setActiveAddUser(true)
 		}
 		if (title === 'Pin to your profile') {
@@ -119,12 +114,6 @@ const PostMoreItem = ({
 							{title} {userId} from Lists
 						</span>
 					)}
-					<AddUserModal
-						active={activeAddUser}
-						setActive={setActiveAddUser}
-						user={user}
-						postAuthor={post?.user._id}
-					/>
 				</div>
 			) : (
 				<div

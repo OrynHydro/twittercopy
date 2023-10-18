@@ -5,54 +5,95 @@ import axios from 'axios'
 import PostsLoader from '../../posts/postsLoader/PostsLoader'
 import ListItem from '../listItem/ListItem'
 
-const AddUserModal = ({ active, setActive, user, postAuthor }) => {
+const AddUserModal = ({ active, setActive, user, post }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
 	const [activeAddList, setActiveAddList] = useState(false)
 
 	const [userLists, setUserLists] = useState([])
-
 	const [isLoadingLists, setIsLoadingLists] = useState(true)
 
 	const [chosenLists, setChosenLists] = useState([])
-	const fetchUserLists = async () => {
-		await axios
-			.get(`/lists/createdLists/${user._id}`)
-			.then(res => {
-				const createdLists = res.data.createdLists
-				if (createdLists?.length === 0) {
-					setUserLists(undefined)
-				} else {
-					setUserLists(createdLists)
-					setChosenLists(
-						createdLists.filter(list => list.members.includes(postAuthor))
-					)
-					console.log(
-						createdLists.filter(list => list.members.includes(postAuthor))
-					)
-				}
-			})
-			.catch(() => setUserLists(undefined))
-		setIsLoadingLists(false)
-	}
+
+	const [postAuthorMemberLists, setPostAuthorMemberLists] = useState([])
+
+	const [loadingBtn, setLoadingBtn] = useState(false)
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (active && userLists?.length === 0) {
-				await fetchUserLists()
+		const fetchUserLists = async () => {
+			await axios
+				.get(`/lists/createdLists/${user._id}`)
+				.then(res => {
+					const createdLists = res.data.createdLists
+					if (createdLists?.length === 0) {
+						setUserLists(undefined)
+					} else {
+						setUserLists(createdLists)
+						setChosenLists(
+							createdLists
+								.filter(list => list.members.includes(post.user._id))
+								.map(list => list._id)
+						)
+						setPostAuthorMemberLists(
+							createdLists
+								.filter(list => list.members.includes(post.user._id))
+								.map(list => list._id)
+						)
+					}
+				})
+				.catch(() => setUserLists(undefined))
+			setIsLoadingLists(false)
+		}
+		if (active && userLists?.length === 0 && user._id) {
+			fetchUserLists()
+		}
+	}, [active, userLists?.length, user._id])
+
+	const addUserToList = async () => {
+		if (arraysAreEqual(postAuthorMemberLists, chosenLists)) return
+		setLoadingBtn(true)
+		try {
+			const differentElements1 = postAuthorMemberLists.filter(
+				list => !chosenLists.includes(list)
+			)
+
+			const differentElements2 = chosenLists.filter(
+				list => !postAuthorMemberLists.includes(list)
+			)
+
+			for (const list of differentElements1) {
+				await axios.put(`/lists/addToList/${list}`, {
+					userDbId: post.user._id,
+				})
+			}
+
+			for (const list of differentElements2) {
+				await axios.put(`/lists/addToList/${list}`, {
+					userDbId: post.user._id,
+				})
+			}
+			document.location.reload()
+		} catch (error) {
+			console.log(error)
+		}
+		setLoadingBtn(false)
+	}
+
+	function arraysAreEqual(arr1, arr2) {
+		if (arr1.length !== arr2.length) {
+			return false
+		}
+
+		const sortedArr1 = arr1.slice().sort()
+		const sortedArr2 = arr2.slice().sort()
+
+		for (let i = 0; i < sortedArr1.length; i++) {
+			if (sortedArr1[i] !== sortedArr2[i]) {
+				return false
 			}
 		}
 
-		fetchData()
-	}, [active, userLists?.length])
-
-	const addUserToList = () => {
-		chosenLists.map(
-			async list =>
-				await axios.put(`/lists/addToList/${list}`, {
-					userDbId: postAuthor,
-				})
-		)
+		return true
 	}
 
 	return activeAddList ? (
@@ -76,15 +117,20 @@ const AddUserModal = ({ active, setActive, user, postAuthor }) => {
 						<span className='addListTitle'>Pick a List</span>
 					</div>
 					<button
-						disabled={chosenLists.length === 0 ? true : null}
+						disabled={arraysAreEqual(
+							postAuthorMemberLists,
+							chosenLists ? true : null
+						)}
 						className={
-							chosenLists.length === 0
+							loadingBtn
+								? 'addListNextBtn loadingBtn'
+								: arraysAreEqual(postAuthorMemberLists, chosenLists)
 								? 'addListNextBtn disabled'
 								: 'addListNextBtn'
 						}
 						onClick={addUserToList}
 					>
-						Save
+						<span>Save</span>
 					</button>
 				</div>
 
@@ -114,6 +160,7 @@ const AddUserModal = ({ active, setActive, user, postAuthor }) => {
 							setActiveAddUser={setActive}
 							chosenLists={chosenLists}
 							setChosenLists={setChosenLists}
+							activeAddUser={active}
 						/>
 					))
 				)}

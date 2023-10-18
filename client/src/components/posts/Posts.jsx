@@ -245,8 +245,8 @@ const Posts = ({
 					<div className='homePostTop'>
 						<div
 							className='homePostTopInfo'
-							onMouseOver={() => setOpenModal(true)}
-							onMouseOut={() => setOpenModal(false)}
+							onMouseOver={() => setTimeout(() => setOpenModal(true), 500)}
+							onMouseOut={() => setTimeout(() => setOpenModal(false), 500)}
 						>
 							<img
 								className='homePostUserImg'
@@ -471,7 +471,8 @@ const Posts = ({
 				<div
 					className='popupWindow'
 					style={{
-						display: popupWindow ? 'block' : 'none',
+						opacity: popupWindow ? '1' : '0',
+						zIndex: popupWindow ? '1000' : '-1',
 					}}
 					ref={popup}
 				>
@@ -567,8 +568,8 @@ const Posts = ({
 				<div className='homePostTop'>
 					<div
 						className='homePostTopInfo'
-						onMouseOver={() => setOpenModal(true)}
-						onMouseOut={() => setOpenModal(false)}
+						onMouseOver={() => setTimeout(() => setOpenModal(true), 500)}
+						onMouseOut={() => setTimeout(() => setOpenModal(false), 500)}
 					>
 						<Link to={`/${post?.user.userId}`} style={{ zIndex: '100' }}>
 							<img
@@ -805,7 +806,8 @@ const Posts = ({
 			<div
 				className='popupWindow'
 				style={{
-					display: popupWindow ? 'block' : 'none',
+					opacity: popupWindow ? '1' : '0',
+					zIndex: popupWindow ? '1000' : '-1',
 				}}
 				ref={popup}
 			>
@@ -885,6 +887,7 @@ const Posts = ({
 				active={activeAddUser}
 				setActive={setActiveAddUser}
 				user={currentUser}
+				post={post}
 			/>
 		</Link>
 	)

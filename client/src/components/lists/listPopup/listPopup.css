@@ -4,10 +4,22 @@
 	left: 0;
 	background-color: #fff;
 	cursor: default;
-	transition: 0.2s ease;
 	width: 300px;
 	border-radius: 16px;
 	box-shadow: rgba(149, 157, 165) 0px 8px 24px;
+	z-index: -1;
+	opacity: 0;
+}
+
+.listPopup.active {
+	opacity: 1;
+	z-index: 1000;
+	transition: opacity 0.2s ease;
+}
+
+.listPopup.active.pinnedItem {
+	top: 130px;
+	left: -90px;
 }
 
 .listPopupCover {

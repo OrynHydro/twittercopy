@@ -18,7 +18,10 @@ const UserPopup = ({
 	return (
 		<div
 			className='followingBlockModal'
-			style={{ display: openModal ? 'block' : 'none' }}
+			style={{
+				opacity: openModal ? '1' : '0',
+				zIndex: openModal ? '1000' : '-1',
+			}}
 			onClick={e => e.preventDefault()}
 		>
 			<div

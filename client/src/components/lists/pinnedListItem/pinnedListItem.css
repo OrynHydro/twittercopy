@@ -1,8 +1,15 @@
+.pinnedListsBlock {
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+}
+
 .pinnedListItem {
 	transition: 0.2s ease;
 	cursor: pointer;
 	display: block;
 	width: 104px;
+	position: relative;
 }
 
 .pinnedListItem:hover {
