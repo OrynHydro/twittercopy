@@ -54,7 +54,7 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 		const fetchMembersPosts = async () => {
 			await axios
 				.get(`/lists/membersPosts/${params.listId}`)
-				.then(res => setMembersPosts(res.data[0].membersPosts))
+				.then(res => setMembersPosts(res.data))
 		}
 		membersPosts.length === 0 &&
 			list?.members.length !== 0 &&
@@ -91,8 +91,6 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 
 	const [currentCover, setCurrentCover] = useState()
 
-	const [coverFile, setCoverFile] = useState()
-
 	useEffect(() => {
 		list?.name &&
 			!inputName.value &&
@@ -114,8 +112,6 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 
 	const changeListCover = async e => {
 		try {
-			setCoverFile(e.target.files[0])
-
 			const formData = new FormData()
 			const fileName =
 				'c' +
@@ -317,6 +313,8 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 						/>
 						<div className='listPageData'>
 							<h2 className='listPageName'>{list?.name || 'List'}</h2>
+							{list?.desc && <span className='listPageDesc'>{list?.desc}</span>}
+
 							<Link
 								className='listItemInfoBottom listPageUser'
 								to={`/${list?.creator.userId}`}
@@ -396,6 +394,7 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 									unfollow={unfollow}
 									setUnfollow={setUnfollow}
 									listPage
+									noPin
 								/>
 							))
 						) : (

@@ -1,9 +1,9 @@
 // importing css file, component, react hook and presets file
 
 import './actual.css'
-import { Trends } from './../index'
+import { Trends } from './../../index'
 
-import { trends } from '../../helpers/trends'
+import { trends } from '../../../helpers/trends'
 
 import { useState } from 'react'
 

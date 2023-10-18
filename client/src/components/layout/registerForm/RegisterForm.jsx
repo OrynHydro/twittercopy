@@ -6,16 +6,16 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { useOutsideClick } from '../../utils/useOutsideClick'
+import { useOutsideClick } from '../../../utils/useOutsideClick'
 
 import emailjs from '@emailjs/browser'
 
-import { UserContext } from '../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 
-import { useToken } from '../../utils/useToken'
-import { useLocalStorage } from '../../utils/useLocalStorage'
+import { useToken } from '../../../utils/useToken'
+import { useLocalStorage } from '../../../utils/useLocalStorage'
 import moment from 'moment'
-import Input from '../input/Input'
+import Input from '../../input/Input'
 
 const RegisterForm = ({ activeForm, setActiveForm }) => {
 	// declaring variable that helps to get images from folder directly without importing

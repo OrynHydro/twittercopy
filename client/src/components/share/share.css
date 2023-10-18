@@ -491,3 +491,103 @@
 .homePostBlockIconBlock.disabled:hover {
     background-color: #fff;
 }
+
+
+
+.shareModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+}
+
+.shareModal .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.shareModal .homePostBlock {
+    z-index: 10001;
+    background-color: #fff;
+    border-radius: 16px;
+    min-height: 334px;
+    height: fit-content;
+}
+
+
+
+
+
+
+
+
+.shareModal .homePostContainer {
+    height: fit-content;
+}
+
+.shareModalTextBlock {
+    position: relative;
+    width: 511px;
+    left: 60px;
+    top: -70px;
+}
+
+.shareModalTextBlock .homePostBlockInput {
+    margin-top: 10px;
+}
+
+.shareModalBottomBlock {
+    width: 100%;
+    height: 93px;
+    margin-top: 15px;
+}
+
+.shareModalBottomBlock .homePostWhoCanReplySecondBlock {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: fit-content;
+}
+
+.shareModalBottomBlock .homePostBlockHr {
+    position: static;
+    display: block;
+    height: 1px;
+    background-color: #EFF3F4;
+    margin-top: 15px;
+}
+
+.shareModalBottomBlock .homePostBlockIcons {
+    margin-left: 0px;
+}
+
+.shareModalBottomIconsAndButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.shareModalBottomBlock .tweetBtn {
+    margin-left: 0px;
+}
+
+.shareModalBottomBlock .progressBarBlock.active {
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.shareModalBottomRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

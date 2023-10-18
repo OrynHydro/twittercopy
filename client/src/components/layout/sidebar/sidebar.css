@@ -165,7 +165,6 @@
 .triangle {
     font-size: 12px;
     color: #fff;
-    /* box-shadow: rgba(149, 157, 165) 0px 8px 24px; */
     position: fixed;
     left: 420px;
     bottom: 79px;
@@ -187,7 +186,7 @@
 .sidebarModalItem {
     height: 50px;
     font-weight: 700;
-    font-size: 15px;    
+    font-size: 15px;
     line-height: 20px;
     color: var(--black);
 }

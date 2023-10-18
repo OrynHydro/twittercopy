@@ -26,6 +26,8 @@ const Sidebar = ({
 	setIsLoading,
 	user,
 	userInStorage,
+	activeShareModal,
+	setActiveShareModal,
 }) => {
 	// declaring variable that helps to get images from folder directly without importing
 
@@ -264,7 +266,12 @@ const Sidebar = ({
 							registered ? 'sidebarRegisteredBlock' : 'sidebarUnregisteredBlock'
 						}
 					>
-						<button className='sidebarRegisteredBtn'>Tweet</button>
+						<button
+							className='sidebarRegisteredBtn'
+							onClick={() => setActiveShareModal(true)}
+						>
+							Tweet
+						</button>
 						<div
 							className='sidebarProfileBlock'
 							onClick={e => {

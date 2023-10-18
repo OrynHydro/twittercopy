@@ -8,8 +8,9 @@ import {
 	VerifiedOrganizations,
 	TwitterCircle,
 	TwitterProfessionals,
+	Share,
 } from '../../components/index'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Layout = ({ isLoading, setIsLoading, children, user, userInStorage }) => {
 	// declaring states of modal windows
@@ -26,11 +27,25 @@ const Layout = ({ isLoading, setIsLoading, children, user, userInStorage }) => {
 	const [activeEditInput, setActiveEditInput] = useState(false)
 	const [hasValue, setHasValue] = useState(false)
 
+	const [activeShareModal, setActiveShareModal] = useState(false)
+
 	// removes scrollbar when modal windows are open
 
-	activeLogOut || activeLoginForm || activeTwitterBlue || activeVerified
-		? (document.body.style.overflowY = 'hidden')
-		: (document.body.style.overflowY = 'inherit')
+	useEffect(() => {
+		activeLogOut ||
+		activeLoginForm ||
+		activeTwitterBlue ||
+		activeVerified ||
+		activeShareModal
+			? (document.body.style.overflowY = 'hidden')
+			: (document.body.style.overflowY = 'inherit')
+	}, [
+		activeLogOut,
+		activeLoginForm,
+		activeTwitterBlue,
+		activeVerified,
+		activeShareModal,
+	])
 
 	return (
 		<div style={{ display: 'flex' }}>
@@ -52,6 +67,8 @@ const Layout = ({ isLoading, setIsLoading, children, user, userInStorage }) => {
 				setIsLoading={setIsLoading}
 				user={user}
 				userInStorage={userInStorage}
+				activeShareModal={activeShareModal}
+				setActiveShareModal={setActiveShareModal}
 			/>
 			{/* main content in page */}
 			<div style={{ display: 'flex' }}>{children}</div>
@@ -86,6 +103,24 @@ const Layout = ({ isLoading, setIsLoading, children, user, userInStorage }) => {
 				active={activeProfessionals}
 				setActive={setActiveProfessionals}
 			/>
+			{activeShareModal && (
+				<Share
+					activeEdit={activeEdit}
+					setActiveEdit={setActiveEdit}
+					activeEditCircle={activeEditCircle}
+					setActiveEditCircle={setActiveEditCircle}
+					activeEditRec={activeEditRec}
+					setActiveEditRec={setActiveEditRec}
+					activeEditInput={activeEditInput}
+					setActiveEditInput={setActiveEditInput}
+					hasValue={hasValue}
+					setHasValue={setHasValue}
+					user={user}
+					userInStorage={userInStorage}
+					activeShareModal={activeShareModal}
+					setActiveShareModal={setActiveShareModal}
+				/>
+			)}
 		</div>
 	)
 }

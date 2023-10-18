@@ -22,7 +22,7 @@ const AddUserModal = ({ active, setActive, user, post }) => {
 	useEffect(() => {
 		const fetchUserLists = async () => {
 			await axios
-				.get(`/lists/createdLists/${user._id}`)
+				.get(`/lists/createdLists/${user?._id}`)
 				.then(res => {
 					const createdLists = res.data.createdLists
 					if (createdLists?.length === 0) {
@@ -31,23 +31,23 @@ const AddUserModal = ({ active, setActive, user, post }) => {
 						setUserLists(createdLists)
 						setChosenLists(
 							createdLists
-								.filter(list => list.members.includes(post.user._id))
-								.map(list => list._id)
+								.filter(list => list.members.includes(post.user?._id))
+								.map(list => list?._id)
 						)
 						setPostAuthorMemberLists(
 							createdLists
-								.filter(list => list.members.includes(post.user._id))
-								.map(list => list._id)
+								.filter(list => list.members.includes(post.user?._id))
+								.map(list => list?._id)
 						)
 					}
 				})
 				.catch(() => setUserLists(undefined))
 			setIsLoadingLists(false)
 		}
-		if (active && userLists?.length === 0 && user._id) {
+		if (active && userLists?.length === 0 && user?._id) {
 			fetchUserLists()
 		}
-	}, [active, userLists?.length, user._id])
+	}, [active, userLists?.length, user?._id])
 
 	const addUserToList = async () => {
 		if (arraysAreEqual(postAuthorMemberLists, chosenLists)) return
@@ -63,13 +63,13 @@ const AddUserModal = ({ active, setActive, user, post }) => {
 
 			for (const list of differentElements1) {
 				await axios.put(`/lists/addToList/${list}`, {
-					userDbId: post.user._id,
+					userDbId: post.user?._id,
 				})
 			}
 
 			for (const list of differentElements2) {
 				await axios.put(`/lists/addToList/${list}`, {
-					userDbId: post.user._id,
+					userDbId: post.user?._id,
 				})
 			}
 			document.location.reload()

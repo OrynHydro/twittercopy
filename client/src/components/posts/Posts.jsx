@@ -42,6 +42,7 @@ const Posts = ({
 	postPage,
 	isReply,
 	listPage,
+	noPin,
 }) => {
 	// declaring state of more icon
 
@@ -237,320 +238,16 @@ const Posts = ({
 
 	const [activeAddUser, setActiveAddUser] = useState(false)
 
-	if (postPage)
-		return (
-			<div className='homePost postPagePost' ref={ref}>
-				<div className='homePostContainer postPageContainer'>
-					{/* user avatar, name, id and when post was created */}
-					<div className='homePostTop'>
-						<div
-							className='homePostTopInfo'
-							onMouseOver={() => setTimeout(() => setOpenModal(true), 500)}
-							onMouseOut={() => setTimeout(() => setOpenModal(false), 500)}
-						>
-							<img
-								className='homePostUserImg'
-								src={
-									post && !post?.user?.profilePicture
-										? PF + 'icon/noAvatar.png'
-										: PF + 'storage/' + post?.user?.profilePicture
-								}
-								onClick={() => navigate(`/${post?.user.userId}`)}
-							/>
-							<div className='homePostUserInfo postPageInfo'>
-								<h2 className='homePostUsername'>{post?.user?.username}</h2>
-								<span className='homePostUserId'>{post?.user?.userId}</span>
-							</div>
-							<div style={{ position: 'absolute', top: '-10px' }}>
-								<UserPopup
-									modalText={modalText}
-									setModalText={setModalText}
-									userDbId={post?.user?._id}
-									currentUser={currentUser}
-									followUser={followUser}
-									userId={post?.user?.userId}
-									username={post?.user?.username}
-									followers={post?.user?.followers}
-									following={post?.user?.following}
-									profilePicture={post?.user?.profilePicture}
-									openModal={openModal}
-								/>
-							</div>
-						</div>
-						<div
-							className='homePostMoreBlock'
-							title='More'
-							onMouseOver={() => setActiveMore(true)}
-							onMouseOut={() => setActiveMore(false)}
-							onClick={() => setPopupWindow(true)}
-						>
-							<img src={activeMore ? moreActive : more} alt='' />
-						</div>
-					</div>
-					{/* post image and desc */}
-					<div className='homePostMid postPageMid'>
-						<span className='homePostDesc'>{post?.desc}</span>
-						{post?.img?.length === 3 ? (
-							<div className='postImagesContainer three'>
-								<div className='column'>
-									<img
-										src={post?.img[0] && PF + 'storage/' + post?.img[0]}
-										className='homePostImg'
-										onClick={() => setFullScreenImg([post?.img[0], post])}
-										key={1}
-									/>
-								</div>
-								<div className='column'>
-									<img
-										src={post?.img[1] && PF + 'storage/' + post?.img[1]}
-										className='homePostImg'
-										onClick={() => setFullScreenImg([post?.img[0], post])}
-										key={2}
-									/>
-									<img
-										src={post?.img[2] && PF + 'storage/' + post?.img[2]}
-										className='homePostImg'
-										onClick={() => setFullScreenImg([post?.img[0], post])}
-										key={3}
-									/>
-								</div>
-							</div>
-						) : (
-							<div
-								className={
-									post?.img?.length === 1
-										? ''
-										: post?.img?.length === 2
-										? 'postImagesContainer two'
-										: post?.img?.length === 4
-										? 'postImagesContainer four'
-										: ''
-								}
-							>
-								{post?.img?.map((link, index) => (
-									<>
-										{imageExtensions.includes(link.split('.')[1]) ? (
-											<img
-												src={link && PF + 'storage/' + link}
-												onClick={() => setFullScreenImg([link, post])}
-												className='homePostImg'
-												key={index}
-											/>
-										) : (
-											videoExtensions.includes(link.split('.')[1]) && (
-												<Video
-													className='homePostImg'
-													autoPlay
-													loop
-													key={index}
-													onClick={() => setFullScreenImg([link, post])}
-												>
-													<source src={link && PF + 'storage/' + link} />
-												</Video>
-											)
-										)}
-									</>
-								))}
-							</div>
-						)}
-					</div>
-					<div className='postPageData'>
-						<span className='postPageTime'>
-							{moment(post.createdAt).format('h:mm A')} ·{' '}
-							{moment(post.createdAt).format('MMM d, yyyy')}
-						</span>{' '}
-						·{' '}
-						<span className='postPageViews'>
-							<strong>{post.views}</strong> Views
-						</span>
-					</div>
-					<hr className='postPageHr' />
-					{/* post icons  */}
-					<div className='homePostBottom postPageBottom'>
-						{PostIconsPostPage?.map(i => {
-							return (
-								<Posticons
-									key={i.id}
-									icon={i.icon}
-									iconColoured={i.iconColoured}
-									color={i.color}
-									hoverColor={i.hoverColor}
-									title={i.title}
-									post={post}
-									userId={post?.userId}
-									dbTitle={i.dbTitle}
-									like={like}
-									setLike={setLike}
-									isLiked={isLiked}
-									setIsLiked={setIsLiked}
-									currentUser={currentUser}
-								/>
-							)
-						})}
-					</div>
-					<hr className='postPageHr' />
-				</div>
-				{/* full screen img block */}
-				{fullScreenImg && post && (
-					<div className='fullScreenImg'>
-						<div
-							className='fullScreenImgCross'
-							onClick={() => setFullScreenImg(null)}
-							title='Close'
-						>
-							<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
-						</div>
-						<Swiper
-							modules={[Navigation]}
-							navigation
-							allowTouchMove={false}
-							speed={500}
-							onClick={() => setFullScreenImg(null)}
-						>
-							{post.img?.map((item, index) => (
-								<SwiperSlide>
-									<>
-										{imageExtensions.includes(item.split('.')[1]) ? (
-											<img
-												src={PF + 'storage/' + item}
-												className='fullScreenImgBlock'
-												key={index}
-											/>
-										) : (
-											videoExtensions.includes(item.split('.')[1]) && (
-												<Video
-													className='fullScreenImgBlock'
-													autoPlay
-													loop
-													key={index}
-												>
-													<source src={PF + 'storage/' + item} />
-												</Video>
-											)
-										)}
-									</>
-								</SwiperSlide>
-							))}
-						</Swiper>
-
-						<div className='fullScreenImgIconContainer'>
-							{fullScreenIcons?.map(item => (
-								<div
-									className='fullScreenImgIconBlock'
-									title={item.title}
-									onClick={() => likePost(item.title === 'Like' && true)}
-								>
-									<div className='fullScreenImgIconImgBlock'>
-										<img
-											src={
-												item.title === 'Like' && like
-													? PF + 'icon/colored/heartColour.svg'
-													: item.common
-											}
-											alt=''
-										/>
-									</div>
-									<span className='fullScreenImgIconBlockCounter'>
-										{item.title === 'Reply'
-											? fullScreenImg[1]?.replies?.length
-											: item.title === 'Retweet'
-											? fullScreenImg[1]?.retweets?.length
-											: item.title === 'Like'
-											? like
-											: ''}
-									</span>
-								</div>
-							))}
-						</div>
-						<div
-							className='fullScreenImgOverlay'
-							onClick={() => setFullScreenImg(null)}
-						/>
-					</div>
-				)}
-				<div
-					className='popupWindow'
-					style={{
-						opacity: popupWindow ? '1' : '0',
-						zIndex: popupWindow ? '1000' : '-1',
-					}}
-					ref={popup}
-				>
-					{isUserPosts
-						? postMoreUserItem.map((item, id) => (
-								<PostMoreItem
-									key={id}
-									title={item.title}
-									icon={item.icon}
-									setDeleteModal={setDeleteModal}
-									setPopupWindow={setPopupWindow}
-									isUserPosts={isUserPosts}
-									post={post}
-									user={currentUser}
-									isPinned={isPinned}
-									setIsPinned={setIsPinned}
-									activeAddUser={activeAddUser}
-									setActiveAddUser={setActiveAddUser}
-								/>
-						  ))
-						: postMoreNotUserItem.map((item, id) => (
-								<PostMoreItem
-									key={id}
-									title={item.title}
-									icon={item.icon}
-									setDeleteModal={setDeleteModal}
-									setPopupWindow={setPopupWindow}
-									activeFollowBtn={activeFollowBtn}
-									setActiveFollowBtn={setActiveFollowBtn}
-									unfollow={unfollow}
-									setUnfollow={setUnfollow}
-									post={post}
-									user={currentUser}
-									activeAddUser={activeAddUser}
-									setActiveAddUser={setActiveAddUser}
-								/>
-						  ))}
-				</div>
-				<div
-					className='deletePostModalWindow'
-					style={{
-						display: deleteModal ? 'block' : 'none',
-					}}
-				>
-					<div className='deletePostModalContainer'>
-						<h2>Delete post?</h2>
-						<p>
-							This can’t be undone and it will be removed from your profile, the
-							timeline of any accounts that follow you, and from search results.{' '}
-						</p>
-						<div className='buttonBlock'>
-							<button className='deleteBtn' onClick={deletePost}>
-								Delete
-							</button>
-							<button
-								className='cancelBtn'
-								onClick={() => {
-									setDeleteModal(false)
-									setPopupWindow(true)
-								}}
-							>
-								Cancel
-							</button>
-						</div>
-					</div>
-					<div className='overlay' onClick={() => setDeleteModal(false)}></div>
-				</div>
-			</div>
-		)
-
 	return (
 		<Link
-			className='homePost'
+			className={postPage ? 'homePost postPagePost' : 'homePost'}
 			ref={ref}
-			to={`/${post?.user.userId}/status/${post?._id}`}
+			to={postPage ? false : `/${post?.user.userId}/status/${post?._id}`}
 		>
 			<div
-				className='homePostContainer'
+				className={
+					postPage ? 'homePostContainer postPageContainer' : 'homePostContainer'
+				}
 				style={{
 					paddingLeft: isReply === 'reply' && '75px',
 				}}
@@ -558,7 +255,7 @@ const Posts = ({
 				{isReply === 'original' && (
 					<hr className='verticalLine' style={{ top: '70px' }} />
 				)}
-				{isPinned && (
+				{isPinned && !postPage && !noPin && (
 					<div className='pinnedBlock'>
 						<BsPinFill color='#536471' fontSize={16} />
 						<span>Pinned</span>
@@ -567,7 +264,9 @@ const Posts = ({
 				{/* user avatar, name, id and when post was created */}
 				<div className='homePostTop'>
 					<div
-						className='homePostTopInfo'
+						className={
+							postPage ? 'homePostTopInfo postPageInfo' : 'homePostTopInfo'
+						}
 						onMouseOver={() => setTimeout(() => setOpenModal(true), 500)}
 						onMouseOut={() => setTimeout(() => setOpenModal(false), 500)}
 					>
@@ -579,10 +278,15 @@ const Posts = ({
 										? PF + 'icon/noAvatar.png'
 										: PF + 'storage/' + post?.user?.profilePicture
 								}
+								onClick={() => navigate(`/${post?.user.userId}`)}
 							/>
 						</Link>
 
-						<div className='homePostUserInfo'>
+						<div
+							className={
+								postPage ? 'homePostUserInfo postPageInfo' : 'homePostUserInfo'
+							}
+						>
 							<Link to={`/${post?.user.userId}`}>
 								<h2 className='homePostUsername'>{post?.user?.username}</h2>
 							</Link>
@@ -590,9 +294,11 @@ const Posts = ({
 								<span className='homePostUserId'>{post?.user?.userId}</span>
 							</Link>
 
-							<span className='homePostDate'>
-								{moment(post?.createdAt).fromNow()}
-							</span>
+							{!postPage && (
+								<span className='homePostDate'>
+									{moment(post?.createdAt).fromNow()}
+								</span>
+							)}
 						</div>
 						<div style={{ position: 'absolute', top: '-10px' }}>
 							<UserPopup
@@ -624,7 +330,7 @@ const Posts = ({
 					</div>
 				</div>
 				{/* post image and desc */}
-				<div className='homePostMid'>
+				<div className={postPage ? 'homePostMid postPageMid' : 'homePostMid'}>
 					<span className='homePostDesc'>{post?.desc}</span>
 					{post?.img?.length === 3 ? (
 						<div
@@ -683,7 +389,6 @@ const Posts = ({
 												autoPlay
 												loop
 												key={index}
-												// onClick={() => setFullScreenImg([link, post])}
 												style={{ width: isReply && '452px' }}
 											>
 												<source src={link && PF + 'storage/' + link} />
@@ -695,35 +400,73 @@ const Posts = ({
 						</div>
 					)}
 				</div>
+				{postPage && (
+					<div className='postPageData'>
+						<span className='postPageTime'>
+							{moment(post.createdAt).format('h:mm A')} ·{' '}
+							{moment(post.createdAt).format('MMM d, yyyy')}
+						</span>{' '}
+						·{' '}
+						<span className='postPageViews'>
+							<strong>{post.views}</strong> Views
+						</span>
+					</div>
+				)}
+
+				{postPage && <hr className='postPageHr' />}
 				{/* post icons  */}
 				<div
 					className={
 						isReply === 'reply'
 							? 'homePostBottom replyBottom'
+							: postPage
+							? 'homePostBottom postPageBottom'
 							: 'homePostBottom'
 					}
 				>
-					{PostIcons?.map(i => {
-						return (
-							<Posticons
-								key={i.id}
-								icon={i.icon}
-								iconColoured={i.iconColoured}
-								color={i.color}
-								hoverColor={i.hoverColor}
-								title={i.title}
-								post={post}
-								userId={post?.userId}
-								dbTitle={i.dbTitle}
-								like={like}
-								setLike={setLike}
-								isLiked={isLiked}
-								setIsLiked={setIsLiked}
-								currentUser={currentUser}
-							/>
-						)
-					})}
+					{postPage
+						? PostIconsPostPage?.map(i => {
+								return (
+									<Posticons
+										key={i.id}
+										icon={i.icon}
+										iconColoured={i.iconColoured}
+										color={i.color}
+										hoverColor={i.hoverColor}
+										title={i.title}
+										post={post}
+										userId={post?.userId}
+										dbTitle={i.dbTitle}
+										like={like}
+										setLike={setLike}
+										isLiked={isLiked}
+										setIsLiked={setIsLiked}
+										currentUser={currentUser}
+									/>
+								)
+						  })
+						: PostIcons?.map(i => {
+								return (
+									<Posticons
+										key={i.id}
+										icon={i.icon}
+										iconColoured={i.iconColoured}
+										color={i.color}
+										hoverColor={i.hoverColor}
+										title={i.title}
+										post={post}
+										userId={post?.userId}
+										dbTitle={i.dbTitle}
+										like={like}
+										setLike={setLike}
+										isLiked={isLiked}
+										setIsLiked={setIsLiked}
+										currentUser={currentUser}
+									/>
+								)
+						  })}
 				</div>
+				{postPage && <hr className='postPageHr' />}
 			</div>
 			{/* full screen img block */}
 			{fullScreenImg && post && (
