@@ -341,4 +341,30 @@ router.get(`/createdLists/:userDbId`, async (req, res) => {
 	}
 })
 
+// find lists by text
+router.get('/findByText', async (req, res) => {
+	const searchText = req.query.text
+
+	if (!searchText) {
+		return res.status(400).json('No text')
+	}
+
+	const foundLists = await List.find({
+		$or: [
+			{ name: { $regex: new RegExp(searchText, 'i') } },
+			{ desc: { $regex: new RegExp(searchText, 'i') } },
+		],
+	}).exec()
+
+	if (foundLists.length === 0) {
+		return res.status(404).json('No matches')
+	}
+
+	for (const list of foundLists) {
+		await list.populate('creator followers')
+	}
+
+	res.status(200).json(foundLists)
+})
+
 module.exports = router
