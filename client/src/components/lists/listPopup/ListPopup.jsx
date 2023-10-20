@@ -50,7 +50,11 @@ const ListPopup = ({ list, user, opened, pinnedItem }) => {
 		>
 			<img
 				className='listPopupCover'
-				src={PF + 'storage/' + list?.coverPicture}
+				src={
+					list?.coverPicture
+						? PF + 'storage/' + list?.coverPicture
+						: PF + 'defaultListCover.png'
+				}
 				alt=''
 			/>
 			<div className='listPopupContent'>

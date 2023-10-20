@@ -14,6 +14,7 @@ const ListItem = ({
 	chosenLists,
 	setChosenLists,
 	activeAddUser,
+	search,
 }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const formatNumber = number => {
@@ -53,6 +54,12 @@ const ListItem = ({
 
 	const [activePopup, setActivePopup] = useState(false)
 
+	useEffect(() => {
+		if (list?.creator[0]) {
+			list.creator = list.creator[0]
+		}
+	}, [list?.creator])
+
 	return (
 		<Link
 			className='listItem'
@@ -69,7 +76,11 @@ const ListItem = ({
 			<div className='listItemContainer'>
 				<div className='listItemLeft'>
 					<img
-						src={PF + 'storage/' + list?.coverPicture}
+						src={
+							list?.coverPicture
+								? PF + 'storage/' + list?.coverPicture
+								: PF + 'defaultListCover.png'
+						}
 						alt=''
 						className='listItemImg'
 					/>
@@ -87,7 +98,9 @@ const ListItem = ({
 									? ' · 1 member'
 									: ` · ${list.members.length} members`}
 							</span>
-							<ListPopup list={list} user={user} opened={activePopup} />
+							{!search && (
+								<ListPopup list={list} user={user} opened={activePopup} />
+							)}
 						</div>
 
 						{list.creator === user?._id || list?.followers?.length === 0 ? (
@@ -101,8 +114,8 @@ const ListItem = ({
 										!list.creator?.profilePicture && !user?.profilePicture
 											? PF + 'icon/noAvatar.png'
 											: list.creator?.profilePicture
-											? PF + 'storage/' + user?.profilePicture
-											: PF + 'storage/' + list.creator?.profilePicture
+											? PF + 'storage/' + list.creator?.profilePicture
+											: PF + 'icon/noAvatar.png'
 									}
 									alt=''
 									className='listItemInfoBottomCreatorAvatar'

@@ -16,7 +16,14 @@ const PinnedListItem = ({ list, user }) => {
 			onMouseOut={() => setTimeout(() => setActivePopup(false), 500)}
 		>
 			<div className='pinnedListItemContainer'>
-				<img src={PF + 'storage/' + list?.coverPicture} alt='' />
+				<img
+					src={
+						list?.coverPicture
+							? PF + 'storage/' + list?.coverPicture
+							: PF + 'defaultListCover.png'
+					}
+					alt=''
+				/>
 				<p>{list?.name}</p>
 			</div>{' '}
 			<ListPopup list={list} user={user} opened={activePopup} pinnedItem />

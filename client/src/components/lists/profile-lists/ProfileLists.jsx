@@ -1,10 +1,12 @@
 // lists pages inside of profile
 
+import './../lists.css'
+
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useOutsideClick } from '../../../utils/useOutsideClick'
 import axios from 'axios'
-import { BsPin } from 'react-icons/bs'
+import { BsFillXCircleFill, BsPin } from 'react-icons/bs'
 import { PostsLoader } from '../../index'
 import ListItem from '../listItem/ListItem'
 import PinnedListItem from '../pinnedListItem/PinnedListItem'
@@ -42,32 +44,89 @@ export const ProfileLists = ({ user, setActiveAddList }) => {
 		userLists?.length === 0 && fetchUserLists()
 	}, [userLists?.length])
 
-	const [activeInputEdit, setActiveInputEdit] = useState(false)
+	const [activeSearch, setActiveSearch] = useState(false)
+
+	const [searchText, setSearchText] = useState('')
+
+	const [fetchedLists, setFetchedLists] = useState([])
+
+	const [noMatches, setNoMatches] = useState(false)
+
+	const searchListBlock = useOutsideClick(() => setActiveSearch(false))
+
+	useEffect(() => {
+		const searchForList = async text => {
+			await axios.get(`/lists/findByText?text=${text}`).then(res => {
+				if (res.data === 'No matches') {
+					setNoMatches(true)
+				} else {
+					setFetchedLists(res.data)
+					setNoMatches(false)
+				}
+			})
+		}
+
+		searchText ? searchForList(searchText) : setFetchedLists([])
+	}, [searchText])
 
 	return (
 		<div className='profileLists'>
 			<div className='profileTop'>
 				<form
 					className='actualSearchBlockForm'
-					onFocus={() => setActiveInputEdit(true)}
-					onBlur={() => setActiveInputEdit(false)}
+					onFocus={() => setActiveSearch(true)}
+					// onBlur={() => setActiveSearch(false)}
+					ref={searchListBlock}
 				>
 					<img
 						src={
-							activeInputEdit
+							activeSearch
 								? PF + 'icon/utility/searchActive.svg'
 								: PF + 'icon/utility/search.svg'
 						}
 						alt=''
+						className='searchIcon'
 					/>
 					<input
 						placeholder='Search Lists'
 						className={
-							activeInputEdit
+							activeSearch
 								? 'actualSearchBlockFormInput active'
 								: 'actualSearchBlockFormInput'
 						}
+						onChange={e => setSearchText(e.target.value)}
+						value={searchText}
 					/>
+					<BsFillXCircleFill
+						className='xCircle'
+						onClick={() => setSearchText('')}
+						style={{ display: searchText && activeSearch ? 'block' : 'none' }}
+						fontSize={24}
+						color='var(--blue)'
+					/>
+					{activeSearch && (
+						<div
+							className='listSearchBlock'
+							style={{ minHeight: fetchedLists.length === 1 && 'fit-content' }}
+						>
+							{!searchText ? (
+								<div className='listSearchContainer'>
+									Try searching for lists
+								</div>
+							) : fetchedLists.length !== 0 && !noMatches ? (
+								fetchedLists.map((list, index) => (
+									<ListItem search list={list} key={index} user={user} noPin />
+								))
+							) : (
+								searchText &&
+								noMatches && (
+									<div className='listSearchContainer'>
+										No Lists matched "{searchText}"
+									</div>
+								)
+							)}
+						</div>
+					)}
 				</form>
 
 				<div className='profileTopIconBlock'>

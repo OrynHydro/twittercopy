@@ -130,6 +130,15 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 		}
 	}
 
+	const listCoverArray = [
+		'defaultListCover.png',
+		'defaultListCover2.png',
+		'defaultListCover3.png',
+		'defaultListCover4.png',
+	]
+
+	const randomCover = Math.floor(Math.random() * listCoverArray.length)
+
 	const updateList = async () => {
 		if (
 			(!inputName.hasValue && inputName.value.length <= 1) ||
@@ -148,7 +157,10 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 				name: inputName.value,
 				desc: inputDesc.value,
 				isPrivate: isChecked,
-				coverPicture: currentCover === undefined ? null : currentCover,
+				coverPicture:
+					currentCover === undefined
+						? listCoverArray[randomCover]
+						: currentCover,
 			})
 			document.location.reload()
 		} catch (err) {
@@ -456,10 +468,11 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 									className='editProfileBackgroundBlock'
 									style={{ position: 'relative' }}
 								>
-									{currentCover === undefined ? (
+									{currentCover === undefined &&
+									!listCoverArray.includes(list?.coverPicture) ? (
 										<div className='currentCover'>
 											<img
-												src={PF + 'defaultListCover.png'}
+												src={PF + listCoverArray[randomCover]}
 												alt=''
 												className='coverImg'
 											/>
@@ -501,7 +514,8 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 										</label>
 										{currentCover === undefined ? (
 											false
-										) : currentCover && !currentCover.match('undefined') ? (
+										) : !listCoverArray.includes(currentCover) &&
+										  !currentCover.match('undefined') ? (
 											<div
 												className='editProfileBackgroundAddPhotoBlock'
 												onClick={() => setCurrentCover()}
@@ -509,7 +523,7 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 												<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
 											</div>
 										) : (
-											list?.coverPicture && (
+											!listCoverArray.includes(list?.coverPicture) && (
 												<div
 													className='editProfileBackgroundAddPhotoBlock'
 													onClick={() => {

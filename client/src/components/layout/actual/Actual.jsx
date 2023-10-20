@@ -34,6 +34,7 @@ const Actual = ({ registered, position }) => {
 								: PF + 'icon/utility/search.svg'
 						}
 						alt=''
+						className='searchIcon'
 					/>
 					<input
 						placeholder='Search Twitter'

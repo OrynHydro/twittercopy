@@ -50,7 +50,7 @@
     border-color: #1D9BF0;
 }
 
-.actualSearchBlockForm img {
+.actualSearchBlockForm .searchIcon {
     position: absolute;
     left: 18px;
     top: 15px;

@@ -31,6 +31,15 @@ const CreateListModal = ({
 
 	const navigate = useNavigate()
 
+	const listCoverArray = [
+		'defaultListCover.png',
+		'defaultListCover2.png',
+		'defaultListCover3.png',
+		'defaultListCover4.png',
+	]
+
+	const randomCover = Math.floor(Math.random() * listCoverArray.length)
+
 	const createList = async () => {
 		if (!inputName.hasValue) return
 		try {
@@ -39,7 +48,9 @@ const CreateListModal = ({
 					name: inputName.value,
 					desc: inputDesc.value,
 					creator: user?._id,
-					coverPicture: currentListCover,
+					coverPicture: !currentListCover
+						? listCoverArray[randomCover]
+						: currentListCover,
 				})
 				.then(res => navigate(`/lists/${res.data._id}`))
 		} catch (err) {
@@ -117,7 +128,7 @@ const CreateListModal = ({
 				>
 					{currentListCover === null
 						? false
-						: currentListCover && (
+						: currentListCover !== undefined && (
 								<div className='currentCover'>
 									<img
 										src={PF + 'storage/' + currentListCover}
@@ -133,14 +144,14 @@ const CreateListModal = ({
 							className='editProfileBackgroundAddPhotoBlock'
 						>
 							<img src={PF + 'icon/common/camera.svg'} alt='' />
-							<input
-								type='file'
-								hidden
-								id='listCover'
-								onChange={e => changeListCover(e)}
-							/>
 						</label>
-						{currentListCover === null
+						<input
+							type='file'
+							hidden
+							id='listCover'
+							onChange={e => changeListCover(e)}
+						/>
+						{!currentListCover
 							? false
 							: currentListCover && (
 									<div
