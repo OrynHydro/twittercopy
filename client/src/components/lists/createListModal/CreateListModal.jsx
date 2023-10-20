@@ -83,9 +83,9 @@ const CreateListModal = ({
 	}
 
 	return (
-		<form
+		<div
 			className={activeAddList ? 'addListBlock active' : 'addListBlock'}
-			onClick={e => e.preventDefault()}
+			// onClick={e => e.preventDefault()}
 		>
 			<div className='addListBlockContainer'>
 				<div className='addListTop'>
@@ -187,7 +187,7 @@ const CreateListModal = ({
 				</div>
 			</div>
 			<div className='overlay' onClick={() => setActiveAddList(false)}></div>
-		</form>
+		</div>
 	)
 }
 

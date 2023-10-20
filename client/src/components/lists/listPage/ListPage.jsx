@@ -2,7 +2,14 @@
 
 import './listPage.css'
 
-import { Actual, Input, Posts, PostsLoader, WhoToFollow } from '../../index'
+import {
+	Actual,
+	Input,
+	Posts,
+	PostsLoader,
+	Share,
+	WhoToFollow,
+} from '../../index'
 import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
@@ -221,6 +228,14 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 
 	const sharePopup = useOutsideClick(() => setSharePopupActive(false))
 
+	const [activeShareModal, setActiveShareModal] = useState(false)
+
+	const [activeEdit, setActiveEdit] = useState(false)
+	const [activeEditCircle, setActiveEditCircle] = useState(true)
+	const [activeEditRec, setActiveEditRec] = useState(false)
+	const [activeEditInput, setActiveEditInput] = useState(false)
+	const [hasValue, setHasValue] = useState(false)
+
 	const clickToShareItem = item => {
 		if (item.img === 'link.svg') {
 			navigator.clipboard.writeText(
@@ -228,6 +243,8 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 			)
 			setActiveAlert(true)
 			setTimeout(() => setActiveAlert(false), 5000)
+		} else if (item.img === 'feather.svg') {
+			setActiveShareModal(true)
 		}
 	}
 
@@ -239,7 +256,28 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 			setIsLoading={setIsLoading}
 			user={user}
 			userInStorage={userInStorage}
+			shareModal={activeShareModal}
+			openShareModal={setActiveShareModal}
 		>
+			{activeShareModal && (
+				<Share
+					activeEdit={activeEdit}
+					setActiveEdit={setActiveEdit}
+					activeEditCircle={activeEditCircle}
+					setActiveEditCircle={setActiveEditCircle}
+					activeEditRec={activeEditRec}
+					setActiveEditRec={setActiveEditRec}
+					activeEditInput={activeEditInput}
+					setActiveEditInput={setActiveEditInput}
+					hasValue={hasValue}
+					setHasValue={setHasValue}
+					user={user}
+					userInStorage={userInStorage}
+					activeShareModal={activeShareModal}
+					setActiveShareModal={setActiveShareModal}
+					inputValue={`http://localhost:3000/lists/${params.listId}`}
+				/>
+			)}
 			<div className='bookmarks'>
 				{list ? (
 					<>

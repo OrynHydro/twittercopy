@@ -33,6 +33,7 @@ const Share = ({
 	originalPost,
 	activeShareModal,
 	setActiveShareModal,
+	inputValue,
 }) => {
 	// declaring variable that helps to get images from folder directly without importing
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -169,6 +170,15 @@ const Share = ({
 	useEffect(() => {
 		if (uploadedFiles.at(-1)?.length === 0) uploadedFiles.pop()
 	}, [uploadedFiles])
+
+	const [textColor, setTextColor] = useState(
+		inputValue ? 'var(--blue)' : 'var(--black)'
+	)
+
+	useEffect(() => {
+		if (inputValue === text && textColor === 'var(--black)')
+			setTextColor('var(--blue)')
+	}, [inputValue, text, textColor])
 
 	return (
 		<div className={activeShareModal && 'shareModal'}>
@@ -790,7 +800,14 @@ const Share = ({
 										postPage ? 'Post your reply' : "What's happening?"
 									}
 									onClick={() => setActiveInput(true)}
-									onChange={e => setText(e.target.value)}
+									onChange={e => {
+										setText(e.target.value)
+										setTextColor('var(--black)')
+									}}
+									style={{
+										color: textColor,
+									}}
+									defaultValue={inputValue || ''}
 								/>
 							</div>
 							<div className='shareModalBottomBlock'>
