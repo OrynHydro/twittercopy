@@ -319,4 +319,24 @@ router.put('/pinList/:userDbId', async (req, res) => {
 		res.status(500).json(err)
 	}
 })
+
+// find users by text
+router.get('/findByText', async (req, res) => {
+	const searchText = req.query.text
+
+	const foundUsers = await User.find({
+		username: { $regex: new RegExp(searchText, 'i') },
+	}).exec()
+
+	if (foundUsers.length === 0) {
+		return res.status(200).json('No matches')
+	}
+
+	// for (const user of foundUsers) {
+	// 	await user.populate('creator followers')
+	// }
+
+	res.status(200).json(foundUsers)
+})
+
 module.exports = router

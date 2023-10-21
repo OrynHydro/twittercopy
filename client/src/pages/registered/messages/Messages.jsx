@@ -95,6 +95,7 @@ const Messages = ({ isLoading, setIsLoading }) => {
 			<NewMessage
 				activeModal={newMessageModal}
 				setActiveModal={setNewMessageModal}
+				user={user}
 			/>
 		</Layout>
 	)

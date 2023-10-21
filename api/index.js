@@ -16,6 +16,7 @@ const authRoute = require('./routes/auth')
 const postRoute = require('./routes/posts')
 const uploadFilesRoute = require('./routes/uploadFiles')
 const listRoute = require('./routes/lists')
+const chatRoute = require('./routes/chat')
 
 mongoose
 	.connect(process.env.MONGO_URL, {
@@ -37,6 +38,7 @@ app.use('/api/auth', authRoute)
 app.use('/api/posts', postRoute)
 app.use('/api/upload', uploadFilesRoute)
 app.use('/api/lists', listRoute)
+app.use('/api/chats', chatRoute)
 
 app.listen(8800, () => {
 	console.log('API started')
