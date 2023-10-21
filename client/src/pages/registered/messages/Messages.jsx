@@ -3,10 +3,11 @@
 import './messages.css'
 
 import { Layout } from '../../../components/index'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
+import NewMessage from './newMessage/NewMessage'
 
 const Messages = ({ isLoading, setIsLoading }) => {
 	document.title = 'Messages / Twitter'
@@ -29,6 +30,8 @@ const Messages = ({ isLoading, setIsLoading }) => {
 	// declaring variable that helps to get images from folder directly without importing
 
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
+
+	const [newMessageModal, setNewMessageModal] = useState(false)
 
 	return (
 		<Layout
@@ -64,7 +67,12 @@ const Messages = ({ isLoading, setIsLoading }) => {
 							Drop a line, share Tweets and more with private conversations
 							between you and others on Twitter.{' '}
 						</p>
-						<button className='messagesMainButton'>Write a message</button>
+						<button
+							className='messagesMainButton'
+							onClick={() => setNewMessageModal(true)}
+						>
+							Write a message
+						</button>
 					</div>
 				</div>
 			</div>
@@ -76,9 +84,18 @@ const Messages = ({ isLoading, setIsLoading }) => {
 						Choose from your existing conversations, start a new one, or just
 						keep swimming.
 					</p>
-					<button className='messagesMainButton'>New message</button>
+					<button
+						className='messagesMainButton'
+						onClick={() => setNewMessageModal(true)}
+					>
+						New message
+					</button>
 				</div>
 			</div>
+			<NewMessage
+				activeModal={newMessageModal}
+				setActiveModal={setNewMessageModal}
+			/>
 		</Layout>
 	)
 }

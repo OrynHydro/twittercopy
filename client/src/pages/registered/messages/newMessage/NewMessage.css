@@ -1,0 +1,108 @@
+.newMessageModal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+}
+
+.newMessageModal.active {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.newMessageModal .overlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.newMessageModalBlock {
+	width: 600px;
+	height: 650px;
+	background-color: #fff;
+	border-radius: 16px;
+	z-index: 1000;
+}
+
+.newMessageModalTop {
+	padding: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.newMessageModalTopLeft {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.newMessageModalCross {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	transition: 0.2s ease;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.newMessageModalCross:hover {
+	background-color: #E7E7E8;
+}
+
+.newMessageModalTopLeft {
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 24px;
+	color: var(--black);
+}
+
+.newMessageModalTopRight {
+	padding: 8px 16px;
+	background-color: var(--black);
+	color: #fff;
+	border-radius: 32px;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 16px;
+}
+
+.newMessageModalSearchBlock {
+	width: 100%;
+}
+
+.newMessageModalSearch {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	padding-left: 20px;
+	gap: 20px;
+	margin-bottom: 15px;
+}
+
+.newMessageModalSearch img {
+	width: 20px;
+	height: 20px;
+}
+
+.newMessageModalSearch input,
+.newMessageModalSearch input::placeholder {
+	font-size: 15px;
+	font-size: 400;
+	line-height: 20px;
+	color: var(--gray);
+}
+
+.newMessageModalHr {
+	width: 100%;
+	height: 1.5px;
+	background-color: #cfd9de;
+}
