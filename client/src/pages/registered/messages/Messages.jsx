@@ -2,12 +2,14 @@
 
 import './messages.css'
 
-import { Layout } from '../../../components/index'
+import { Layout, PostsLoader } from '../../../components/index'
 import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
 import NewMessage from './newMessage/NewMessage'
+import ChatItem from './chatItem/ChatItem'
+import ActiveChatRight from './activeChatRight/ActiveChatRight'
 
 const Messages = ({ isLoading, setIsLoading }) => {
 	document.title = 'Messages / Twitter'
@@ -33,6 +35,33 @@ const Messages = ({ isLoading, setIsLoading }) => {
 
 	const [newMessageModal, setNewMessageModal] = useState(false)
 
+	const [userChats, setUserChats] = useState([])
+
+	const [userGroups, setUserGroups] = useState([])
+
+	const [activeChat, setActiveChat] = useState(null)
+
+	const [isLoadingChats, setIsLoadingChats] = useState(false)
+
+	useEffect(() => {
+		const fetchChats = async () => {
+			try {
+				setIsLoadingChats(true)
+				await axios
+					.get(`/chats/getChats/${user._id}`)
+					.then(res =>
+						res.data.members?.length > 2
+							? setUserGroups(res.data)
+							: setUserChats(res.data)
+					)
+				setIsLoadingChats(false)
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		userChats?.length === 0 && userGroups?.length === 0 && user && fetchChats()
+	}, [userChats?.length, userGroups?.length, user])
+
 	return (
 		<Layout
 			isLoading={isLoading}
@@ -52,7 +81,11 @@ const Messages = ({ isLoading, setIsLoading }) => {
 									className='messagesMainIcon'
 								/>
 							</div>
-							<div className='messagesMainIconBlock' title='New message'>
+							<div
+								className='messagesMainIconBlock'
+								title='New message'
+								onClick={() => setNewMessageModal(true)}
+							>
 								<img
 									src={PF + 'icon/common/message.svg'}
 									alt=''
@@ -61,6 +94,20 @@ const Messages = ({ isLoading, setIsLoading }) => {
 							</div>
 						</div>
 					</div>
+				</div>
+				{isLoadingChats ? (
+					<div className='loader'></div>
+				) : userChats?.length !== 0 ? (
+					userChats.map((item, index) => (
+						<ChatItem
+							key={index}
+							chat={item}
+							user={user}
+							activeChat={activeChat}
+							setActiveChat={setActiveChat}
+						/>
+					))
+				) : (
 					<div className='messagesMainBottom'>
 						<h1 className='messagesMainTitle'>Welcome to your inbox!</h1>
 						<p className='messagesMainText'>
@@ -74,23 +121,30 @@ const Messages = ({ isLoading, setIsLoading }) => {
 							Write a message
 						</button>
 					</div>
-				</div>
+				)}
 			</div>
 			{/* page specific rightbar */}
 			<div className='messagesRight'>
-				<div className='messagesRightContainer'>
-					<h1 className='messagesMainTitle'>Select a message</h1>
-					<p className='messagesMainText'>
-						Choose from your existing conversations, start a new one, or just
-						keep swimming.
-					</p>
-					<button
-						className='messagesMainButton'
-						onClick={() => setNewMessageModal(true)}
-					>
-						New message
-					</button>
-				</div>
+				{activeChat ? (
+					<ActiveChatRight
+						chat={userChats.find(chat => chat._id === activeChat)}
+						user={user}
+					/>
+				) : (
+					<div className='messagesRightContainer'>
+						<h1 className='messagesMainTitle'>Select a message</h1>
+						<p className='messagesMainText'>
+							Choose from your existing conversations, start a new one, or just
+							keep swimming.
+						</p>
+						<button
+							className='messagesMainButton'
+							onClick={() => setNewMessageModal(true)}
+						>
+							New message
+						</button>
+					</div>
+				)}
 			</div>
 			<NewMessage
 				activeModal={newMessageModal}
