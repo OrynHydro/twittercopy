@@ -68,3 +68,10 @@
 	width: 18px;
 	height: 18px;
 }
+
+.chatItemBottom {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--black);
+}

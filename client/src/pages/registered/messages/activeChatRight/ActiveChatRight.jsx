@@ -5,6 +5,10 @@ import { AiOutlineInfoCircle } from 'react-icons/ai'
 
 import TextareaAutosize from 'react-textarea-autosize'
 import { PiPaperPlaneRightBold } from 'react-icons/pi'
+import axios from 'axios'
+import moment from 'moment'
+import { Link } from 'react-router-dom'
+import Message from './../message/Message'
 
 const ActiveChatRight = ({ chat, user }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -18,13 +22,29 @@ const ActiveChatRight = ({ chat, user }) => {
 
 	const [text, setText] = useState('')
 
+	const sendMessage = async () => {
+		if (!text) return
+		try {
+			const message = await axios.post('/messages', {
+				chatId: chat._id,
+				sender: user._id,
+				text: text,
+			})
+			await axios.put(`/chats/addMessage/${message.data.chatId}`, {
+				messageId: message.data._id,
+			})
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	return (
 		<div className='activeChatContainer'>
 			<div className='activeChatTop'>
 				<div className='activeChatTopLeft'>
 					<img
 						src={
-							chat?.profilePicture
+							chatMember?.profilePicture
 								? PF + 'storage/' + chatMember?.profilePicture
 								: PF + 'icon/noAvatar.png'
 						}
@@ -37,7 +57,58 @@ const ActiveChatRight = ({ chat, user }) => {
 					<AiOutlineInfoCircle fontSize={20} />
 				</div>
 			</div>
-			<div className='activeChatMid'></div>
+			<div className='activeChatMid'>
+				{chat?.messages.length > 0 && (
+					<div className='activeChatMidContainer'>
+						<Link
+							className='activeChatMidUserBlock'
+							to={`/${chatMember?.userId}`}
+						>
+							<div className='activeChatMidUserContainer'>
+								<img
+									src={
+										chatMember?.profilePicture
+											? PF + 'storage/' + chatMember?.profilePicture
+											: PF + 'icon/noAvatar.png'
+									}
+									alt=''
+									className='activeChatMidUserAva'
+								/>
+								<div className='activeChatMidUserData'>
+									<h2 className='activeChatMidUsername'>
+										{chatMember?.username}
+									</h2>
+									<span className='activeChatMidUserId'>
+										{chatMember?.userId}
+									</span>
+								</div>
+
+								{chatMember?.bio && (
+									<span className='activeChatMidUserBio'>
+										{chatMember?.bio}
+									</span>
+								)}
+								<span className='activeChatMidUserJoinedAndFollowers'>
+									Joined{' '}
+									{moment(chatMember?.createdAt).format('MMMM') +
+										' ' +
+										moment(chatMember?.createdAt).format('YYYY')}{' '}
+									·{' '}
+									{chatMember?.followers.length === 0 ||
+									chatMember?.followers.length > 1
+										? `${chatMember?.followers.length} Followers`
+										: '1 Follower'}
+								</span>
+							</div>
+						</Link>
+						<div className='activeChatMidMessagesBlock'>
+							{chat.messages.map((message, index) => (
+								<Message message={message} key={index} user={user} />
+							))}
+						</div>
+					</div>
+				)}
+			</div>
 			<div className='activeChatBottom'>
 				<div className='activeChatBottomContainer'>
 					<div className='activeChatBottomIcons'>
@@ -59,6 +130,7 @@ const ActiveChatRight = ({ chat, user }) => {
 					/>
 					<div
 						className={text ? 'sendMessageBlock' : 'sendMessageBlock disabled'}
+						onClick={sendMessage}
 					>
 						<PiPaperPlaneRightBold
 							fontSize={18}

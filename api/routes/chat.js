@@ -19,15 +19,24 @@ router.post('/', async (req, res) => {
 router.get('/getChats/:userDbId', async (req, res) => {
 	try {
 		const userId = req.params.userDbId
-		const userChats = await Chat.find({ members: { $in: [userId] } })
-
-		const populatePromises = userChats.map(chat => chat.populate('members'))
-
-		await Promise.all(populatePromises)
+		const userChats = await Chat.find({ members: userId })
+			.populate('members')
+			.populate('messages')
 
 		res.status(200).json(userChats)
 	} catch (error) {
 		res.status(500).json(error)
+	}
+})
+
+// add message to chat
+router.put('/addMessage/:chatId', async (req, res) => {
+	try {
+		const chat = await Chat.findById(req.params.chatId)
+		await chat.updateOne({ $push: { messages: req.body.messageId } })
+		res.status(200).json(chat)
+	} catch (err) {
+		res.status(500).json(err)
 	}
 })
 
