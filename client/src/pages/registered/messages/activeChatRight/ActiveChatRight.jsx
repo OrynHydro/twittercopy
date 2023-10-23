@@ -26,7 +26,6 @@ const ActiveChatRight = ({ chat, user }) => {
 	const socket = useRef()
 
 	const [messages, setMessages] = useState([])
-	const [newMessage, setNewMessage] = useState('')
 	const [arrivalMessage, setArrivalMessage] = useState(null)
 
 	useEffect(() => {
@@ -36,7 +35,6 @@ const ActiveChatRight = ({ chat, user }) => {
 		})
 	}, [])
 
-	console.log(arrivalMessage)
 	useEffect(() => {
 		arrivalMessage &&
 			chat?.members.find(member => member._id === arrivalMessage.sender) &&
@@ -56,8 +54,6 @@ const ActiveChatRight = ({ chat, user }) => {
 		if (chat && messages.length === 0) getChatMessages()
 	}, [chat])
 
-	console.log(arrivalMessage)
-
 	const sendMessage = async () => {
 		if (!text) return
 		try {
@@ -65,13 +61,13 @@ const ActiveChatRight = ({ chat, user }) => {
 				chatId: chat._id,
 				sender: user._id,
 				text: text,
-				createdAt: moment(),
 			}
 
 			socket.current.emit('sendMessage', {
 				senderId: user._id,
 				receiverId: chatMember._id,
 				text: newMessage,
+				createdAt: moment(),
 			})
 
 			const message = await axios.post('/messages', newMessage)
@@ -80,7 +76,6 @@ const ActiveChatRight = ({ chat, user }) => {
 			})
 
 			setMessages([...messages, message.data])
-			setNewMessage('')
 			setText('')
 		} catch (err) {
 			console.log(err)
