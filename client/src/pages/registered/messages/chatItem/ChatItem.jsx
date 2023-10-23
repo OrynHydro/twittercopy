@@ -24,8 +24,6 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 		currentDate.diff(chat?.messages.at(-1).createdAt)
 	)
 
-	console.log(duration)
-
 	return (
 		<div
 			className={activeChat ? 'chatItem active' : 'chatItem'}

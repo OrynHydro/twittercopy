@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import './activeChatRight.css'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
@@ -9,6 +9,7 @@ import axios from 'axios'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import Message from './../message/Message'
+import { io } from 'socket.io-client'
 
 const ActiveChatRight = ({ chat, user }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -22,17 +23,65 @@ const ActiveChatRight = ({ chat, user }) => {
 
 	const [text, setText] = useState('')
 
+	const socket = useRef()
+
+	const [messages, setMessages] = useState([])
+	const [newMessage, setNewMessage] = useState('')
+	const [arrivalMessage, setArrivalMessage] = useState(null)
+
+	useEffect(() => {
+		socket.current = io('ws://localhost:8900')
+		socket.current.on('getMessage', data => {
+			setArrivalMessage(data.text)
+		})
+	}, [])
+
+	console.log(arrivalMessage)
+	useEffect(() => {
+		arrivalMessage &&
+			chat?.members.find(member => member._id === arrivalMessage.sender) &&
+			setMessages(prev => [...prev, arrivalMessage])
+	}, [arrivalMessage, chat])
+
+	useEffect(() => {
+		if (user) {
+			socket.current.emit('addUser', user._id)
+		}
+	}, [user])
+
+	useEffect(() => {
+		const getChatMessages = async () => {
+			setMessages(chat.messages)
+		}
+		if (chat && messages.length === 0) getChatMessages()
+	}, [chat])
+
+	console.log(arrivalMessage)
+
 	const sendMessage = async () => {
 		if (!text) return
 		try {
-			const message = await axios.post('/messages', {
+			const newMessage = {
 				chatId: chat._id,
 				sender: user._id,
 				text: text,
+				createdAt: moment(),
+			}
+
+			socket.current.emit('sendMessage', {
+				senderId: user._id,
+				receiverId: chatMember._id,
+				text: newMessage,
 			})
+
+			const message = await axios.post('/messages', newMessage)
 			await axios.put(`/chats/addMessage/${message.data.chatId}`, {
 				messageId: message.data._id,
 			})
+
+			setMessages([...messages, message.data])
+			setNewMessage('')
+			setText('')
 		} catch (err) {
 			console.log(err)
 		}
@@ -102,8 +151,13 @@ const ActiveChatRight = ({ chat, user }) => {
 							</div>
 						</Link>
 						<div className='activeChatMidMessagesBlock'>
-							{chat.messages.map((message, index) => (
-								<Message message={message} key={index} user={user} />
+							{messages.map((message, index) => (
+								<Message
+									message={message}
+									key={index}
+									user={user}
+									nextMessage={messages[messages.indexOf(message) + 1]}
+								/>
 							))}
 						</div>
 					</div>
@@ -127,6 +181,7 @@ const ActiveChatRight = ({ chat, user }) => {
 						type='text'
 						onChange={e => setText(e.target.value)}
 						placeholder='Start a new message'
+						value={text}
 					/>
 					<div
 						className={text ? 'sendMessageBlock' : 'sendMessageBlock disabled'}

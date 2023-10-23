@@ -51,6 +51,7 @@
 .activeChatMid {
 	width: 100%;
 	height: calc(80% + 82px);
+	overflow-y: scroll;
 }
 
 .activeChatBottom {
