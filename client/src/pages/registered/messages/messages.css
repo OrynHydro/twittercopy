@@ -109,3 +109,113 @@
 .messagesRightContainer .messagesMainText {
     width: 335px;
 }
+
+.messagesSearchBlock {
+    padding: 12px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.messagesSearchBlock.activeArrow {
+    padding-left: 4px;
+}
+
+.messagesSearch {
+    border: 1px solid #cfd9de;
+    border-radius: 32px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+}
+
+.searchIconBlock {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.messagesSearch .searchIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.messagesSearch input {
+    width: 270px;
+}
+
+.messagesSearch input,
+.messagesSearch input::placeholder {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #707376;
+}
+
+.messagesSearchArrow {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.messagesSearchArrow:hover {
+    background-color: #E7E7E8;
+}
+
+.searchingNoResults {
+    margin: 30px auto 0;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.searchSwitchMenu {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.searchSwitchMenuItem {
+    padding: 16px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--gray);
+    position: relative;
+}
+
+.searchSwitchMenuItem:hover {
+    background-color: #E7E7E8;
+}
+
+.searchSwitchMenuItem.active {
+    font-weight: 700;
+    color: var(--black);
+}
+
+.searchSwitchMenuItem.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    height: 4px;
+    width: 56px;
+    background-color: var(--blue);
+    border-radius: 9999px;
+}

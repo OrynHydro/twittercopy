@@ -61,9 +61,9 @@ const Message = ({ message, user, nextMessage }) => {
 			inputMoment.isSameOrAfter(now.clone().subtract(7, 'days')) &&
 			inputMoment.isSameOrBefore(now)
 		) {
-			return `${inputMoment.format('dddd')}: ${inputMoment.format('h:mm A')}`
+			return `${inputMoment.format('ddd')} ${inputMoment.format('h:mm A')}`
 		} else if (inputMoment.isSame(now, 'month')) {
-			return `${inputMoment.format('MMMM D')}: ${inputMoment.format('h:mm A')}`
+			return `${inputMoment.format('MMMM D')} ${inputMoment.format('h:mm A')}`
 		} else {
 			return inputMoment.format('YYYY-MM-DD h:mm A')
 		}
@@ -125,14 +125,12 @@ const Message = ({ message, user, nextMessage }) => {
 					{nextMessage?.sender !== message?.sender ? (
 						<div className='messageContainerBottom'>
 							<span className='messageCreatedAt'>
-								{/* {moment(message?.createdAt).format('LT')} */}
 								{formatTime(new Date(message.createdAt))}
 							</span>
 						</div>
 					) : !nextMessage ? (
 						<div className='messageContainerBottom'>
 							<span className='messageCreatedAt'>
-								{/* {moment(message?.createdAt).format('LT')} */}
 								{formatTime(new Date(message.createdAt))}
 							</span>
 						</div>
@@ -140,7 +138,6 @@ const Message = ({ message, user, nextMessage }) => {
 						duration > 2 && (
 							<div className='messageContainerBottom'>
 								<span className='messageCreatedAt'>
-									{/* {moment(message?.createdAt).format('LT')} */}
 									{formatTime(new Date(message.createdAt))}
 								</span>
 							</div>

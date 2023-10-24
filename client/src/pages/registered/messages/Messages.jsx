@@ -10,6 +10,7 @@ import axios from 'axios'
 import NewMessage from './newMessage/NewMessage'
 import ChatItem from './chatItem/ChatItem'
 import ActiveChatRight from './activeChatRight/ActiveChatRight'
+import { AiFillCloseCircle } from 'react-icons/ai'
 
 const Messages = ({ isLoading, setIsLoading }) => {
 	document.title = 'Messages / Twitter'
@@ -62,6 +63,14 @@ const Messages = ({ isLoading, setIsLoading }) => {
 		userChats?.length === 0 && userGroups?.length === 0 && user && fetchChats()
 	}, [userChats?.length, userGroups?.length, user])
 
+	const [activeSearch, setActiveSearch] = useState(false)
+
+	const [activeArrow, setActiveArrow] = useState(false)
+
+	const [text, setText] = useState('')
+
+	const [activeSwitchMenu, setActiveSwitchMenu] = useState('people')
+
 	return (
 		<Layout
 			isLoading={isLoading}
@@ -98,15 +107,105 @@ const Messages = ({ isLoading, setIsLoading }) => {
 				{isLoadingChats ? (
 					<div className='loader'></div>
 				) : userChats?.length !== 0 ? (
-					userChats.map((item, index) => (
-						<ChatItem
-							key={index}
-							chat={item}
-							user={user}
-							activeChat={activeChat}
-							setActiveChat={setActiveChat}
-						/>
-					))
+					<>
+						<div
+							className={
+								activeArrow
+									? 'messagesSearchBlock activeArrow'
+									: 'messagesSearchBlock'
+							}
+						>
+							{activeArrow && (
+								<div
+									className='messagesSearchArrow'
+									onClick={() => setActiveArrow(false)}
+								>
+									<img src={PF + 'icon/utility/arrowLeft.svg'} alt='' />
+								</div>
+							)}
+
+							<div
+								className='messagesSearch'
+								style={{ borderColor: activeSearch && 'var(--blue)' }}
+							>
+								<div className='searchIconBlock'>
+									<img
+										className='searchIcon'
+										src={PF + 'icon/utility/search.svg'}
+										alt=''
+									/>
+								</div>
+
+								<input
+									onFocus={() => {
+										setActiveSearch(true)
+										setActiveArrow(true)
+									}}
+									onBlur={() => setActiveSearch(false)}
+									type='text'
+									placeholder='Search Direct Messages'
+									value={text}
+									onChange={e => setText(e.target.value)}
+								/>
+								{text && (
+									<AiFillCloseCircle
+										fontSize={22}
+										style={{ cursor: 'pointer' }}
+										onClick={() => setText('')}
+									/>
+								)}
+							</div>
+						</div>
+						{activeArrow ? (
+							<>
+								<div className='searchSwitchMenu'>
+									<div
+										className={
+											activeSwitchMenu === 'people'
+												? 'searchSwitchMenuItem active'
+												: 'searchSwitchMenuItem'
+										}
+										onClick={() => setActiveSwitchMenu('people')}
+									>
+										People
+									</div>
+									<div
+										className={
+											activeSwitchMenu === 'groups'
+												? 'searchSwitchMenuItem active'
+												: 'searchSwitchMenuItem'
+										}
+										onClick={() => setActiveSwitchMenu('groups')}
+									>
+										Groups
+									</div>
+									<div
+										className={
+											activeSwitchMenu === 'messages'
+												? 'searchSwitchMenuItem active'
+												: 'searchSwitchMenuItem'
+										}
+										onClick={() => setActiveSwitchMenu('messages')}
+									>
+										Messages
+									</div>
+								</div>
+								<div className='searchingNoResults'>
+									Try searching for people, groups, or messages
+								</div>
+							</>
+						) : (
+							userChats.map((item, index) => (
+								<ChatItem
+									key={index}
+									chat={item}
+									user={user}
+									activeChat={activeChat}
+									setActiveChat={setActiveChat}
+								/>
+							))
+						)}
+					</>
 				) : (
 					<div className='messagesMainBottom'>
 						<h1 className='messagesMainTitle'>Welcome to your inbox!</h1>

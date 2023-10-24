@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react'
 import './chatItem.css'
 
 import moment from 'moment'
+import { useOutsideClick } from '../../../../utils/useOutsideClick'
+import { BsBellSlash, BsPin } from 'react-icons/bs'
+import { RiFlag2Line } from 'react-icons/ri'
+import { FiTrash2 } from 'react-icons/fi'
 
 const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
@@ -23,6 +27,33 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 	const duration = moment.duration(
 		currentDate.diff(chat?.messages.at(-1).createdAt)
 	)
+
+	const [activeMorePopup, setActiveMorePopup] = useState(false)
+
+	const morePopup = useOutsideClick(() => setActiveMorePopup(false))
+
+	const morePopupItems = [
+		{
+			id: 1,
+			title: 'Pin conversation',
+			img: <BsPin fontSize={18} />,
+		},
+		{
+			id: 2,
+			title: 'Snooze conversation',
+			img: <BsBellSlash fontSize={18} />,
+		},
+		{
+			id: 3,
+			title: 'Report conversation',
+			img: <RiFlag2Line fontSize={18} />,
+		},
+		{
+			id: 4,
+			title: 'Delete conversation',
+			img: <FiTrash2 fontSize={18} color='#f4212e' />,
+		},
+	]
 
 	return (
 		<div
@@ -67,6 +98,7 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 								className='chatItemMoreBlock'
 								onMouseOver={() => setActiveMore(true)}
 								onMouseOut={() => setActiveMore(false)}
+								onClick={() => setActiveMorePopup(true)}
 							>
 								<img
 									src={
@@ -78,6 +110,30 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 								/>
 							</div>
 						)}
+						<div
+							className={
+								activeMorePopup
+									? 'chatItemMorePopup active'
+									: 'chatItemMorePopup'
+							}
+							ref={morePopup}
+						>
+							{morePopupItems.map(item => (
+								<div className='chatItemMorePopupItem'>
+									<div className='chatItemMorePopupItemContainer'>
+										{item.img}
+										<span
+											style={{
+												color:
+													item.title === 'Delete conversation' && '#f4212e',
+											}}
+										>
+											{item.title}
+										</span>
+									</div>
+								</div>
+							))}
+						</div>
 					</div>
 					<div className='chatItemBottom'>{chat?.messages.at(-1).text}</div>
 				</div>
