@@ -50,11 +50,7 @@ const Messages = ({ isLoading, setIsLoading }) => {
 				setIsLoadingChats(true)
 				await axios
 					.get(`/chats/getChats/${user._id}`)
-					.then(res =>
-						res.data.members?.length > 2
-							? setUserGroups(res.data)
-							: setUserChats(res.data)
-					)
+					.then(res => setUserChats(res.data))
 				setIsLoadingChats(false)
 			} catch (error) {
 				console.log(error)
@@ -249,6 +245,7 @@ const Messages = ({ isLoading, setIsLoading }) => {
 				activeModal={newMessageModal}
 				setActiveModal={setNewMessageModal}
 				user={user}
+				userChats={userChats}
 			/>
 		</Layout>
 	)

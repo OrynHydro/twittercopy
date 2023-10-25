@@ -1,0 +1,48 @@
+.userItem {
+	width: 100%;
+	cursor: pointer;
+	transition: 0.2s ease;
+}
+
+.userItem:hover {
+	background-color: #f7f7f8;
+}
+
+.userItemContainer {
+	display: flex;
+	align-items: center;
+	padding: 12px 16px;
+	gap: 12px;
+	position: relative;
+}
+
+.userItemInfo {
+	display: flex;
+	flex-direction: column;
+}
+
+.userItemContainer .userAva {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.userItemInfo {
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 20px;
+	color: var(--black);
+}
+
+.userItemInfo .userItemInfoUserId {
+	font-weight: 400;
+	color: var(--gray);
+}
+
+.userItemFollows {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--gray);
+}

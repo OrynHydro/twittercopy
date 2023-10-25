@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import './NewMessage.css'
 import axios from 'axios'
 import { PostsLoader } from './../../../../components/index'
-import { FaUser } from 'react-icons/fa'
 import { PiUsersThreeDuotone } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
+import UserItem from '../userItem/UserItem'
 
-const NewMessage = ({ activeModal, setActiveModal, user }) => {
+const NewMessage = ({ activeModal, setActiveModal, user, userChats }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const [activeSearch, setActiveSearch] = useState(false)
 
@@ -39,15 +39,51 @@ const NewMessage = ({ activeModal, setActiveModal, user }) => {
 
 	const createChat = async () => {
 		try {
-			const members = chosenUsers.map(item => item._id)
-			members.unshift(user?._id)
-			await axios.post('/chats', {
-				members: members,
-			})
+			let members = chosenUsers.map(item => item._id)
+			const userChatsMembers = userChats
+				.filter(item => {
+					return (
+						item.members.length === 2 &&
+						item.members.some(member => members.includes(member._id))
+					)
+				})
+				.map(
+					item => item.members.find(member => members.includes(member._id))._id
+				)
+			if (activeModalPage === 'group') {
+				if (members.length === 1 && userChatsMembers.includes(members[0])) {
+					setActiveModal(false)
+					setChosenUsers([])
+					return
+				} else {
+					members.unshift(user?._id)
+					await axios.post('/chats', {
+						members: members,
+					})
+					document.location.reload()
+				}
+			} else {
+				members = members.filter(
+					memberId => !userChatsMembers.includes(memberId)
+				)
+				if (members.length === 0) {
+					setActiveModal(false)
+					setChosenUsers([])
+					return
+				} else {
+					members.unshift(user?._id)
+					await axios.post('/chats', {
+						members: members,
+					})
+					document.location.reload()
+				}
+			}
 		} catch (err) {
 			console.log(err)
 		}
 	}
+
+	const [activeModalPage, setActiveModalPage] = useState('chat')
 
 	return (
 		<div className={activeModal ? 'newMessageModal active' : 'newMessageModal'}>
@@ -56,10 +92,24 @@ const NewMessage = ({ activeModal, setActiveModal, user }) => {
 					<div className='newMessageModalTopLeft'>
 						<div
 							className='newMessageModalCross'
-							title='Close'
-							onClick={() => setActiveModal(false)}
+							title={activeModalPage === 'group' ? 'Back' : 'Close'}
+							onClick={() => {
+								if (activeModalPage === 'group') {
+									setActiveModalPage('chat')
+									setChosenUsers([])
+								} else {
+									setActiveModal(false)
+								}
+							}}
 						>
-							<img src={PF + 'icon/utility/x.svg'} alt='' />
+							<img
+								src={
+									activeModalPage === 'group'
+										? PF + 'icon/utility/arrowLeft.svg'
+										: PF + 'icon/utility/x.svg'
+								}
+								alt=''
+							/>
 						</div>
 						<h1>New message</h1>
 					</div>
@@ -134,39 +184,22 @@ const NewMessage = ({ activeModal, setActiveModal, user }) => {
 						<div className='listSearchContainer'>No Users matched "{text}"</div>
 					) : users.length > 0 ? (
 						users.map((item, index) => (
-							<div
-								className='userItem'
+							<UserItem
+								chosenUsers={chosenUsers}
+								setChosenUsers={setChosenUsers}
+								setText={setText}
+								item={item}
+								user={user}
 								key={index}
-								onClick={() => {
-									setChosenUsers([...chosenUsers, item])
-									setText('')
-								}}
-							>
-								<div className='userItemContainer'>
-									<img
-										src={
-											item.profilePicture
-												? PF + 'storage/' + item.profilePicture
-												: PF + 'icon/noAvatar.png'
-										}
-										className='userAva'
-										alt=''
-									/>
-									<div className='userItemInfo'>
-										<h2 className='userItemInfoUsername'>{item.username}</h2>
-										<span className='userItemInfoUserId'>{item.userId}</span>
-										{item.following.includes(user?._id) && (
-											<span className='userItemFollows'>
-												<FaUser fontSize={12} color='var(--gray)' /> Follows you
-											</span>
-										)}
-									</div>
-								</div>
-							</div>
+							/>
 						))
 					) : (
-						chosenUsers.length === 0 && (
-							<div className='createGroupBlock'>
+						chosenUsers.length === 0 &&
+						activeModalPage !== 'group' && (
+							<div
+								className='createGroupBlock'
+								onClick={() => setActiveModalPage('group')}
+							>
 								<div className='createGroupContainer'>
 									<div className='createGroupImgBlock'>
 										<PiUsersThreeDuotone
@@ -181,6 +214,17 @@ const NewMessage = ({ activeModal, setActiveModal, user }) => {
 							</div>
 						)
 					)}
+					{users.length === 0 &&
+						userChats.map((item, index) => (
+							<UserItem
+								chosenUsers={chosenUsers}
+								setChosenUsers={setChosenUsers}
+								setText={setText}
+								item={item.members.find(member => member._id !== user._id)}
+								user={user}
+								key={index}
+							/>
+						))}
 				</div>
 			</div>
 			<div className='overlay' onClick={() => setActiveModal(false)}></div>

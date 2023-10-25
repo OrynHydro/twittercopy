@@ -14,7 +14,11 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 
 	useEffect(() => {
 		if (chat && user) {
-			setChatMember(chat.members.find(item => item._id !== user?._id))
+			if (chat.members.length >= 3) {
+				setChatMember(chat.members.filter(item => item._id !== user?._id))
+			} else {
+				setChatMember(chat.members.find(item => item._id !== user?._id))
+			}
 		}
 	}, [chat, user])
 
@@ -24,9 +28,13 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 
 	const currentDate = moment()
 
-	const duration = moment.duration(
-		currentDate.diff(chat?.messages.at(-1).createdAt)
-	)
+	let duration
+
+	if (chat.messages.length > 0) {
+		duration = moment.duration(
+			currentDate.diff(chat?.messages.at(-1).createdAt)
+		)
+	}
 
 	const [activeMorePopup, setActiveMorePopup] = useState(false)
 
@@ -75,22 +83,29 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 				<div className='chatItemRight'>
 					<div className='chatItemTop'>
 						<div className='chatItemUserData'>
-							<h2 className='chatItemUsername'>{chatMember?.username}</h2>
+							<h2 className='chatItemUsername'>
+								{Array.isArray(chatMember)
+									? chatMember.map(member => member?.username).join(', ')
+									: chatMember?.username}
+							</h2>
 							<span className='chatItemUserId'>
-								{chatMember?.userId} ·{' '}
-								{duration._data.years > 0
-									? `${duration._data.years}y`
-									: duration._data.months > 0
-									? `${duration._data.months}m`
-									: duration._data.days > 0
-									? `${duration._data.days}d`
-									: duration._data.hours > 0
-									? `${duration._data.hours}h`
-									: duration._data.minutes > 0
-									? `${duration._data.minutes}m`
-									: duration._data.seconds > 0
-									? `${duration._data.seconds}s`
-									: `${duration._data.milliseconds}ms`}
+								{!Array.isArray(chatMember) && `${chatMember?.userId}`}
+								{chat.messages.length > 0 &&
+									` ·${' '} ${
+										duration._data.years > 0
+											? `${duration._data.years}y`
+											: duration._data.months > 0
+											? `${duration._data.months}m`
+											: duration._data.days > 0
+											? `${duration._data.days}d`
+											: duration._data.hours > 0
+											? `${duration._data.hours}h`
+											: duration._data.minutes > 0
+											? `${duration._data.minutes}m`
+											: duration._data.seconds > 0
+											? `${duration._data.seconds}s`
+											: `${duration._data.milliseconds}ms`
+									}`}
 							</span>
 						</div>
 						{activeBlock && (
@@ -135,7 +150,9 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 							))}
 						</div>
 					</div>
-					<div className='chatItemBottom'>{chat?.messages.at(-1).text}</div>
+					<div className='chatItemBottom'>
+						{chat.messages.length > 0 && chat?.messages.at(-1).text}
+					</div>
 				</div>
 			</div>
 		</div>
