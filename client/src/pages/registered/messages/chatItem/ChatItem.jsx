@@ -65,21 +65,51 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 
 	return (
 		<div
-			className={activeChat ? 'chatItem active' : 'chatItem'}
+			className={activeChat === chat._id ? 'chatItem active' : 'chatItem'}
 			onMouseOver={() => setActiveBlock(true)}
 			onMouseOut={() => setActiveBlock(false)}
 			onClick={() => setActiveChat(chat._id)}
 		>
 			<div className='chatItemContainer'>
-				<img
-					src={
-						chatMember?.profilePicture
-							? PF + 'storage/' + chatMember?.profilePicture
-							: PF + 'icon/noAvatar.png'
-					}
-					alt=''
-					className='chatItemUserAva'
-				/>
+				{!Array.isArray(chatMember) ? (
+					<img
+						src={
+							chatMember?.profilePicture
+								? PF + 'storage/' + chatMember?.profilePicture
+								: PF + 'icon/noAvatar.png'
+						}
+						alt=''
+						className='chatItemUserAva'
+					/>
+				) : (
+					chatMember.length === 2 && (
+						<div className='chaItemAvaBlock'>
+							<div className='chatItemAvaContainer'>
+								<img
+									src={
+										chatMember[0]?.profilePicture
+											? PF + 'storage/' + chatMember[0]?.profilePicture
+											: PF + 'icon/noAvatar.png'
+									}
+									alt=''
+									className='chatItemUserAva'
+								/>
+								<hr />
+								<img
+									src={
+										chatMember[1]?.profilePicture
+											? PF + 'storage/' + chatMember[1]?.profilePicture
+											: PF + 'icon/noAvatar.png'
+									}
+									alt=''
+									className='chatItemUserAva'
+								/>
+							</div>
+							<div className='counterCircle'>{chatMember.length}</div>
+						</div>
+					)
+				)}
+
 				<div className='chatItemRight'>
 					<div className='chatItemTop'>
 						<div className='chatItemUserData'>

@@ -17,7 +17,11 @@ const ActiveChatRight = ({ chat, user }) => {
 
 	useEffect(() => {
 		if (chat && user) {
-			setChatMember(chat.members.find(item => item._id !== user?._id))
+			if (chat.members.length >= 3) {
+				setChatMember(chat.members.filter(item => item._id !== user?._id))
+			} else {
+				setChatMember(chat.members.find(item => item._id !== user?._id))
+			}
 		}
 	}, [chat, user])
 
@@ -31,6 +35,9 @@ const ActiveChatRight = ({ chat, user }) => {
 	useEffect(() => {
 		socket.current = io('ws://localhost:8900')
 		socket.current.on('getMessage', data => {
+			data.text.createdAt = moment(Date.now()).format(
+				'YYYY-MM-DDTHH:mm:ss.SSSZ'
+			)
 			setArrivalMessage(data.text)
 		})
 	}, [])
@@ -48,10 +55,7 @@ const ActiveChatRight = ({ chat, user }) => {
 	}, [user])
 
 	useEffect(() => {
-		const getChatMessages = async () => {
-			setMessages(chat.messages)
-		}
-		if (chat && messages.length === 0) getChatMessages()
+		if (chat) setMessages(chat.messages)
 	}, [chat])
 
 	const sendMessage = async () => {
@@ -65,9 +69,10 @@ const ActiveChatRight = ({ chat, user }) => {
 
 			socket.current.emit('sendMessage', {
 				senderId: user._id,
-				receiverId: chatMember._id,
+				receiverId: Array.isArray(chatMember)
+					? chatMember.map(member => member._id)
+					: chatMember._id,
 				text: newMessage,
-				createdAt: moment(),
 			})
 
 			const message = await axios.post('/messages', newMessage)
@@ -82,6 +87,8 @@ const ActiveChatRight = ({ chat, user }) => {
 		}
 	}
 
+	console.log(chat)
+
 	return (
 		<div className='activeChatContainer'>
 			<div className='activeChatTop'>
@@ -95,7 +102,11 @@ const ActiveChatRight = ({ chat, user }) => {
 						alt=''
 						className='activeChatUserAva'
 					/>
-					<h2 className='activeChatUsername'>{chatMember?.username}</h2>
+					<h2 className='activeChatUsername'>
+						{Array.isArray(chatMember)
+							? chatMember.map(member => member?.username).join(', ')
+							: chatMember?.username}
+					</h2>
 				</div>
 				<div className='activeChatTopRight'>
 					<AiOutlineInfoCircle fontSize={20} />
@@ -104,47 +115,50 @@ const ActiveChatRight = ({ chat, user }) => {
 			<div className='activeChatMid'>
 				{chat?.messages.length > 0 && (
 					<div className='activeChatMidContainer'>
-						<Link
-							className='activeChatMidUserBlock'
-							to={`/${chatMember?.userId}`}
-						>
-							<div className='activeChatMidUserContainer'>
-								<img
-									src={
-										chatMember?.profilePicture
-											? PF + 'storage/' + chatMember?.profilePicture
-											: PF + 'icon/noAvatar.png'
-									}
-									alt=''
-									className='activeChatMidUserAva'
-								/>
-								<div className='activeChatMidUserData'>
-									<h2 className='activeChatMidUsername'>
-										{chatMember?.username}
-									</h2>
-									<span className='activeChatMidUserId'>
-										{chatMember?.userId}
+						{!Array.isArray(chatMember) && (
+							<Link
+								className='activeChatMidUserBlock'
+								to={`/${chatMember?.userId}`}
+							>
+								<div className='activeChatMidUserContainer'>
+									<img
+										src={
+											chatMember?.profilePicture
+												? PF + 'storage/' + chatMember?.profilePicture
+												: PF + 'icon/noAvatar.png'
+										}
+										alt=''
+										className='activeChatMidUserAva'
+									/>
+									<div className='activeChatMidUserData'>
+										<h2 className='activeChatMidUsername'>
+											{chatMember?.username}
+										</h2>
+										<span className='activeChatMidUserId'>
+											{chatMember?.userId}
+										</span>
+									</div>
+
+									{chatMember?.bio && (
+										<span className='activeChatMidUserBio'>
+											{chatMember?.bio}
+										</span>
+									)}
+									<span className='activeChatMidUserJoinedAndFollowers'>
+										Joined{' '}
+										{moment(chatMember?.createdAt).format('MMMM') +
+											' ' +
+											moment(chatMember?.createdAt).format('YYYY')}{' '}
+										·{' '}
+										{chatMember?.followers.length === 0 ||
+										chatMember?.followers.length > 1
+											? `${chatMember?.followers.length} Followers`
+											: '1 Follower'}
 									</span>
 								</div>
+							</Link>
+						)}
 
-								{chatMember?.bio && (
-									<span className='activeChatMidUserBio'>
-										{chatMember?.bio}
-									</span>
-								)}
-								<span className='activeChatMidUserJoinedAndFollowers'>
-									Joined{' '}
-									{moment(chatMember?.createdAt).format('MMMM') +
-										' ' +
-										moment(chatMember?.createdAt).format('YYYY')}{' '}
-									·{' '}
-									{chatMember?.followers.length === 0 ||
-									chatMember?.followers.length > 1
-										? `${chatMember?.followers.length} Followers`
-										: '1 Follower'}
-								</span>
-							</div>
-						</Link>
 						<div className='activeChatMidMessagesBlock'>
 							{messages.map((message, index) => (
 								<Message

@@ -27,11 +27,21 @@ io.on('connection', socket => {
 	})
 
 	socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-		const user = getUser(receiverId)
-		io.to(user.socketId).emit('getMessage', {
-			senderId,
-			text,
-		})
+		if (Array.isArray(receiverId)) {
+			receiverId.forEach(userId => {
+				const user = getUser(userId)
+				io.to(user.socketId).emit('getMessage', {
+					senderId,
+					text,
+				})
+			})
+		} else {
+			const user = getUser(receiverId)
+			io.to(user.socketId).emit('getMessage', {
+				senderId,
+				text,
+			})
+		}
 	})
 
 	socket.on('disconnect', () => {
