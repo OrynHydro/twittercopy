@@ -63,9 +63,18 @@ const Messages = ({ isLoading, setIsLoading }) => {
 
 	const [activeArrow, setActiveArrow] = useState(false)
 
+	const [activeSwitchMenu, setActiveSwitchMenu] = useState('people')
+
 	const [text, setText] = useState('')
 
-	const [activeSwitchMenu, setActiveSwitchMenu] = useState('people')
+	const fetchMessages = async e => {
+		const searchText = e.target.value
+		if (activeSwitchMenu === 'people') {
+			await axios
+				.get(`/users/findByText?text=${searchText}`)
+				.then(res => console.log(res.data))
+		}
+	}
 
 	return (
 		<Layout
@@ -141,7 +150,10 @@ const Messages = ({ isLoading, setIsLoading }) => {
 									type='text'
 									placeholder='Search Direct Messages'
 									value={text}
-									onChange={e => setText(e.target.value)}
+									onChange={e => {
+										setText(e.target.value)
+										fetchMessages(e)
+									}}
 								/>
 								{text && (
 									<AiFillCloseCircle

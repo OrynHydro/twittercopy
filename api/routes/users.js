@@ -1,9 +1,10 @@
 // importing router using ExpressJS, users and posts model, and bcrypt
 
 const router = require('express').Router()
-const List = require('../models/List')
 const Post = require('../models/Post')
 const User = require('../models/User')
+const Chat = require('../models/Chat')
+const Message = require('../models/Message')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 
@@ -337,6 +338,73 @@ router.get('/findByText', async (req, res) => {
 	// }
 
 	res.status(200).json(foundUsers)
+})
+
+// find user's chats with people
+router.get('/findChats/:userDbId/people', async (req, res) => {
+	try {
+		const searchText = req.query.text
+		const userDbId = req.params.userDbId
+		const chats = await Chat.find({ members: { $in: userDbId } })
+			.populate('members')
+			.populate('messages')
+		const filteredChats = chats.filter(chat => chat.members.length === 2)
+		const filteredChatsWithText = filteredChats.filter(chat =>
+			chat.members.some(
+				member =>
+					member._id.equals(new mongoose.Types.ObjectId(userDbId)) === false &&
+					(member.userId.match(new RegExp(searchText, 'i')) ||
+						member.username.match(new RegExp(searchText, 'i')))
+			)
+		)
+		res.status(200).json(filteredChatsWithText)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// find user's groups with certain persons
+router.get('/findChats/:userDbId/groups', async (req, res) => {
+	try {
+		const searchText = req.query.text
+		const userDbId = req.params.userDbId
+		const chats = await Chat.find({ members: { $in: userDbId } })
+			.populate('members')
+			.populate('messages')
+		const filteredChats = chats.filter(chat => chat.members.length > 2)
+		const filteredChatsWithText = filteredChats.filter(chat =>
+			chat.members.some(
+				member =>
+					member._id.equals(new mongoose.Types.ObjectId(userDbId)) === false &&
+					(member.userId.match(new RegExp(searchText, 'i')) ||
+						member.username.match(new RegExp(searchText, 'i')))
+			)
+		)
+		res.status(200).json(filteredChatsWithText)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// find message with text in user's chats
+router.get('/findChats/:userDbId/messages', async (req, res) => {
+	try {
+		const searchText = req.query.text
+		const userDbId = req.params.userDbId
+		const chats = await Chat.find({ members: { $in: userDbId } })
+			.populate('members')
+			.populate('messages')
+
+		const chatIds = chats.map(chat => chat._id)
+
+		const messages = await Message.find({
+			chatId: { $in: chatIds },
+			text: { $regex: new RegExp(searchText, 'i') },
+		}).populate('sender')
+		res.status(200).json(messages)
+	} catch (err) {
+		res.status(500).json(err)
+	}
 })
 
 module.exports = router
