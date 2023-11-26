@@ -38,8 +38,6 @@ const Messages = ({ isLoading, setIsLoading }) => {
 
 	const [userChats, setUserChats] = useState([])
 
-	const [userGroups, setUserGroups] = useState([])
-
 	const [activeChat, setActiveChat] = useState(null)
 
 	const [isLoadingChats, setIsLoadingChats] = useState(false)
@@ -56,8 +54,8 @@ const Messages = ({ isLoading, setIsLoading }) => {
 				console.log(error)
 			}
 		}
-		userChats?.length === 0 && userGroups?.length === 0 && user && fetchChats()
-	}, [userChats?.length, userGroups?.length, user])
+		userChats?.length === 0 && user && fetchChats()
+	}, [userChats?.length, user])
 
 	const [activeSearch, setActiveSearch] = useState(false)
 
@@ -67,13 +65,55 @@ const Messages = ({ isLoading, setIsLoading }) => {
 
 	const [text, setText] = useState('')
 
-	const fetchMessages = async e => {
-		const searchText = e.target.value
-		if (activeSwitchMenu === 'people') {
-			await axios
-				.get(`/users/findByText?text=${searchText}`)
-				.then(res => console.log(res.data))
+	const [searchedChats, setSearchedChats] = useState([])
+
+	const [noMatches, setNoMatches] = useState(false)
+
+	const [loadingChatSearching, setLoadingChatSearching] = useState(false)
+
+	useEffect(() => {
+		if (!text) {
+			setSearchedChats([])
+			setNoMatches(false)
+		} else if (text && searchedChats.length === 0) {
+			setNoMatches(true)
+		} else if (text && searchedChats.length !== 0) {
+			setNoMatches(false)
 		}
+	}, [text])
+
+	const fetchMessages = async e => {
+		setText(e.target.value)
+		setLoadingChatSearching(true)
+		if (!loadingChatSearching) return
+		if (activeSwitchMenu === 'people') {
+			try {
+				await axios
+					.get(`/users/findChats/${user?._id}/people?text=${e.target.value}`)
+					.then(res => setSearchedChats(res.data))
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		if (activeSwitchMenu === 'groups') {
+			try {
+				await axios
+					.get(`/users/findChats/${user?._id}/groups?text=${e.target.value}`)
+					.then(res => setSearchedChats(res.data))
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		if (activeSwitchMenu === 'messages') {
+			try {
+				await axios
+					.get(`/users/findChats/${user?._id}/messages?text=${e.target.value}`)
+					.then(res => setSearchedChats(res.data))
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		setLoadingChatSearching(false)
 	}
 
 	return (
@@ -123,7 +163,10 @@ const Messages = ({ isLoading, setIsLoading }) => {
 							{activeArrow && (
 								<div
 									className='messagesSearchArrow'
-									onClick={() => setActiveArrow(false)}
+									onClick={() => {
+										setActiveArrow(false)
+										setText('')
+									}}
 								>
 									<img src={PF + 'icon/utility/arrowLeft.svg'} alt='' />
 								</div>
@@ -150,10 +193,7 @@ const Messages = ({ isLoading, setIsLoading }) => {
 									type='text'
 									placeholder='Search Direct Messages'
 									value={text}
-									onChange={e => {
-										setText(e.target.value)
-										fetchMessages(e)
-									}}
+									onChange={e => fetchMessages(e)}
 								/>
 								{text && (
 									<AiFillCloseCircle
@@ -198,9 +238,44 @@ const Messages = ({ isLoading, setIsLoading }) => {
 										Messages
 									</div>
 								</div>
-								<div className='searchingNoResults'>
-									Try searching for people, groups, or messages
-								</div>
+								{loadingChatSearching ? (
+									<div className='loader'></div>
+								) : text &&
+								  searchedChats.length > 0 &&
+								  activeSwitchMenu !== 'messages' ? (
+									searchedChats.map((item, index) => (
+										<ChatItem
+											key={index}
+											chat={item}
+											user={user}
+											activeChat={activeChat}
+											setActiveChat={setActiveChat}
+										/>
+									))
+								) : text &&
+								  activeSwitchMenu === 'messages' &&
+								  searchedChats.length > 0 ? (
+									searchedChats.map((item, index) => (
+										<ChatItem
+											key={index}
+											chat={item.chat}
+											user={user}
+											activeChat={activeChat}
+											setActiveChat={setActiveChat}
+											searchedMessage={item}
+										/>
+									))
+								) : noMatches ? (
+									<div className='searchingNoResults'>
+										No results for "{text}"
+									</div>
+								) : (
+									!text && (
+										<div className='searchingNoResults'>
+											Try searching for people, groups, or messages
+										</div>
+									)
+								)}
 							</>
 						) : (
 							userChats.map((item, index) => (

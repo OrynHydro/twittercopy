@@ -17,6 +17,14 @@
 	gap: 5px;		
 }
 
+.messageTextBlock.noImg {
+	margin: 0 0 0 34px;
+}
+
+.messageBlock.senderMessage .messageTextBlock.noImg {
+	margin: 0 34px 0 0;
+}
+
 .messageBlock.senderMessage .messageTextBlock {
 	align-items: end;
 }

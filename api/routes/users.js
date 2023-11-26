@@ -401,7 +401,22 @@ router.get('/findChats/:userDbId/messages', async (req, res) => {
 			chatId: { $in: chatIds },
 			text: { $regex: new RegExp(searchText, 'i') },
 		}).populate('sender')
-		res.status(200).json(messages)
+
+		const getChatForMessage = async message => {
+			const chat = await Chat.findById(message.chatId)
+				.populate('members')
+				.populate('messages')
+
+			message = message.toObject()
+
+			message.chat = chat
+
+			return message
+		}
+
+		const messagesWithChats = await Promise.all(messages.map(getChatForMessage))
+
+		res.status(200).json(messagesWithChats)
 	} catch (err) {
 		res.status(500).json(err)
 	}

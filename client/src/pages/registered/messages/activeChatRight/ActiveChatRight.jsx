@@ -87,21 +87,47 @@ const ActiveChatRight = ({ chat, user }) => {
 		}
 	}
 
-	console.log(chat)
-
 	return (
 		<div className='activeChatContainer'>
 			<div className='activeChatTop'>
 				<div className='activeChatTopLeft'>
-					<img
-						src={
-							chatMember?.profilePicture
-								? PF + 'storage/' + chatMember?.profilePicture
-								: PF + 'icon/noAvatar.png'
-						}
-						alt=''
-						className='activeChatUserAva'
-					/>
+					{!Array.isArray(chatMember) ? (
+						<img
+							src={
+								chatMember?.profilePicture
+									? PF + 'storage/' + chatMember?.profilePicture
+									: PF + 'icon/noAvatar.png'
+							}
+							alt=''
+							className='chatItemUserAva'
+						/>
+					) : (
+						chatMember.length === 2 && (
+							<div className='chaItemAvaBlock'>
+								<div className='chatItemAvaContainer'>
+									<img
+										src={
+											chatMember[0]?.profilePicture
+												? PF + 'storage/' + chatMember[0]?.profilePicture
+												: PF + 'icon/noAvatar.png'
+										}
+										alt=''
+										className='chatItemUserAva'
+									/>
+									<hr />
+									<img
+										src={
+											chatMember[1]?.profilePicture
+												? PF + 'storage/' + chatMember[1]?.profilePicture
+												: PF + 'icon/noAvatar.png'
+										}
+										alt=''
+										className='chatItemUserAva'
+									/>
+								</div>
+							</div>
+						)
+					)}
 					<h2 className='activeChatUsername'>
 						{Array.isArray(chatMember)
 							? chatMember.map(member => member?.username).join(', ')
@@ -166,6 +192,11 @@ const ActiveChatRight = ({ chat, user }) => {
 									key={index}
 									user={user}
 									nextMessage={messages[messages.indexOf(message) + 1]}
+									sender={
+										Array.isArray(chatMember)
+											? chatMember.find(item => item._id === message.sender)
+											: chatMember
+									}
 								/>
 							))}
 						</div>

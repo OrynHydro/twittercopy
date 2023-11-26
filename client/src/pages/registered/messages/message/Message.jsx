@@ -7,7 +7,8 @@ import { LuCopyPlus } from 'react-icons/lu'
 import { RiFlag2Line } from 'react-icons/ri'
 import { useOutsideClick } from './../../../../utils/useOutsideClick'
 
-const Message = ({ message, user, nextMessage }) => {
+const Message = ({ message, user, nextMessage, sender }) => {
+	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const [hovered, setHovered] = useState(false)
 
 	const [duration, setDuration] = useState(null)
@@ -93,9 +94,63 @@ const Message = ({ message, user, nextMessage }) => {
 						onMouseOver={() => setHovered(true)}
 						onMouseOut={() => setHovered(false)}
 					>
-						<div className='messageTextBlock'>
-							<span className='messageText'>{message.text}</span>
-						</div>
+						{nextMessage?.sender !== message?.sender ? (
+							<img
+								src={
+									message.sender === user._id && user?.profilePicture
+										? PF + 'storage/' + user?.profilePicture
+										: message.sender !== user._id && sender?.profilePicture
+										? PF + 'storage/' + sender?.profilePicture
+										: PF + 'icon/noAvatar.png'
+								}
+								alt=''
+								className='activeChatUserAva'
+							/>
+						) : !nextMessage ? (
+							<img
+								src={
+									message.sender === user._id && user?.profilePicture
+										? PF + 'storage/' + user?.profilePicture
+										: message.sender !== user._id && sender?.profilePicture
+										? PF + 'storage/' + sender?.profilePicture
+										: PF + 'icon/noAvatar.png'
+								}
+								alt=''
+								className='activeChatUserAva'
+							/>
+						) : (
+							duration > 2 && (
+								<img
+									src={
+										message.sender === user._id && user?.profilePicture
+											? PF + 'storage/' + user?.profilePicture
+											: message.sender !== user._id && sender?.profilePicture
+											? PF + 'storage/' + sender?.profilePicture
+											: PF + 'icon/noAvatar.png'
+									}
+									alt=''
+									className='activeChatUserAva'
+								/>
+							)
+						)}
+						{nextMessage?.sender !== message?.sender ? (
+							<div className='messageTextBlock'>
+								<span className='messageText'>{message.text}</span>
+							</div>
+						) : !nextMessage ? (
+							<div className='messageTextBlock'>
+								<span className='messageText'>{message.text}</span>
+							</div>
+						) : duration > 2 ? (
+							<div className='messageTextBlock'>
+								<span className='messageText'>{message.text}</span>
+							</div>
+						) : (
+							<div className='messageTextBlock noImg'>
+								<span className='messageText'>{message.text}</span>
+							</div>
+						)}
+
 						<div
 							className='messageMoreBlock'
 							style={{ display: !hovered && 'none' }}

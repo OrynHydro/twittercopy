@@ -8,7 +8,13 @@ import { BsBellSlash, BsPin } from 'react-icons/bs'
 import { RiFlag2Line } from 'react-icons/ri'
 import { FiTrash2 } from 'react-icons/fi'
 
-const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
+const ChatItem = ({
+	chat,
+	user,
+	activeChat,
+	setActiveChat,
+	searchedMessage,
+}) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const [chatMember, setChatMember] = useState(null)
 
@@ -181,7 +187,9 @@ const ChatItem = ({ chat, user, activeChat, setActiveChat }) => {
 						</div>
 					</div>
 					<div className='chatItemBottom'>
-						{chat.messages.length > 0 && chat?.messages.at(-1).text}
+						{searchedMessage
+							? searchedMessage.text
+							: chat.messages.length > 0 && chat?.messages.at(-1).text}
 					</div>
 				</div>
 			</div>
