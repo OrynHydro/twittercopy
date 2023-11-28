@@ -72,6 +72,20 @@ const UserSchema = new mongoose.Schema(
 				ref: 'List',
 			},
 		],
+		pinnedChats: {
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Chat',
+				},
+			],
+			validate: {
+				validator: function (array) {
+					return array.length <= 5
+				},
+				message: 'Max amount of pinned chats - 5.',
+			},
+		},
 	},
 	{ timestamps: true }
 )

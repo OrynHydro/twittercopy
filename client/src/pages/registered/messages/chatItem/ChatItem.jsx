@@ -4,9 +4,10 @@ import './chatItem.css'
 
 import moment from 'moment'
 import { useOutsideClick } from '../../../../utils/useOutsideClick'
-import { BsBellSlash, BsPin } from 'react-icons/bs'
+import { BsBellSlash, BsPin, BsPinFill } from 'react-icons/bs'
 import { RiFlag2Line } from 'react-icons/ri'
 import { FiTrash2 } from 'react-icons/fi'
+import axios from 'axios'
 
 const ChatItem = ({
 	chat,
@@ -68,6 +69,36 @@ const ChatItem = ({
 			img: <FiTrash2 fontSize={18} color='#f4212e' />,
 		},
 	]
+
+	const [pinned, setPinned] = useState(false)
+
+	const pinChat = async () => {
+		try {
+			await axios
+				.put(`/users/pinChat/${user._id}`, {
+					chatId: chat._id,
+				})
+				.then(res =>
+					res.data === 'Pinned'
+						? setPinned(true)
+						: res.data === 'Unpinned' && setPinned(false)
+				)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	useEffect(() => {
+		user?.pinnedChats.some(pinnedChat => pinnedChat._id === chat._id) &&
+			setPinned(true)
+	}, [user?.pinnedChats, chat])
+
+	const morePopupClickHandler = item => {
+		if (item.title === 'Pin conversation') {
+			pinChat()
+		}
+		setActiveMorePopup(false)
+	}
 
 	return (
 		<div
@@ -149,7 +180,10 @@ const ChatItem = ({
 								className='chatItemMoreBlock'
 								onMouseOver={() => setActiveMore(true)}
 								onMouseOut={() => setActiveMore(false)}
-								onClick={() => setActiveMorePopup(true)}
+								onClick={e => {
+									setActiveMorePopup(true)
+									e.stopPropagation()
+								}}
 							>
 								<img
 									src={
@@ -170,16 +204,28 @@ const ChatItem = ({
 							ref={morePopup}
 						>
 							{morePopupItems.map(item => (
-								<div className='chatItemMorePopupItem'>
+								<div
+									className='chatItemMorePopupItem'
+									onClick={e => {
+										e.stopPropagation()
+										morePopupClickHandler(item)
+									}}
+								>
 									<div className='chatItemMorePopupItemContainer'>
-										{item.img}
+										{item.title === 'Pin conversation' && pinned ? (
+											<BsPinFill fontSize={20} />
+										) : (
+											item.img
+										)}
 										<span
 											style={{
 												color:
 													item.title === 'Delete conversation' && '#f4212e',
 											}}
 										>
-											{item.title}
+											{item.title === 'Pin conversation' && pinned
+												? 'Unpin conversation'
+												: item.title}
 										</span>
 									</div>
 								</div>

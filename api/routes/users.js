@@ -35,10 +35,19 @@ router.put('/:userId/update', async (req, res) => {
 // get user by token
 router.get('/findByToken/:token', async (req, res) => {
 	try {
-		const user = await User.findOne({ token: req.params.token }).populate({
-			path: 'pinnedLists',
-			populate: { path: 'creator' },
-		})
+		const user = await User.findOne({ token: req.params.token })
+			.populate({
+				path: 'pinnedLists',
+				populate: { path: 'creator' },
+			})
+			.populate({
+				path: 'pinnedChats',
+				populate: { path: 'members' },
+			})
+			.populate({
+				path: 'pinnedChats',
+				populate: { path: 'messages' },
+			})
 
 		const { password, updatedAt, ...other } = user?._doc
 		res.status(200).json(other)
@@ -417,6 +426,26 @@ router.get('/findChats/:userDbId/messages', async (req, res) => {
 		const messagesWithChats = await Promise.all(messages.map(getChatForMessage))
 
 		res.status(200).json(messagesWithChats)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// pin chat
+router.put('/pinChat/:userDbId', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.userDbId)
+		if (!user.pinnedChats.includes(req.body.chatId)) {
+			await user.updateOne({
+				$push: { pinnedChats: req.body.chatId },
+			})
+			res.status(200).json('Pinned')
+		} else {
+			await user.updateOne({
+				$pull: { pinnedChats: req.body.chatId },
+			})
+			res.status(200).json('Unpinned')
+		}
 	} catch (err) {
 		res.status(500).json(err)
 	}

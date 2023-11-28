@@ -277,16 +277,57 @@ const Messages = ({ isLoading, setIsLoading }) => {
 									)
 								)}
 							</>
+						) : user?.pinnedChats?.length !== 0 ? (
+							<>
+								<h2 className='pinnedChatsTitle'>Pinned conversations</h2>
+								{user?.pinnedChats.map((item, index) => (
+									<ChatItem
+										key={index}
+										chat={item}
+										user={user}
+										activeChat={activeChat}
+										setActiveChat={setActiveChat}
+									/>
+								))}
+								{userChats.filter(
+									chat =>
+										!user?.pinnedChats
+											.map(pinnedChat => pinnedChat._id)
+											.includes(chat._id)
+								).length !== 0 && (
+									<>
+										<h2 className='pinnedChatsTitle'>All conversations</h2>
+										{userChats
+											.filter(
+												chat =>
+													!user?.pinnedChats
+														.map(pinnedChat => pinnedChat._id)
+														.includes(chat._id)
+											)
+											.map((item, index) => (
+												<ChatItem
+													key={index}
+													chat={item}
+													user={user}
+													activeChat={activeChat}
+													setActiveChat={setActiveChat}
+												/>
+											))}
+									</>
+								)}
+							</>
 						) : (
-							userChats.map((item, index) => (
-								<ChatItem
-									key={index}
-									chat={item}
-									user={user}
-									activeChat={activeChat}
-									setActiveChat={setActiveChat}
-								/>
-							))
+							<>
+								{userChats.map((item, index) => (
+									<ChatItem
+										key={index}
+										chat={item}
+										user={user}
+										activeChat={activeChat}
+										setActiveChat={setActiveChat}
+									/>
+								))}
+							</>
 						)}
 					</>
 				) : (
