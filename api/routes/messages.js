@@ -16,20 +16,27 @@ router.post('/', async (req, res) => {
 	}
 })
 
-// get user chats
-// router.get('/getChats/:userDbId', async (req, res) => {
-// 	try {
-// 		const userId = req.params.userDbId
-// 		const userChats = await Chat.find({ members: { $in: [userId] } })
+// delete message
+router.delete('/:messageId/delete', async (req, res) => {
+	try {
+		const message = await Message.findById(req.params.messageId)
+		await message.deleteOne()
+		res.status(200).json('Message deleted')
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
 
-// 		const populatePromises = userChats.map(chat => chat.populate('members'))
-
-// 		await Promise.all(populatePromises)
-
-// 		res.status(200).json(userChats)
-// 	} catch (error) {
-// 		res.status(500).json(error)
-// 	}
-// })
+// reply to message
+router.put('/:messageId/reply', async (req, res) => {
+	try {
+		await Message.findByIdAndUpdate(req.params.messageId, {
+			originalMessage: req.body.originalMessage,
+		})
+		res.status(200).json('Message replied')
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
 
 module.exports = router

@@ -65,6 +65,7 @@ const ActiveChatRight = ({ chat, user }) => {
 				chatId: chat._id,
 				sender: user._id,
 				text: text,
+				originalMessage: repliedMessage,
 			}
 
 			socket.current.emit('sendMessage', {
@@ -80,12 +81,27 @@ const ActiveChatRight = ({ chat, user }) => {
 				messageId: message.data._id,
 			})
 
-			setMessages([...messages, message.data])
+			setMessages([
+				...messages,
+				{
+					...message.data,
+					sender: user,
+				},
+			])
 			setText('')
 		} catch (err) {
 			console.log(err)
 		}
 	}
+
+	const handleKeyDown = e => {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault()
+			sendMessage()
+		}
+	}
+
+	const [repliedMessage, setRepliedMessage] = useState(null)
 
 	return (
 		<div className='activeChatContainer'>
@@ -192,17 +208,35 @@ const ActiveChatRight = ({ chat, user }) => {
 									key={index}
 									user={user}
 									nextMessage={messages[messages.indexOf(message) + 1]}
+									chat={chat}
 									sender={
 										Array.isArray(chatMember)
 											? chatMember.find(item => item._id === message.sender)
 											: chatMember
 									}
+									setRepliedMessage={setRepliedMessage}
 								/>
 							))}
 						</div>
 					</div>
 				)}
 			</div>
+			{repliedMessage && (
+				<div className='activeChatRepliedMessageBlock'>
+					<div className='activeChatRepliedMessageContainer'>
+						<div className='repliedMessageUserData'>
+							<h3>{repliedMessage.sender?.username}</h3>
+							<span>{repliedMessage?.text}</span>
+						</div>
+						<div
+							className='newMessageModalCross'
+							onClick={() => setRepliedMessage(null)}
+						>
+							<img src={PF + 'icon/utility/x.svg'} alt='' />
+						</div>
+					</div>
+				</div>
+			)}
 			<div className='activeChatBottom'>
 				<div className='activeChatBottomContainer'>
 					<div className='activeChatBottomIcons'>
@@ -220,6 +254,7 @@ const ActiveChatRight = ({ chat, user }) => {
 						className='activeChatBottomInput'
 						type='text'
 						onChange={e => setText(e.target.value)}
+						onKeyDown={handleKeyDown}
 						placeholder='Start a new message'
 						value={text}
 					/>

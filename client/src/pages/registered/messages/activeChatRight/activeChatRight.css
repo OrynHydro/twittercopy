@@ -196,3 +196,33 @@
 	gap: 10px;
 	padding: 20px 0;
 }
+
+.activeChatRepliedMessageBlock {
+	width: 100%;
+	background-color: #f7f7f9;
+	border-left: 4px solid #242e36;
+}
+
+.activeChatRepliedMessageContainer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 12px;
+}
+
+.repliedMessageUserData {
+	display: flex;
+	flex-direction: column;
+}
+
+.repliedMessageUserData h3,
+.repliedMessageUserData span {
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 16px;
+	color: var(--black);
+}
+
+.repliedMessageUserData span {
+	font-weight: 400;
+}

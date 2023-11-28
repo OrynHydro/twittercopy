@@ -35,7 +35,7 @@
 
 .messageContainerTop {
 	display: flex;
-	align-items: center;
+	align-items: flex-end;
 	gap: 5px;
 	width: 100%;
 	position: relative;
@@ -93,6 +93,7 @@
 	transition: 0.2s ease;
 	position: relative;
 	top: 4px;
+	margin-bottom: 10px;
 }
 
 .messageMoreBlock:hover {
@@ -157,4 +158,54 @@
 	font-weight: 700;
 	line-height: 20px;
 	color: var(--black);
+}
+
+
+
+.messageContent {
+	display: flex;
+	align-items: center;
+	flex-direction: row-reverse;
+	gap: 10px;
+}
+
+.messageBlock.senderMessage .messageContent {
+	flex-direction: row;
+}
+
+.messageBlock.senderMessage .messageTextContainer {
+	align-items: flex-end;
+}
+
+.messageTextContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.replyMessage {
+	border-left: 4px solid #6B7F8E;
+	padding-left: 10px;
+	margin: 5px 0 5px 40px;
+}
+
+.messageBlock.senderMessage .replyMessage {
+	margin: 5px 40px 10px 5px;
+}
+
+.replyMessageContainer {
+	display: flex;
+	align-items: center;
+	padding: 20px 0;
+}
+
+.replyMessageText {
+	display: inline-block;
+	max-width: 400px;
+	word-wrap: break-word;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 18px;
+	color: #6B7F8E;
+	margin-right: 5px;
 }

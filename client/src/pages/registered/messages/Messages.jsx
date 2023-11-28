@@ -250,6 +250,8 @@ const Messages = ({ isLoading, setIsLoading }) => {
 											user={user}
 											activeChat={activeChat}
 											setActiveChat={setActiveChat}
+											userChats={userChats}
+											setUserChats={setUserChats}
 										/>
 									))
 								) : text &&
@@ -263,6 +265,8 @@ const Messages = ({ isLoading, setIsLoading }) => {
 											activeChat={activeChat}
 											setActiveChat={setActiveChat}
 											searchedMessage={item}
+											userChats={userChats}
+											setUserChats={setUserChats}
 										/>
 									))
 								) : noMatches ? (
@@ -287,6 +291,8 @@ const Messages = ({ isLoading, setIsLoading }) => {
 										user={user}
 										activeChat={activeChat}
 										setActiveChat={setActiveChat}
+										userChats={userChats}
+										setUserChats={setUserChats}
 									/>
 								))}
 								{userChats.filter(
@@ -311,6 +317,8 @@ const Messages = ({ isLoading, setIsLoading }) => {
 													user={user}
 													activeChat={activeChat}
 													setActiveChat={setActiveChat}
+													userChats={userChats}
+													setUserChats={setUserChats}
 												/>
 											))}
 									</>
@@ -325,6 +333,8 @@ const Messages = ({ isLoading, setIsLoading }) => {
 										user={user}
 										activeChat={activeChat}
 										setActiveChat={setActiveChat}
+										userChats={userChats}
+										setUserChats={setUserChats}
 									/>
 								))}
 							</>

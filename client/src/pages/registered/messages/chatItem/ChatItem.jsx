@@ -15,6 +15,9 @@ const ChatItem = ({
 	activeChat,
 	setActiveChat,
 	searchedMessage,
+	setDeletedChat,
+	userChats,
+	setUserChats,
 }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const [chatMember, setChatMember] = useState(null)
@@ -88,6 +91,24 @@ const ChatItem = ({
 		}
 	}
 
+	const [deleted, setDeleted] = useState(false)
+
+	const deleteChat = async () => {
+		try {
+			await axios
+				.delete(`/chats/${chat._id}/delete`, {
+					chatId: chat._id,
+				})
+				.then(() => {
+					setDeleted(true)
+					setActiveChat(null)
+					setUserChats(userChats.filter(item => item._id !== chat._id))
+				})
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	useEffect(() => {
 		user?.pinnedChats.some(pinnedChat => pinnedChat._id === chat._id) &&
 			setPinned(true)
@@ -97,8 +118,13 @@ const ChatItem = ({
 		if (item.title === 'Pin conversation') {
 			pinChat()
 		}
+		if (item.title === 'Delete conversation') {
+			deleteChat()
+		}
 		setActiveMorePopup(false)
 	}
+
+	if (deleted) return null
 
 	return (
 		<div

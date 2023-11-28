@@ -6,8 +6,16 @@ import { BsReply } from 'react-icons/bs'
 import { LuCopyPlus } from 'react-icons/lu'
 import { RiFlag2Line } from 'react-icons/ri'
 import { useOutsideClick } from './../../../../utils/useOutsideClick'
+import axios from 'axios'
 
-const Message = ({ message, user, nextMessage, sender }) => {
+const Message = ({
+	message,
+	user,
+	nextMessage,
+	sender,
+	chat,
+	setRepliedMessage,
+}) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const [hovered, setHovered] = useState(false)
 
@@ -43,7 +51,7 @@ const Message = ({ message, user, nextMessage, sender }) => {
 		},
 		{
 			id: 3,
-			title: 'Delete for you',
+			title: 'Delete',
 			img: <FiTrash2 fontSize={20} />,
 		},
 	]
@@ -70,19 +78,46 @@ const Message = ({ message, user, nextMessage, sender }) => {
 		}
 	}
 
+	const [deleted, setDeleted] = useState(false)
+
+	const deleteMessage = async () => {
+		await axios.delete(`/messages/${message._id}/delete`).then(async res => {
+			if (res.data === 'Message deleted') {
+				await axios
+					.put(`/chats/${message._id}/removeMessage`, {
+						chatId: chat._id,
+					})
+					.then(() => {
+						setDeleted(true)
+						console.log('test')
+					})
+			}
+		})
+	}
+
+	const morePopupItemHandler = item => {
+		if (item.title === 'Delete') {
+			deleteMessage()
+		}
+		if (item.title === 'Reply') setRepliedMessage(message)
+		setActiveMore(false)
+	}
+
+	if (deleted) return null
+
 	return (
 		<div
 			className={
-				message.sender !== user._id &&
+				message.sender._id !== user._id &&
 				(duration > 2 ||
 					!nextMessage ||
-					nextMessage?.sender !== message?.sender)
+					nextMessage?.sender._id !== message?.sender._id)
 					? 'messageBlock lastMessage'
-					: (message.sender === user._id && duration > 2) ||
+					: (message.sender._id === user._id && duration > 2) ||
 					  !nextMessage ||
-					  nextMessage?.sender !== message?.sender
+					  nextMessage?.sender._id !== message?.sender._id
 					? 'messageBlock senderMessage lastMessage'
-					: message.sender === user._id
+					: message.sender._id === user._id
 					? 'messageBlock senderMessage'
 					: 'messageBlock'
 			}
@@ -94,62 +129,78 @@ const Message = ({ message, user, nextMessage, sender }) => {
 						onMouseOver={() => setHovered(true)}
 						onMouseOut={() => setHovered(false)}
 					>
-						{nextMessage?.sender !== message?.sender ? (
-							<img
-								src={
-									message.sender === user._id && user?.profilePicture
-										? PF + 'storage/' + user?.profilePicture
-										: message.sender !== user._id && sender?.profilePicture
-										? PF + 'storage/' + sender?.profilePicture
-										: PF + 'icon/noAvatar.png'
-								}
-								alt=''
-								className='activeChatUserAva'
-							/>
-						) : !nextMessage ? (
-							<img
-								src={
-									message.sender === user._id && user?.profilePicture
-										? PF + 'storage/' + user?.profilePicture
-										: message.sender !== user._id && sender?.profilePicture
-										? PF + 'storage/' + sender?.profilePicture
-										: PF + 'icon/noAvatar.png'
-								}
-								alt=''
-								className='activeChatUserAva'
-							/>
-						) : (
-							duration > 2 && (
-								<img
-									src={
-										message.sender === user._id && user?.profilePicture
-											? PF + 'storage/' + user?.profilePicture
-											: message.sender !== user._id && sender?.profilePicture
-											? PF + 'storage/' + sender?.profilePicture
-											: PF + 'icon/noAvatar.png'
-									}
-									alt=''
-									className='activeChatUserAva'
-								/>
-							)
-						)}
-						{nextMessage?.sender !== message?.sender ? (
-							<div className='messageTextBlock'>
-								<span className='messageText'>{message.text}</span>
+						<div className='messageTextContainer'>
+							{message.originalMessage && (
+								<div className='replyMessage'>
+									<div className='replyMessageContainer'>
+										<span className='replyMessageText'>
+											{message.originalMessage.text}
+										</span>
+									</div>
+								</div>
+							)}
+							<div className='messageContent'>
+								{nextMessage?.sender._id !== message?.sender._id ? (
+									<div className='messageTextBlock'>
+										<span className='messageText'>{message.text}</span>
+									</div>
+								) : !nextMessage ? (
+									<div className='messageTextBlock'>
+										<span className='messageText'>{message.text}</span>
+									</div>
+								) : duration > 2 ? (
+									<div className='messageTextBlock'>
+										<span className='messageText'>{message.text}</span>
+									</div>
+								) : (
+									<div className='messageTextBlock noImg'>
+										<span className='messageText'>{message.text}</span>
+									</div>
+								)}
+								{nextMessage?.sender._id !== message?.sender._id ? (
+									<img
+										src={
+											message.sender._id === user._id && user?.profilePicture
+												? PF + 'storage/' + user?.profilePicture
+												: message.sender._id !== user._id &&
+												  sender._id?.profilePicture
+												? PF + 'storage/' + sender._id?.profilePicture
+												: PF + 'icon/noAvatar.png'
+										}
+										alt=''
+										className='activeChatUserAva'
+									/>
+								) : !nextMessage ? (
+									<img
+										src={
+											message.sender._id === user._id && user?.profilePicture
+												? PF + 'storage/' + user?.profilePicture
+												: message.sender._id !== user._id &&
+												  sender._id?.profilePicture
+												? PF + 'storage/' + sender._id?.profilePicture
+												: PF + 'icon/noAvatar.png'
+										}
+										alt=''
+										className='activeChatUserAva'
+									/>
+								) : (
+									duration > 2 && (
+										<img
+											src={
+												message.sender._id === user._id && user?.profilePicture
+													? PF + 'storage/' + user?.profilePicture
+													: message.sender._id !== user._id &&
+													  sender._id?.profilePicture
+													? PF + 'storage/' + sender._id?.profilePicture
+													: PF + 'icon/noAvatar.png'
+											}
+											alt=''
+											className='activeChatUserAva'
+										/>
+									)
+								)}
 							</div>
-						) : !nextMessage ? (
-							<div className='messageTextBlock'>
-								<span className='messageText'>{message.text}</span>
-							</div>
-						) : duration > 2 ? (
-							<div className='messageTextBlock'>
-								<span className='messageText'>{message.text}</span>
-							</div>
-						) : (
-							<div className='messageTextBlock noImg'>
-								<span className='messageText'>{message.text}</span>
-							</div>
-						)}
+						</div>
 
 						<div
 							className='messageMoreBlock'
@@ -166,8 +217,12 @@ const Message = ({ message, user, nextMessage, sender }) => {
 							ref={morePopup}
 						>
 							{moreItemUser.map(item =>
-								item.id === 4 && message.sender === user?._id ? null : (
-									<div className='messageMorePopupItem' key={item.id}>
+								item.id === 4 && message.sender._id === user?._id ? null : (
+									<div
+										className='messageMorePopupItem'
+										key={item.id}
+										onClick={() => morePopupItemHandler(item)}
+									>
 										<div className='messageMorePopupItemContainer'>
 											{item.img}
 											<span>{item.title}</span>
@@ -177,7 +232,7 @@ const Message = ({ message, user, nextMessage, sender }) => {
 							)}
 						</div>
 					</div>
-					{nextMessage?.sender !== message?.sender ? (
+					{nextMessage?.sender._id !== message?.sender._id ? (
 						<div className='messageContainerBottom'>
 							<span className='messageCreatedAt'>
 								{formatTime(new Date(message.createdAt))}
