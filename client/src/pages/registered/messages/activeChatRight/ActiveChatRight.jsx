@@ -81,13 +81,16 @@ const ActiveChatRight = ({ chat, user }) => {
 				messageId: message.data._id,
 			})
 
-			setMessages([
-				...messages,
+			setMessages(prevMessages => [
+				...prevMessages,
 				{
 					...message.data,
 					sender: user,
 				},
 			])
+
+			console.log(messages)
+
 			setText('')
 		} catch (err) {
 			console.log(err)
@@ -155,7 +158,7 @@ const ActiveChatRight = ({ chat, user }) => {
 				</div>
 			</div>
 			<div className='activeChatMid'>
-				{chat?.messages.length > 0 && (
+				{messages.length > 0 && (
 					<div className='activeChatMidContainer'>
 						{!Array.isArray(chatMember) && (
 							<Link

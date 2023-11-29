@@ -229,13 +229,14 @@ const ChatItem = ({
 							}
 							ref={morePopup}
 						>
-							{morePopupItems.map(item => (
+							{morePopupItems.map((item, index) => (
 								<div
 									className='chatItemMorePopupItem'
 									onClick={e => {
 										e.stopPropagation()
 										morePopupClickHandler(item)
 									}}
+									key={index}
 								>
 									<div className='chatItemMorePopupItemContainer'>
 										{item.title === 'Pin conversation' && pinned ? (
