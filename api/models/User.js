@@ -86,6 +86,12 @@ const UserSchema = new mongoose.Schema(
 				message: 'Max amount of pinned chats - 5.',
 			},
 		},
+		bookmarks: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Post',
+			},
+		],
 	},
 	{ timestamps: true }
 )

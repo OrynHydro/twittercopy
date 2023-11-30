@@ -451,4 +451,51 @@ router.put('/pinChat/:userDbId', async (req, res) => {
 	}
 })
 
+// add post to bookmarks
+router.put('/bookmarks/:userDbId', async (req, res) => {
+	const userDbId = req.params.userDbId
+	const postId = req.body.postId
+	try {
+		const user = await User.findById(userDbId)
+
+		if (!user.bookmarks.includes(postId)) {
+			await user.updateOne({
+				$push: { bookmarks: postId },
+			})
+			res.status(200).json('Added')
+		} else {
+			await user.updateOne({
+				$pull: { bookmarks: postId },
+			})
+			res.status(200).json('Removed')
+		}
+	} catch (error) {
+		res.status(500).json(error)
+	}
+})
+
+// remove all bookmarks
+router.put('/bookmarks/:userDbId/clear', async (req, res) => {
+	const userDbId = req.params.userDbId
+	try {
+		await User.findByIdAndUpdate(userDbId, { bookmarks: [] })
+		res.status(200).json('Bookmarks cleared')
+	} catch (error) {
+		res.status(500).json(error)
+	}
+})
+
+// get user's bookmarks
+router.get('/bookmarks/:userDbId', async (req, res) => {
+	const userDbId = req.params.userDbId
+	try {
+		const bookmarks = await Post.find({
+			_id: { $in: (await User.findById(userDbId)).bookmarks },
+		}).populate('user')
+		res.status(200).json(bookmarks)
+	} catch (error) {
+		res.status(500).json(error)
+	}
+})
+
 module.exports = router

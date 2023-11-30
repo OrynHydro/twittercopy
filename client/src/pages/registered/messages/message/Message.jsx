@@ -100,6 +100,8 @@ const Message = ({
 			deleteMessage()
 		}
 		if (item.title === 'Reply') setRepliedMessage(message)
+		if (item.title === 'Copy message')
+			navigator.clipboard.writeText(`${message.text}`)
 		setActiveMore(false)
 	}
 

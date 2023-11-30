@@ -1,13 +1,21 @@
 .bookmarks {
     margin-left: 270px;
-    min-width: 600px;
+    width: 600px;
     height: 1664px;
     border-left: 1px solid #EFF3F4;
     border-right: 1px solid #EFF3F4;
 }
 
 .bookmarksContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.bookmarksTop {
     padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .boormarksTopTitle {
@@ -42,4 +50,47 @@
     font-weight: 400;
     line-height: 20px;
     color: var(--gray);
+}
+
+.bookmarksTopMore {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s ease;
+    position: relative;
+}
+
+.bookmarksTopMore:hover {
+    background-color: #E7E7E8;
+}
+
+.morePopup {
+    padding: 12px 16px;
+    color: #f4212e;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+    bottom: 0;
+    left: -140px;
+    width: 175px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(101, 119, 134, 0.2), 0 0 3px 1px rgba(101, 119, 134, 0.15);
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    transition: 0.2s ease;
+}
+
+.morePopup:hover {
+    background-color: #F7F9F9;
+}
+
+.morePopup.active {
+    opacity: 1;
+    z-index: 10000;
 }

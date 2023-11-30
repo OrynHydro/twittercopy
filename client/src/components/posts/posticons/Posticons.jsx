@@ -21,27 +21,50 @@ const Posticons = ({
 	// declaring state of icons
 
 	const [activeIcon, setActiveIcon] = useState(false)
+
+	const [isBookmarked, setIsBookmarked] = useState(false)
+
+	useEffect(() => {
+		setIsBookmarked(currentUser?.bookmarks.includes(post?._id))
+	}, [post?._id, currentUser?.bookmarks])
+
 	const likePost = async () => {
-		if (title === 'Like') {
-			try {
-				await axios.put(`/posts/${post?._id}/like`, {
-					userId: currentUser?._id,
-				})
-				setLike(isLiked ? like - 1 : like + 1)
-				setIsLiked(!isLiked)
-			} catch (err) {
-				console.log(err)
-			}
+		try {
+			await axios.put(`/posts/${post?._id}/like`, {
+				userId: currentUser?._id,
+			})
+			setLike(isLiked ? like - 1 : like + 1)
+			setIsLiked(!isLiked)
+		} catch (err) {
+			console.log(err)
 		}
 	}
 
-	// get info if post is liked by user
+	const addBookmark = async () => {
+		try {
+			await axios
+				.put(`/users/bookmarks/${currentUser?._id}`, {
+					postId: post?._id,
+				})
+				.then(res =>
+					setIsBookmarked(
+						res.data === 'Added' ? true : res.data === 'Removed' && false
+					)
+				)
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
-	// useEffect(() => {
-	//     setIsLiked(currentUser?.likedPosts.includes(post[0]?._id))
-	// }, [currentUser?.likedPosts, post[0]?._id])
-
-	// console.log(currentUser.likedPosts)
+	const iconClickHandler = () => {
+		if (title === 'Like') {
+			likePost()
+		}
+		if (title === 'Bookmark') {
+			addBookmark()
+		}
+		return
+	}
 
 	return (
 		<div
@@ -51,7 +74,7 @@ const Posticons = ({
 			onMouseOut={() => setActiveIcon(false)}
 			onClick={e => {
 				e.preventDefault()
-				likePost()
+				iconClickHandler()
 			}}
 		>
 			<div
@@ -60,7 +83,11 @@ const Posticons = ({
 			>
 				<img
 					src={
-						(title === 'Like' && isLiked) || activeIcon ? iconColoured : icon
+						(title === 'Like' && isLiked) ||
+						(title === 'Bookmark' && isBookmarked) ||
+						activeIcon
+							? iconColoured
+							: icon
 					}
 					alt=''
 				/>
@@ -69,7 +96,11 @@ const Posticons = ({
 				className='homePostIconCounter'
 				style={{
 					color:
-						(title === 'Like' && isLiked) || activeIcon ? color : '#84909a',
+						(title === 'Like' && isLiked) ||
+						(title === 'Bookmark' && isBookmarked) ||
+						activeIcon
+							? color
+							: '#84909a',
 				}}
 			>
 				{dbTitle === 'likes'
@@ -80,7 +111,7 @@ const Posticons = ({
 					? post?.retweets?.length
 					: dbTitle === 'views'
 					? post.views
-					: dbTitle === 'shares'
+					: dbTitle === 'shares' || dbTitle === 'bookmarks'
 					? ''
 					: 0}
 			</span>
