@@ -86,10 +86,11 @@ const ActiveChatRight = ({ chat, user }) => {
 				{
 					...message.data,
 					sender: user,
+					originalMessage: repliedMessage,
 				},
 			])
 
-			console.log(messages)
+			setRepliedMessage(null)
 
 			setText('')
 		} catch (err) {
