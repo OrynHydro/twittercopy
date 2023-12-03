@@ -67,12 +67,11 @@
 	background-color: #eff3f4;
 	min-height: 44px;
 	padding: 4px;
-}
-
-.activeChatBottomContainer {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 }
+
 
 .activeChatBottomIcons {
 	display: flex;
@@ -101,7 +100,6 @@
 
 .activeChatBottomInput {
 	width: 400px;
-	margin: 0 10px;
 	outline: none;
 	resize: none;
 }
@@ -225,4 +223,30 @@
 
 .repliedMessageUserData span {
 	font-weight: 400;
+}
+
+
+
+
+
+
+
+.sendMessageImgContainer {
+	position: relative;
+	max-width: fit-content;
+	max-height: fit-content;
+}
+
+.sendMessageImg {
+	max-width: 200px;
+	max-height: 150px;
+	border-radius: 16px;
+	object-fit: cover;
+}
+
+.fileContainer {
+	padding: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }

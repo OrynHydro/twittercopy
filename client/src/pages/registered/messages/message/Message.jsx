@@ -105,6 +105,8 @@ const Message = ({
 		setActiveMore(false)
 	}
 
+	const [fullScreenImg, setFullScreenImg] = useState(null)
+
 	if (deleted) return null
 
 	return (
@@ -141,25 +143,52 @@ const Message = ({
 									</div>
 								</div>
 							)}
+							{message.img && (
+								<div
+									className='messageImgContainer'
+									onClick={() => setFullScreenImg(message?.img)}
+								>
+									<img src={PF + 'storage/' + message.img} />
+								</div>
+							)}
 							<div className='messageContent'>
-								{nextMessage?.sender._id !== message?.sender._id ? (
-									<div className='messageTextBlock'>
-										<span className='messageText'>{message.text}</span>
-									</div>
-								) : !nextMessage ? (
-									<div className='messageTextBlock'>
-										<span className='messageText'>{message.text}</span>
-									</div>
-								) : duration > 2 ? (
-									<div className='messageTextBlock'>
-										<span className='messageText'>{message.text}</span>
-									</div>
-								) : (
-									<div className='messageTextBlock noImg'>
-										<span className='messageText'>{message.text}</span>
-									</div>
-								)}
-								{nextMessage?.sender._id !== message?.sender._id ? (
+								{message?.text &&
+									(nextMessage?.sender._id !== message?.sender._id ? (
+										<div className='messageTextBlock'>
+											<span className='messageText'>{message.text}</span>
+										</div>
+									) : !nextMessage ? (
+										<div className='messageTextBlock'>
+											<span className='messageText'>{message.text}</span>
+										</div>
+									) : duration > 2 ? (
+										<div className='messageTextBlock'>
+											<span className='messageText'>{message.text}</span>
+										</div>
+									) : message?.img ? (
+										<div className='messageTextBlock'>
+											<span className='messageText'>{message.text}</span>
+										</div>
+									) : (
+										<div className='messageTextBlock noImg'>
+											<span className='messageText'>{message.text}</span>
+										</div>
+									))}
+
+								{message?.img ? (
+									<img
+										src={
+											message.sender._id === user._id && user?.profilePicture
+												? PF + 'storage/' + user?.profilePicture
+												: message.sender._id !== user._id &&
+												  sender._id?.profilePicture
+												? PF + 'storage/' + sender._id?.profilePicture
+												: PF + 'icon/noAvatar.png'
+										}
+										alt=''
+										className='activeChatUserAva'
+									/>
+								) : nextMessage?.sender._id !== message?.sender._id ? (
 									<img
 										src={
 											message.sender._id === user._id && user?.profilePicture
@@ -257,6 +286,25 @@ const Message = ({
 					)}
 				</div>
 			</div>
+			{fullScreenImg && (
+				<div className='fullScreenImg'>
+					<div
+						className='fullScreenImgCross'
+						onClick={() => setFullScreenImg(null)}
+						title='Close'
+					>
+						<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+					</div>
+					<img
+						src={PF + 'storage/' + fullScreenImg}
+						className='fullScreenImgBlock'
+					/>
+					<div
+						className='fullScreenImgOverlay'
+						onClick={() => setFullScreenImg(null)}
+					/>
+				</div>
+			)}
 		</div>
 	)
 }

@@ -59,13 +59,26 @@ const ActiveChatRight = ({ chat, user }) => {
 	}, [chat])
 
 	const sendMessage = async () => {
-		if (!text) return
+		if (!text && !file) return
 		try {
+			const formData = new FormData()
+			const fileName =
+				'm' +
+				Math.random().toString(16).slice(2) +
+				'.' +
+				file?.name.split('.')[1]
+
+			formData.append('name', fileName)
+			formData.append('files', file)
+
+			await axios.post(`/upload`, formData)
+
 			const newMessage = {
 				chatId: chat._id,
 				sender: user._id,
 				text: text,
 				originalMessage: repliedMessage,
+				img: fileName,
 			}
 
 			socket.current.emit('sendMessage', {
@@ -81,6 +94,8 @@ const ActiveChatRight = ({ chat, user }) => {
 				messageId: message.data._id,
 			})
 
+			console.log(message)
+
 			setMessages(prevMessages => [
 				...prevMessages,
 				{
@@ -91,7 +106,7 @@ const ActiveChatRight = ({ chat, user }) => {
 			])
 
 			setRepliedMessage(null)
-
+			setFile(null)
 			setText('')
 		} catch (err) {
 			console.log(err)
@@ -106,6 +121,8 @@ const ActiveChatRight = ({ chat, user }) => {
 	}
 
 	const [repliedMessage, setRepliedMessage] = useState(null)
+
+	const [file, setFile] = useState(null)
 
 	return (
 		<div className='activeChatContainer'>
@@ -243,27 +260,67 @@ const ActiveChatRight = ({ chat, user }) => {
 			)}
 			<div className='activeChatBottom'>
 				<div className='activeChatBottomContainer'>
-					<div className='activeChatBottomIcons'>
-						<div className='activeChatBottomIcon'>
-							<img src={PF + 'icon/common/image.svg'} alt='' />
+					{!file && (
+						<div className='activeChatBottomIcons'>
+							<label className='activeChatBottomIcon' htmlFor='image'>
+								<img src={PF + 'icon/common/image.svg'} alt='' />
+								<input
+									type='file'
+									id='image'
+									hidden
+									onChange={e => setFile(e.target.files[0])}
+								/>
+							</label>
+							<div className='activeChatBottomIcon'>
+								<img src={PF + 'icon/common/gif.png'} alt='' />
+							</div>
+							<div className='activeChatBottomIcon'>
+								<img src={PF + 'icon/common/smile.svg'} alt='' />
+							</div>
 						</div>
-						<div className='activeChatBottomIcon'>
-							<img src={PF + 'icon/common/gif.png'} alt='' />
+					)}
+
+					{file && (
+						<div className='fileContainer'>
+							<div className='sendMessageImgContainer'>
+								<img
+									className='sendMessageImg'
+									src={URL.createObjectURL(file)}
+								/>
+								<div
+									className='imgContainerCrossBlock'
+									title='Remove'
+									onClick={() => setFile(null)}
+								>
+									<span>&#10005;</span>
+								</div>
+							</div>
+							<TextareaAutosize
+								className='activeChatBottomInput'
+								type='text'
+								onChange={e => setText(e.target.value)}
+								onKeyDown={handleKeyDown}
+								placeholder='Start a new message'
+								value={text}
+							/>
 						</div>
-						<div className='activeChatBottomIcon'>
-							<img src={PF + 'icon/common/smile.svg'} alt='' />
-						</div>
-					</div>
-					<TextareaAutosize
-						className='activeChatBottomInput'
-						type='text'
-						onChange={e => setText(e.target.value)}
-						onKeyDown={handleKeyDown}
-						placeholder='Start a new message'
-						value={text}
-					/>
+					)}
+
+					{!file && (
+						<TextareaAutosize
+							className='activeChatBottomInput'
+							type='text'
+							onChange={e => setText(e.target.value)}
+							onKeyDown={handleKeyDown}
+							placeholder='Start a new message'
+							value={text}
+						/>
+					)}
+
 					<div
-						className={text ? 'sendMessageBlock' : 'sendMessageBlock disabled'}
+						className={
+							text || file ? 'sendMessageBlock' : 'sendMessageBlock disabled'
+						}
 						onClick={sendMessage}
 					>
 						<PiPaperPlaneRightBold

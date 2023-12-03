@@ -35,7 +35,7 @@
 
 .messageContainerTop {
 	display: flex;
-	align-items: flex-end;
+	align-items: center;
 	gap: 5px;
 	width: 100%;
 	position: relative;
@@ -208,4 +208,22 @@
 	line-height: 18px;
 	color: #6B7F8E;
 	margin-right: 5px;
+}
+
+.messageImgContainer {
+	max-width: fit-content;
+	max-height: fit-content;
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+
+.messageImgContainer img {
+	max-width: 400px;
+	max-height: 400px;
+	object-fit: cover;
+	border-radius: 16px;
+}
+
+.messageBlock .fullScreenImgBlock {
+	height: 100vh;
 }
