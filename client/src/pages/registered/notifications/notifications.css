@@ -58,13 +58,10 @@
     border-radius: 9999px;
 }
 
-.notificationsMain {
-    margin-top: 35px;
-}
 
 .notificationsMainContainer {
     width: 336px;
-    margin: 0 auto;
+    margin: 35px auto 0;
 }
 
 .notificationsMainTitle {

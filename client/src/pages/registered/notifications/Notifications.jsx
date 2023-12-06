@@ -2,14 +2,20 @@
 // object with arrays that helps to simplify code, user context and axios library
 import './notifications.css'
 
-import { Actual, WhoToFollow, Layout } from '../../../components/index'
-import { useContext, useEffect } from 'react'
+import {
+	Actual,
+	WhoToFollow,
+	Layout,
+	PostsLoader,
+} from '../../../components/index'
+import { useContext, useEffect, useState } from 'react'
 import { notificationsMainItems } from '../../../helpers/notifications'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { NavLink, useLocation } from 'react-router-dom'
 import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
+import NotificationLogin from './notificationLogin/NotificationLogin'
 
 const Notifications = ({ isLoading, setIsLoading }) => {
 	// declaring page location variable using react-router-dom hook
@@ -37,13 +43,26 @@ const Notifications = ({ isLoading, setIsLoading }) => {
 	const NotificationsAll = () => {
 		return (
 			<div className='notificationsMain'>
-				<div className='notificationsMainContainer'>
-					<h1 className='notificationsMainTitle'>Nothing to see here — yet</h1>
-					<span className='notificationsMainText'>
-						{notificationsMainItems[0].text}{' '}
-					</span>
-					<span className='link'>Learn more</span>
-				</div>
+				{!user ? (
+					<PostsLoader />
+				) : user?.notifications.length > 0 ? (
+					user.notifications.map(
+						(item, index) =>
+							item.type === 'login' && (
+								<NotificationLogin item={item} key={index} user={user} />
+							)
+					)
+				) : (
+					<div className='notificationsMainContainer'>
+						<h1 className='notificationsMainTitle'>
+							Nothing to see here — yet
+						</h1>
+						<span className='notificationsMainText'>
+							{notificationsMainItems[0].text}{' '}
+						</span>
+						<span className='link'>Learn more</span>
+					</div>
+				)}
 			</div>
 		)
 	}

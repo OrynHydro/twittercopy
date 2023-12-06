@@ -48,6 +48,7 @@ router.get('/findByToken/:token', async (req, res) => {
 				path: 'pinnedChats',
 				populate: { path: 'messages' },
 			})
+			.populate('notifications')
 
 		const { password, updatedAt, ...other } = user?._doc
 		res.status(200).json(other)

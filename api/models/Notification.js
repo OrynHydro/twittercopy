@@ -30,6 +30,9 @@ const NotificationSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		location: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 )
