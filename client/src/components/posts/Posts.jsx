@@ -125,6 +125,9 @@ const Posts = ({
 
 	const viewPost = async () => {
 		try {
+			if (notification) {
+				axios.put(`/notifications/${notification}/read`)
+			}
 			await axios.put(`/posts/${post?._id}/update`, {
 				userId: post?.user?._id,
 				views: post?.views + 1,
@@ -311,14 +314,12 @@ const Posts = ({
 										</span>
 									)}
 								</div>
-								{notification === 'reply' && (
-									<p className='replyingText'>
-										Replying to{' '}
-										<Link to={`/${currentUser?.userId}`}>
-											{currentUser?.userId}
-										</Link>
-									</p>
-								)}
+								<p className='replyingText'>
+									Replying to{' '}
+									<Link to={`/${currentUser?.userId}`}>
+										{currentUser?.userId}
+									</Link>
+								</p>
 							</div>
 						) : (
 							<div

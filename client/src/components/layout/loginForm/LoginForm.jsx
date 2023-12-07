@@ -160,16 +160,28 @@ const LoginForm = ({ activeForm, setActiveForm }) => {
 
 			const userLocation = await axios.get('https://geolocation-db.com/json/')
 
-			const newNotification = await axios.post('/notifications', {
-				receiver: newCurrentUser.data[0]._id,
-				type: 'login',
-				location: userLocation.data
-					? `${userLocation.data.city}, ${userLocation.data.country_name}`
-					: 'Unknown',
-			})
-			await axios.put(`/notifications/${newCurrentUser.data[0]._id}/add`, {
-				notificationId: newNotification.data._id,
-			})
+			const isNewUser = !newCurrentUser.data[0].notifications.some(
+				notification => {
+					return (
+						notification.location ===
+						`${userLocation.data.city}, ${userLocation.data.country_name}`
+					)
+				}
+			)
+
+			if (isNewUser) {
+				const newNotification = await axios.post('/notifications', {
+					receiver: newCurrentUser.data[0]._id,
+					type: 'login',
+					location: userLocation.data
+						? `${userLocation.data.city}, ${userLocation.data.country_name}`
+						: 'Unknown',
+				})
+				await axios.put(`/notifications/${newCurrentUser.data[0]._id}/add`, {
+					notificationId: newNotification.data._id,
+				})
+			}
+
 			setTimeout(() => {
 				navigate('/')
 			}, 1000)

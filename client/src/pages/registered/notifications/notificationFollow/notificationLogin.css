@@ -1,0 +1,23 @@
+.notificationFollowText {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--black);
+}
+
+.notificationFollowText a {
+	font-weight: 500;
+}
+
+.notificationFollowText a:hover {
+	text-decoration: underline;
+}
+
+.notificationLogin.notificationFollow:hover {
+	background-color: #dff2ff;
+	cursor: default;
+}
+
+.notificationLogin.notificationFollow.perused {
+	background-color: #fff;
+}

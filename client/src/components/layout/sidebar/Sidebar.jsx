@@ -122,31 +122,46 @@ const Sidebar = ({
 									}
 								>
 									{/* img related to specific block */}
-									<img
-										src={
-											(item.title !== 'Twitter Blue' && activeTwitterBlue) ||
-											(item.title !== 'Verified Organizations' &&
-												activeVerified) ||
-											(params.userId !== user?.userId &&
-												location.pathname.match(`${params.userId}`))
-												? item.img
-												: (location.pathname === '/' &&
-														item.link === '/explore') ||
-												  location.pathname === item.link ||
-												  (location.pathname.match('notifications') &&
-														item.link === '/notifications') ||
-												  (location.pathname.match('settings') &&
-														item.link === '/settings') ||
-												  (params.userId && item.title === 'Profile') ||
-												  (item.title === 'Twitter Blue' &&
-														activeTwitterBlue) ||
-												  (item.title === 'Verified Organizations' &&
-														activeVerified)
-												? item.imgBold
-												: item.img
-										}
-										alt=''
-									/>
+									<div className={'sidebarImgBlock'}>
+										<img
+											src={
+												(item.title !== 'Twitter Blue' && activeTwitterBlue) ||
+												(item.title !== 'Verified Organizations' &&
+													activeVerified) ||
+												(params.userId !== user?.userId &&
+													location.pathname.match(`${params.userId}`))
+													? item.img
+													: (location.pathname === '/' &&
+															item.link === '/explore') ||
+													  location.pathname === item.link ||
+													  (location.pathname.match('notifications') &&
+															item.link === '/notifications') ||
+													  (location.pathname.match('settings') &&
+															item.link === '/settings') ||
+													  (params.userId && item.title === 'Profile') ||
+													  (item.title === 'Twitter Blue' &&
+															activeTwitterBlue) ||
+													  (item.title === 'Verified Organizations' &&
+															activeVerified)
+													? item.imgBold
+													: item.img
+											}
+											alt=''
+										/>
+										{item.title === 'Notifications' &&
+											user?.notifications.filter(
+												notification => !notification.perused
+											).length > 0 && (
+												<div className='badge'>
+													{
+														user?.notifications.filter(
+															notification => !notification.perused
+														).length
+													}
+												</div>
+											)}
+									</div>
+
 									<span className='sidebarNavItemText'>{item.title}</span>
 								</div>
 								{/* dropdown menu */}

@@ -17,6 +17,8 @@ import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
 import NotificationLogin from './notificationLogin/NotificationLogin'
+import NotificationFollow from './notificationFollow/NotificationFollow'
+import { useInView } from 'react-intersection-observer'
 
 const Notifications = ({ isLoading, setIsLoading }) => {
 	// declaring page location variable using react-router-dom hook
@@ -44,6 +46,10 @@ const Notifications = ({ isLoading, setIsLoading }) => {
 
 	// main page content that switched by switch menu
 
+	const { ref, inView } = useInView({
+		triggerOnce: true,
+	})
+
 	const NotificationsAll = () => {
 		return (
 			<div className='notificationsMain'>
@@ -53,16 +59,17 @@ const Notifications = ({ isLoading, setIsLoading }) => {
 					user.notifications.map((item, index) =>
 						item.type === 'login' ? (
 							<NotificationLogin item={item} key={index} user={user} />
+						) : item.type === 'reply' ? (
+							<Posts
+								post={item.post}
+								more={PF + 'icon/utility/moreHorizontal.svg'}
+								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+								currentUser={user}
+								notification={item._id}
+							/>
 						) : (
-							item.type === 'reply' && (
-								<Posts
-									post={item.post}
-									key={index}
-									more={PF + 'icon/utility/moreHorizontal.svg'}
-									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-									currentUser={user}
-									notification={'reply'}
-								/>
+							item.type === 'follow' && (
+								<NotificationFollow key={index} item={item} />
 							)
 						)
 					)

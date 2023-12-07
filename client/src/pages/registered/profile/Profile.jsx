@@ -499,6 +499,15 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				setActiveFollowBtn('Following')
 				user.following.push(anotherUser?._id)
 				anotherUser.followers.push(user?._id)
+
+				const newNotification = await axios.post('/notifications', {
+					receiver: anotherUser?._id,
+					type: 'follow',
+					sender: user?._id,
+				})
+				await axios.put(`/notifications/${anotherUser?._id}/add`, {
+					notificationId: newNotification.data._id,
+				})
 			} catch (err) {
 				console.log(err)
 			}

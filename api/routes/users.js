@@ -57,6 +57,10 @@ router.get('/findByToken/:token', async (req, res) => {
 				path: 'notifications',
 				populate: { path: 'post', populate: { path: 'user' } },
 			})
+			.populate({
+				path: 'notifications',
+				populate: { path: 'sender' },
+			})
 
 		const { password, updatedAt, ...other } = user?._doc
 		res.status(200).json(other)
@@ -69,7 +73,9 @@ router.get('/findByToken/:token', async (req, res) => {
 
 router.get('/findByEmail/:email', async (req, res) => {
 	try {
-		const user = await User.find({ email: req.params.email })
+		const user = await User.find({ email: req.params.email }).populate(
+			'notifications'
+		)
 		res.status(200).json(user)
 	} catch (err) {
 		res.status(500).json(err)
