@@ -43,6 +43,7 @@ const Posts = ({
 	isReply,
 	listPage,
 	noPin,
+	notification,
 }) => {
 	// declaring state of more icon
 
@@ -240,7 +241,13 @@ const Posts = ({
 
 	return (
 		<Link
-			className={postPage ? 'homePost postPagePost' : 'homePost'}
+			className={
+				postPage
+					? 'homePost postPagePost'
+					: notification
+					? 'homePost notificationPost'
+					: 'homePost'
+			}
 			ref={ref}
 			to={postPage ? false : `/${post?.user.userId}/status/${post?._id}`}
 		>
@@ -282,24 +289,60 @@ const Posts = ({
 							/>
 						</Link>
 
-						<div
-							className={
-								postPage ? 'homePostUserInfo postPageInfo' : 'homePostUserInfo'
-							}
-						>
-							<Link to={`/${post?.user.userId}`}>
-								<h2 className='homePostUsername'>{post?.user?.username}</h2>
-							</Link>
-							<Link to={`/${post?.user.userId}`}>
-								<span className='homePostUserId'>{post?.user?.userId}</span>
-							</Link>
+						{notification ? (
+							<div className='replyNotificationBlock'>
+								<div
+									className={
+										postPage
+											? 'homePostUserInfo postPageInfo'
+											: 'homePostUserInfo'
+									}
+								>
+									<Link to={`/${post?.user.userId}`}>
+										<h2 className='homePostUsername'>{post?.user?.username}</h2>
+									</Link>
+									<Link to={`/${post?.user.userId}`}>
+										<span className='homePostUserId'>{post?.user?.userId}</span>
+									</Link>
 
-							{!postPage && (
-								<span className='homePostDate'>
-									{moment(post?.createdAt).fromNow()}
-								</span>
-							)}
-						</div>
+									{!postPage && (
+										<span className='homePostDate'>
+											{moment(post?.createdAt).fromNow()}
+										</span>
+									)}
+								</div>
+								{notification === 'reply' && (
+									<p className='replyingText'>
+										Replying to{' '}
+										<Link to={`/${currentUser?.userId}`}>
+											{currentUser?.userId}
+										</Link>
+									</p>
+								)}
+							</div>
+						) : (
+							<div
+								className={
+									postPage
+										? 'homePostUserInfo postPageInfo'
+										: 'homePostUserInfo'
+								}
+							>
+								<Link to={`/${post?.user.userId}`}>
+									<h2 className='homePostUsername'>{post?.user?.username}</h2>
+								</Link>
+								<Link to={`/${post?.user.userId}`}>
+									<span className='homePostUserId'>{post?.user?.userId}</span>
+								</Link>
+
+								{!postPage && (
+									<span className='homePostDate'>
+										{moment(post?.createdAt).fromNow()}
+									</span>
+								)}
+							</div>
+						)}
+
 						<div style={{ position: 'absolute', top: '-10px' }}>
 							<UserPopup
 								modalText={modalText}

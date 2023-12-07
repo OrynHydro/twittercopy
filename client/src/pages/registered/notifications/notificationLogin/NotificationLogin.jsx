@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './notificationLogin.css'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
@@ -24,6 +24,12 @@ const NotificationLogin = ({ item, user }) => {
 			console.log(err)
 		}
 	}
+
+	useEffect(() => {
+		activeModal
+			? (document.body.style.overflowY = 'hidden')
+			: (document.body.style.overflowY = 'scroll')
+	}, [activeModal])
 
 	return (
 		<>
@@ -81,8 +87,8 @@ const NotificationLogin = ({ item, user }) => {
 						</span>
 						<span className='notificationLoginModalText'>
 							If this wasn't you <br /> • <Link>Change your password</Link> now
-							to protect your account. You'll be logged out of all your active X
-							sessions except the one you're using at this time.
+							to protect your account. You'll be logged out of all your active
+							Twitter sessions except the one you're using at this time.
 						</span>
 						<button
 							className='notificationLoginModalButton'

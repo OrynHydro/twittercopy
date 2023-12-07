@@ -49,6 +49,14 @@ router.get('/findByToken/:token', async (req, res) => {
 				populate: { path: 'messages' },
 			})
 			.populate('notifications')
+			.populate({
+				path: 'notifications',
+				populate: { path: 'post' },
+			})
+			.populate({
+				path: 'notifications',
+				populate: { path: 'post', populate: { path: 'user' } },
+			})
 
 		const { password, updatedAt, ...other } = user?._doc
 		res.status(200).json(other)

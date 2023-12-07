@@ -72,7 +72,7 @@ const PostPage = ({
 						setUnfollow={setUnfollow}
 						postPage
 					/>
-					<Share user={user} postPage originalPost={post?._id} />
+					<Share user={user} postPage originalPost={post} />
 					{post?.replies.length !== 0 &&
 						post?.replies.map((reply, index) => (
 							<Posts

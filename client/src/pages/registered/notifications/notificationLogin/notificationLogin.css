@@ -3,6 +3,7 @@
 	cursor: pointer;
 	transition: 0.2s ease;
 	background-color: #dff2ff;
+	border-bottom: 1px solid #eff3f4;
 }
 
 .notificationLogin.perused {

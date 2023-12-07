@@ -7,6 +7,7 @@ import {
 	WhoToFollow,
 	Layout,
 	PostsLoader,
+	Posts,
 } from '../../../components/index'
 import { useContext, useEffect, useState } from 'react'
 import { notificationsMainItems } from '../../../helpers/notifications'
@@ -21,6 +22,9 @@ const Notifications = ({ isLoading, setIsLoading }) => {
 	// declaring page location variable using react-router-dom hook
 
 	const location = useLocation()
+
+	const PF = process.env.REACT_APP_PUBLIC_FOLDER
+
 	// user data states
 
 	const { user, setUser } = useContext(UserContext)
@@ -46,11 +50,21 @@ const Notifications = ({ isLoading, setIsLoading }) => {
 				{!user ? (
 					<PostsLoader />
 				) : user?.notifications.length > 0 ? (
-					user.notifications.map(
-						(item, index) =>
-							item.type === 'login' && (
-								<NotificationLogin item={item} key={index} user={user} />
+					user.notifications.map((item, index) =>
+						item.type === 'login' ? (
+							<NotificationLogin item={item} key={index} user={user} />
+						) : (
+							item.type === 'reply' && (
+								<Posts
+									post={item.post}
+									key={index}
+									more={PF + 'icon/utility/moreHorizontal.svg'}
+									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+									currentUser={user}
+									notification={'reply'}
+								/>
 							)
+						)
 					)
 				) : (
 					<div className='notificationsMainContainer'>

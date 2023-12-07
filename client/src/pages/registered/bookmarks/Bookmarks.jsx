@@ -60,6 +60,8 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 
 	const more = useOutsideClick(() => setActiveMore(false))
 
+	console.log(bookmarks)
+
 	const removeBookmarks = async () => {
 		setActiveMore(false)
 		try {

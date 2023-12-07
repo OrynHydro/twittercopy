@@ -5,6 +5,10 @@
     position: relative;
 }
 
+.homePost.notificationPost .homePostContainer {
+    border-bottom: 1px solid #eff3f4;
+}
+
 .homePostContainer:hover {
     background-color: #F7F7F7;
 }
@@ -475,4 +479,28 @@
     font-weight: 700;
     line-height: 16px;
     color: var(--gray);
+}
+
+
+
+.replyNotificationBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.replyNotificationBlock .replyingText {
+    position: relative;
+    top: -10px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--gray);
+}
+
+.replyNotificationBlock .replyingText a {
+    color: var(--blue);
+}
+
+.replyNotificationBlock .replyingText a:hover {
+    transition: 0.2s ease;
 }
