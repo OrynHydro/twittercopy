@@ -119,18 +119,21 @@ const Share = ({
 							await axios.put(`/posts/${originalPost?._id}/reply/${user._id}`, {
 								replyId: newPost.data._id,
 							})
-						}
-						if (originalPost?.user._id !== user._id) {
-							const newNotification = await axios.post('/notifications', {
-								receiver: originalPost?.user._id,
-								sender: user._id,
-								type: 'reply',
-								post: newPost.data._id,
-							})
+							if (originalPost?.user._id !== user._id) {
+								const newNotification = await axios.post('/notifications', {
+									receiver: originalPost?.user._id,
+									sender: user._id,
+									type: 'reply',
+									post: newPost.data._id,
+								})
 
-							await axios.put(`/notifications/${originalPost?.user._id}/add`, {
-								notificationId: newNotification.data._id,
-							})
+								await axios.put(
+									`/notifications/${originalPost?.user._id}/add`,
+									{
+										notificationId: newNotification.data._id,
+									}
+								)
+							}
 						}
 					})
 

@@ -28,6 +28,12 @@ const Posticons = ({
 		setIsBookmarked(currentUser?.bookmarks.includes(post?._id))
 	}, [post?._id, currentUser?.bookmarks])
 
+	const [isRetweeted, setIsRetweeted] = useState(false)
+
+	useEffect(() => {
+		setIsRetweeted(currentUser?.retweets.includes(post?._id))
+	}, [post?._id, currentUser?.retweets])
+
 	const likePost = async () => {
 		try {
 			await axios.put(`/posts/${post?._id}/like`, {
@@ -35,6 +41,21 @@ const Posticons = ({
 			})
 			setLike(isLiked ? like - 1 : like + 1)
 			setIsLiked(!isLiked)
+
+			if (
+				post.user._id !== currentUser._id &&
+				!post.likes.includes(currentUser._id)
+			) {
+				const newNotification = await axios.post('/notifications', {
+					receiver: post.user._id,
+					sender: currentUser._id,
+					type: 'like',
+					post: post._id,
+				})
+				await axios.put(`/notifications/${post.user._id}/add`, {
+					notificationId: newNotification.data._id,
+				})
+			}
 		} catch (err) {
 			console.log(err)
 		}
@@ -56,12 +77,48 @@ const Posticons = ({
 		}
 	}
 
+	const retweetPost = async () => {
+		try {
+			await axios
+				.put(`/posts/${post?._id}/retweet`, {
+					userDbId: currentUser?._id,
+				})
+				.then(res =>
+					setIsRetweeted(
+						res.data === 'Retweeted'
+							? true
+							: res.data === 'Retweet removed' && false
+					)
+				)
+
+			if (
+				post.user._id !== currentUser._id &&
+				!currentUser.retweets.includes(post._id)
+			) {
+				const newNotification = await axios.post('/notifications', {
+					receiver: post.user._id,
+					sender: currentUser._id,
+					type: 'retweet',
+					post: post._id,
+				})
+				await axios.put(`/notifications/${post.user._id}/add`, {
+					notificationId: newNotification.data._id,
+				})
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	const iconClickHandler = () => {
 		if (title === 'Like') {
 			likePost()
 		}
 		if (title === 'Bookmark') {
 			addBookmark()
+		}
+		if (title === 'Retweet') {
+			retweetPost()
 		}
 		return
 	}
@@ -85,6 +142,7 @@ const Posticons = ({
 					src={
 						(title === 'Like' && isLiked) ||
 						(title === 'Bookmark' && isBookmarked) ||
+						(title === 'Retweet' && isRetweeted) ||
 						activeIcon
 							? iconColoured
 							: icon
@@ -98,6 +156,7 @@ const Posticons = ({
 					color:
 						(title === 'Like' && isLiked) ||
 						(title === 'Bookmark' && isBookmarked) ||
+						(title === 'Retweet' && isRetweeted) ||
 						activeIcon
 							? color
 							: '#84909a',
@@ -107,11 +166,11 @@ const Posticons = ({
 					? like
 					: dbTitle === 'replies'
 					? post?.replies?.length
-					: dbTitle === 'retweets'
-					? post?.retweets?.length
 					: dbTitle === 'views'
 					? post.views
-					: dbTitle === 'shares' || dbTitle === 'bookmarks'
+					: dbTitle === 'shares' ||
+					  dbTitle === 'bookmarks' ||
+					  dbTitle === 'retweets'
 					? ''
 					: 0}
 			</span>

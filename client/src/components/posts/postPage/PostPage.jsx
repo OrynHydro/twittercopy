@@ -57,7 +57,7 @@ const PostPage = ({
 					<div className='postPageSeeMore'>
 						<BiMessageRoundedDetail />
 						<span className='postPageSeeMoreText'>
-							<a>{user.username}</a> · <a>See more</a>
+							<a>{post.user.username}</a> · <a>See more</a>
 						</span>
 					</div>
 					<Posts

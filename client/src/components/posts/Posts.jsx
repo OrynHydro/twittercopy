@@ -28,6 +28,7 @@ import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
 import { BsPinFill } from 'react-icons/bs'
 import AddUserModal from '../lists/addUserModal/AddUserModal'
+import { FaRetweet } from 'react-icons/fa6'
 
 const Posts = ({
 	post,
@@ -44,6 +45,7 @@ const Posts = ({
 	listPage,
 	noPin,
 	notification,
+	isRetweet,
 }) => {
 	// declaring state of more icon
 
@@ -107,6 +109,21 @@ const Posts = ({
 				})
 				setLike(isLiked ? like - 1 : like + 1)
 				setIsLiked(!isLiked)
+
+				if (
+					post.user._id !== currentUser._id &&
+					!post.likes.includes(currentUser._id)
+				) {
+					const newNotification = await axios.post('/notifications', {
+						receiver: post.user._id,
+						sender: currentUser._id,
+						type: 'like',
+						post: post._id,
+					})
+					await axios.put(`/notifications/${post.user._id}/add`, {
+						notificationId: newNotification.data._id,
+					})
+				}
 			} catch (err) {
 				console.log(err)
 			}
@@ -265,11 +282,18 @@ const Posts = ({
 				{isReply === 'original' && (
 					<hr className='verticalLine' style={{ top: '70px' }} />
 				)}
-				{isPinned && !postPage && !noPin && (
+				{isPinned && !postPage && !noPin ? (
 					<div className='pinnedBlock'>
 						<BsPinFill color='#536471' fontSize={16} />
 						<span>Pinned</span>
 					</div>
+				) : (
+					isRetweet && (
+						<div className='pinnedBlock'>
+							<FaRetweet color='#536471' fontSize={16} />
+							<span>Retweeted</span>
+						</div>
+					)
 				)}
 				{/* user avatar, name, id and when post was created */}
 				<div className='homePostTop'>

@@ -14,15 +14,7 @@ export const PostIcons = [
 		title: 'Reply',
 		dbTitle: 'replies',
 	},
-	{
-		id: 2,
-		icon: PF + 'icon/common/retweet.svg',
-		iconColoured: PF + 'icon/colored/retweetColour.svg',
-		color: '#00BA7C',
-		hoverColor: '#DEF1EB',
-		title: 'Retweet',
-		dbTitle: 'retweets',
-	},
+
 	{
 		id: 3,
 		icon: PF + 'icon/common/heart.svg',
@@ -40,6 +32,15 @@ export const PostIcons = [
 		hoverColor: '#E1EEF6',
 		title: 'View',
 		dbTitle: 'views',
+	},
+	{
+		id: 2,
+		icon: PF + 'icon/common/retweet.svg',
+		iconColoured: PF + 'icon/colored/retweetColour.svg',
+		color: '#00BA7C',
+		hoverColor: '#DEF1EB',
+		title: 'Retweet',
+		dbTitle: 'retweets',
 	},
 	{
 		id: 5,
@@ -63,15 +64,6 @@ export const PostIconsPostPage = [
 		dbTitle: 'replies',
 	},
 	{
-		id: 2,
-		icon: PF + 'icon/common/retweet.svg',
-		iconColoured: PF + 'icon/colored/retweetColour.svg',
-		color: '#00BA7C',
-		hoverColor: '#DEF1EB',
-		title: 'Retweet',
-		dbTitle: 'retweets',
-	},
-	{
 		id: 3,
 		icon: PF + 'icon/common/heart.svg',
 		iconColoured: PF + 'icon/colored/heartColour.svg',
@@ -79,6 +71,15 @@ export const PostIconsPostPage = [
 		hoverColor: '#F7E0EB',
 		title: 'Like',
 		dbTitle: 'likes',
+	},
+	{
+		id: 2,
+		icon: PF + 'icon/common/retweet.svg',
+		iconColoured: PF + 'icon/colored/retweetColour.svg',
+		color: '#00BA7C',
+		hoverColor: '#DEF1EB',
+		title: 'Retweet',
+		dbTitle: 'retweets',
 	},
 	{
 		id: 4,

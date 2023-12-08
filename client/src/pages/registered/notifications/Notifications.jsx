@@ -18,7 +18,7 @@ import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
 import NotificationLogin from './notificationLogin/NotificationLogin'
 import NotificationFollow from './notificationFollow/NotificationFollow'
-import { useInView } from 'react-intersection-observer'
+import NotificationLike from './notificationLike/NotificationLike'
 
 const Notifications = ({ isLoading, setIsLoading }) => {
 	// declaring page location variable using react-router-dom hook
@@ -46,10 +46,6 @@ const Notifications = ({ isLoading, setIsLoading }) => {
 
 	// main page content that switched by switch menu
 
-	const { ref, inView } = useInView({
-		triggerOnce: true,
-	})
-
 	const NotificationsAll = () => {
 		return (
 			<div className='notificationsMain'>
@@ -67,9 +63,13 @@ const Notifications = ({ isLoading, setIsLoading }) => {
 								currentUser={user}
 								notification={item._id}
 							/>
+						) : item.type === 'follow' ? (
+							<NotificationFollow key={index} item={item} />
+						) : item.type === 'like' ? (
+							<NotificationLike key={index} item={item} />
 						) : (
-							item.type === 'follow' && (
-								<NotificationFollow key={index} item={item} />
+							item.type === 'retweet' && (
+								<NotificationLike key={index} item={item} retweet />
 							)
 						)
 					)

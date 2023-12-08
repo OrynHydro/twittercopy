@@ -1270,6 +1270,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 											setActiveFollowBtn={setActiveFollowBtn}
 											unfollow={unfollow}
 											setUnfollow={setUnfollow}
+											isRetweet={user.retweets.includes(post._id)}
 										/>
 									)
 							)
@@ -1286,6 +1287,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									setActiveFollowBtn={setActiveFollowBtn}
 									unfollow={unfollow}
 									setUnfollow={setUnfollow}
+									isRetweet={user.retweets.includes(post._id)}
 								/>
 							))
 						) : activePosts === 'replies' && replies.length !== 0 ? (
@@ -1306,6 +1308,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 												setActiveFollowBtn={setActiveFollowBtn}
 												unfollow={unfollow}
 												setUnfollow={setUnfollow}
+												isRetweet={user.retweets.includes(post._id)}
 											/>
 											<hr className='postPageHr' />
 										</>
@@ -1325,6 +1328,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 												unfollow={unfollow}
 												setUnfollow={setUnfollow}
 												isReply={'original'}
+												isRetweet={user.retweets.includes(post._id)}
 											/>
 											{post.replies.map(
 												(reply, index2) =>
@@ -1347,6 +1351,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 																unfollow={unfollow}
 																setUnfollow={setUnfollow}
 																isReply={'reply'}
+																isRetweet={user.retweets.includes(post._id)}
 															/>
 														</div>
 													)
@@ -1374,6 +1379,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									setActiveFollowBtn={setActiveFollowBtn}
 									unfollow={unfollow}
 									setUnfollow={setUnfollow}
+									isRetweet={user.retweets.includes(post._id)}
 								/>
 							))
 						)}

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import './notificationLogin.css'
+import './notificationFollow.css'
 import { SlUserFollowing } from 'react-icons/sl'
 import { useInView } from 'react-intersection-observer'
 import axios from 'axios'
