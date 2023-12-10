@@ -18,6 +18,12 @@ const MessageSchema = new mongoose.Schema(
 			ref: 'Message',
 			default: null,
 		},
+		perused: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'User',
+			},
+		],
 	},
 	{ timestamps: true }
 )

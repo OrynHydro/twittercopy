@@ -128,7 +128,13 @@ const ChatItem = ({
 
 	return (
 		<div
-			className={activeChat === chat._id ? 'chatItem active' : 'chatItem'}
+			className={
+				activeChat === chat._id
+					? 'chatItem active'
+					: chat.messages.some(message => !message.perused.includes(user._id))
+					? 'chatItem newMessage'
+					: 'chatItem'
+			}
 			onMouseOver={() => setActiveBlock(true)}
 			onMouseOut={() => setActiveBlock(false)}
 			onClick={() => setActiveChat(chat._id)}

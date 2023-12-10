@@ -13,6 +13,23 @@
 	background-color: #f7f7f8;
 }
 
+.chatItem.newMessage {
+	background-color: #f7f7f8;
+	position: relative;
+}
+
+.chatItem.newMessage::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 5px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: var(--blue);
+}
+
 .chatItemContainer {
 	display: flex;
 	padding: 16px;

@@ -346,11 +346,13 @@ router.put('/pinList/:userDbId', async (req, res) => {
 })
 
 // find users by text
-router.get('/findByText', async (req, res) => {
+router.get('/findByText/:userDbId', async (req, res) => {
 	const searchText = req.query.text
+	const userDbId = req.params.userDbId
 
 	const foundUsers = await User.find({
 		username: { $regex: new RegExp(searchText, 'i') },
+		_id: { $ne: userDbId },
 	}).exec()
 
 	if (foundUsers.length === 0) {

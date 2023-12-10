@@ -20,17 +20,17 @@ const UserItem = ({ chosenUsers, setChosenUsers, item, setText, user }) => {
 			<div className='userItemContainer'>
 				<img
 					src={
-						item.profilePicture
-							? PF + 'storage/' + item.profilePicture
+						item?.profilePicture
+							? PF + 'storage/' + item?.profilePicture
 							: PF + 'icon/noAvatar.png'
 					}
 					className='userAva'
 					alt=''
 				/>
 				<div className='userItemInfo'>
-					<h2 className='userItemInfoUsername'>{item.username}</h2>
-					<span className='userItemInfoUserId'>{item.userId}</span>
-					{item.following.includes(user?._id) && (
+					<h2 className='userItemInfoUsername'>{item?.username}</h2>
+					<span className='userItemInfoUserId'>{item?.userId}</span>
+					{item?.following.includes(user?._id) && (
 						<span className='userItemFollows'>
 							<FaUser fontSize={12} color='var(--gray)' /> Follows you
 						</span>

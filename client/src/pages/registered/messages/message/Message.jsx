@@ -7,6 +7,7 @@ import { LuCopyPlus } from 'react-icons/lu'
 import { RiFlag2Line } from 'react-icons/ri'
 import { useOutsideClick } from './../../../../utils/useOutsideClick'
 import axios from 'axios'
+import { useInView } from 'react-intersection-observer'
 
 const Message = ({
 	message,
@@ -32,6 +33,29 @@ const Message = ({
 	}, [nextMessage?.createdAt, message?.createdAt])
 
 	const [activeMore, setActiveMore] = useState(false)
+
+	const { ref, inView } = useInView({
+		triggerOnce: true,
+	})
+
+	const [isViewed, setIsViewed] = useState(message.perused.includes(user._id))
+
+	const readMessage = async () => {
+		if (inView && !isViewed) {
+			try {
+				await axios.put(`/messages/${message._id}/read`, {
+					userDbId: user._id,
+				})
+				setIsViewed(true)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+	}
+
+	useEffect(() => {
+		readMessage()
+	}, [inView, isViewed, message._id])
 
 	const moreItemUser = [
 		{
@@ -125,6 +149,7 @@ const Message = ({
 					? 'messageBlock senderMessage'
 					: 'messageBlock'
 			}
+			ref={ref}
 		>
 			<div className='messageContainer'>
 				<div className='messageContainerBlocked'>

@@ -39,4 +39,20 @@ router.put('/:messageId/reply', async (req, res) => {
 	}
 })
 
+// read message
+router.put('/:messageId/read', async (req, res) => {
+	const messageId = req.params.messageId
+	const userDbId = req.body.userDbId
+	try {
+		const message = await Message.findById(messageId)
+		if (!message.perused.includes(userDbId)) {
+			await message.updateOne({ $push: { perused: userDbId } })
+		}
+
+		res.status(200).json('Message read')
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
 module.exports = router

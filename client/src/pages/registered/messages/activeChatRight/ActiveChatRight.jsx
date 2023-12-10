@@ -78,7 +78,7 @@ const ActiveChatRight = ({ chat, user }) => {
 				sender: user._id,
 				text: text,
 				originalMessage: repliedMessage,
-				img: fileName,
+				img: file ? fileName : '',
 			}
 
 			socket.current.emit('sendMessage', {
@@ -230,11 +230,7 @@ const ActiveChatRight = ({ chat, user }) => {
 									user={user}
 									nextMessage={messages[messages.indexOf(message) + 1]}
 									chat={chat}
-									sender={
-										Array.isArray(chatMember)
-											? chatMember.find(item => item._id === message.sender)
-											: chatMember
-									}
+									sender={message.sender}
 									setRepliedMessage={setRepliedMessage}
 								/>
 							))}
@@ -325,7 +321,7 @@ const ActiveChatRight = ({ chat, user }) => {
 					>
 						<PiPaperPlaneRightBold
 							fontSize={18}
-							color={text ? '#37a6f1' : '#93ccf2'}
+							color={text || file ? '#37a6f1' : '#93ccf2'}
 						/>
 					</div>
 				</div>

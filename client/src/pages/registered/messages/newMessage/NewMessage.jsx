@@ -23,14 +23,16 @@ const NewMessage = ({ activeModal, setActiveModal, user, userChats }) => {
 	useEffect(() => {
 		const searchForUsers = async text => {
 			setIsLoading(true)
-			await axios.get(`/users/findByText?text=${text}`).then(res => {
-				if (res.data === 'No matches') {
-					setNoMatches(true)
-				} else {
-					setUsers(res.data)
-					setNoMatches(false)
-				}
-			})
+			await axios
+				.get(`/users/findByText/${user._id}?text=${text}`)
+				.then(res => {
+					if (res.data === 'No matches') {
+						setNoMatches(true)
+					} else {
+						setUsers(res.data)
+						setNoMatches(false)
+					}
+				})
 			setIsLoading(false)
 		}
 
