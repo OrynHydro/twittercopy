@@ -124,6 +124,8 @@ const ActiveChatRight = ({ chat, user }) => {
 
 	const [file, setFile] = useState(null)
 
+	const [activeMessage, setActiveMessage] = useState(null)
+
 	return (
 		<div className='activeChatContainer'>
 			<div className='activeChatTop'>
@@ -232,6 +234,9 @@ const ActiveChatRight = ({ chat, user }) => {
 									chat={chat}
 									sender={message.sender}
 									setRepliedMessage={setRepliedMessage}
+									activeMessage={activeMessage}
+									setActiveMessage={setActiveMessage}
+									chatMember={chatMember}
 								/>
 							))}
 						</div>

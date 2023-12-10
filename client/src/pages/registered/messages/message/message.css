@@ -75,13 +75,6 @@
 	background-color: #1A8CD8;
 }
 
-.messageCreatedAt {
-	font-size: 13px;
-	font-weight: 400;
-	line-height: 16px;
-	color: var(--gray);
-}
-
 .messageMoreBlock {
 	width: 34px;
 	height: 34px;
@@ -103,6 +96,21 @@
 .messageBlock.senderMessage .messageContainerBottom {
 	float: right;
 }
+
+.messageContainerBottom {
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 16px;
+	color: var(--gray);
+	display: flex;
+	align-items: center;
+}
+
+.messageContainerBottomSend {
+	margin-left: 3px;
+}
+
+
 
 .messageMorePopup {
 	border-radius: 16px;

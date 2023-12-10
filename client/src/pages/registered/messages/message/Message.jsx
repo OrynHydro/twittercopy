@@ -16,6 +16,9 @@ const Message = ({
 	sender,
 	chat,
 	setRepliedMessage,
+	activeMessage,
+	setActiveMessage,
+	chatMember,
 }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const [hovered, setHovered] = useState(false)
@@ -150,6 +153,9 @@ const Message = ({
 					: 'messageBlock'
 			}
 			ref={ref}
+			onClick={() =>
+				message.sender._id === user._id && setActiveMessage(message)
+			}
 		>
 			<div className='messageContainer'>
 				<div className='messageContainerBlocked'>
@@ -288,27 +294,45 @@ const Message = ({
 							)}
 						</div>
 					</div>
-					{nextMessage?.sender._id !== message?.sender._id ? (
-						<div className='messageContainerBottom'>
-							<span className='messageCreatedAt'>
-								{formatTime(new Date(message.createdAt))}
-							</span>
-						</div>
-					) : !nextMessage ? (
-						<div className='messageContainerBottom'>
-							<span className='messageCreatedAt'>
-								{formatTime(new Date(message.createdAt))}
-							</span>
-						</div>
-					) : (
-						duration > 2 && (
+					<div className='messageContainerBottom'>
+						{nextMessage?.sender._id !== message?.sender._id ? (
 							<div className='messageContainerBottom'>
 								<span className='messageCreatedAt'>
-									{formatTime(new Date(message.createdAt))}
+									{formatTime(new Date(message.createdAt))}{' '}
 								</span>
 							</div>
-						)
-					)}
+						) : !nextMessage ? (
+							<div className='messageContainerBottom'>
+								<span className='messageCreatedAt'>
+									{formatTime(new Date(message.createdAt))}{' '}
+								</span>
+							</div>
+						) : (
+							duration > 2 && (
+								<div className='messageContainerBottom'>
+									<span className='messageCreatedAt'>
+										{formatTime(new Date(message.createdAt))}{' '}
+									</span>
+								</div>
+							)
+						)}
+						{activeMessage?._id === message._id &&
+							message.sender._id === user._id && (
+								<p className='messageContainerBottomSend'>
+									{' '}
+									·{' '}
+									{Array.isArray(chatMember)
+										? chatMember.some(member =>
+												message.perused.includes(member._id)
+										  )
+											? 'Seen'
+											: 'Sent'
+										: message.perused.includes(chatMember._id)
+										? 'Seen'
+										: 'Sent'}
+								</p>
+							)}
+					</div>
 				</div>
 			</div>
 			{fullScreenImg && (
