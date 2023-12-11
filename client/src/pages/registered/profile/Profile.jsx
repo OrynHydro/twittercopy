@@ -47,6 +47,7 @@ import { ProfileLists } from '../../../components/lists/profile-lists/ProfileLis
 import { ProfileListsMembership } from '../../../components/lists/profile-lists/ProfileListsMembership'
 import PostPage from '../../../components/posts/postPage/PostPage'
 import CreateListModal from '../../../components/lists/createListModal/CreateListModal'
+import { CiHashtag } from 'react-icons/ci'
 
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
@@ -233,9 +234,11 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	const [activeEditProfileBlock, setActiveEditProfileBlock] = useState(false)
 
-	activeEditProfileBlock
-		? (document.body.style.overflowY = 'hidden')
-		: (document.body.style.overflowY = 'scroll')
+	useEffect(() => {
+		activeEditProfileBlock
+			? (document.body.style.overflowY = 'hidden')
+			: (document.body.style.overflowY = 'scroll')
+	}, [activeEditProfileBlock])
 
 	const [imgFile, setImgFile] = useState()
 
@@ -374,9 +377,11 @@ const Profile = ({ isLoading, setIsLoading }) => {
 
 	// removes scrollbar when user's avatar or cover opened on full screen
 
-	userAvaFullScreen || userCoverFullScreen
-		? (document.body.style.overflowY = 'hidden')
-		: (document.body.style.overflowY = 'scroll')
+	useEffect(() => {
+		userAvaFullScreen || userCoverFullScreen
+			? (document.body.style.overflowY = 'hidden')
+			: (document.body.style.overflowY = 'scroll')
+	}, [userAvaFullScreen, userCoverFullScreen])
 
 	if (!activeEditProfileBlock && currentCover === 'none')
 		setCurrentCover(anotherUser?.coverPicture)
@@ -1233,6 +1238,57 @@ const Profile = ({ isLoading, setIsLoading }) => {
 										</div>
 									</div>
 								</div>
+							</div>
+							<div className='profileTags'>
+								<h2 className='profileTagsTitle'>Tags</h2>
+								<span className='profileTagsDesc'>
+									Tags help you find similar users, tweets, and communities
+									based on your interests. Easily explore content and connect
+									with like-minded individuals using these convenient labels.
+								</span>
+								<div className='profileTagsList'>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+									<div className='profileTag'>
+										<CiHashtag fontSize={20} />
+										<span className='profileTagTitle'>Movies</span>
+									</div>
+								</div>
+								<button className='profileTagsEditButton'>Edit tags</button>
 							</div>
 						</div>
 						<div

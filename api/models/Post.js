@@ -51,6 +51,12 @@ const PostSchema = new mongoose.Schema(
 			ref: 'Post',
 			default: null,
 		},
+		tags: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Tag',
+			},
+		],
 	},
 	{ timestamps: true }
 )

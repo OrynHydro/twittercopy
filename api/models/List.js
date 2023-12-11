@@ -40,6 +40,12 @@ const ListSchema = new mongoose.Schema(
 			type: String,
 			default: 'defaultListCover.png',
 		},
+		tags: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Tag',
+			},
+		],
 	},
 	{ timestamps: true }
 )
