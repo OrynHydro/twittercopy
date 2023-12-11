@@ -19,7 +19,6 @@ const listRoute = require('./routes/lists')
 const chatRoute = require('./routes/chat')
 const messageRoute = require('./routes/messages')
 const notificationRoute = require('./routes/notifications')
-const tagsRoute = require('./routes/tags')
 
 mongoose
 	.connect(process.env.MONGO_URL, {
@@ -44,7 +43,6 @@ app.use('/api/lists', listRoute)
 app.use('/api/chats', chatRoute)
 app.use('/api/messages', messageRoute)
 app.use('/api/notifications', notificationRoute)
-app.use('/api/tags', tagsRoute)
 
 app.listen(8800, () => {
 	console.log('API started')

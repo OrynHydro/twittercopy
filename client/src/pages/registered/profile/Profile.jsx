@@ -1283,10 +1283,6 @@ const Profile = ({ isLoading, setIsLoading }) => {
 										<CiHashtag fontSize={20} />
 										<span className='profileTagTitle'>Movies</span>
 									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
 								</div>
 								<button className='profileTagsEditButton'>Edit tags</button>
 							</div>

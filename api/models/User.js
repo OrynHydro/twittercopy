@@ -8,7 +8,6 @@ const UserSchema = new mongoose.Schema(
 	{
 		username: {
 			type: String,
-			required: true,
 			max: 50,
 			unique: true,
 		},
@@ -18,7 +17,6 @@ const UserSchema = new mongoose.Schema(
 		},
 		email: {
 			type: String,
-			required: true,
 			max: 50,
 			unique: true,
 		},
@@ -60,7 +58,6 @@ const UserSchema = new mongoose.Schema(
 		},
 		token: {
 			type: String,
-			required: true,
 		},
 		pinnedPost: {
 			type: String,
@@ -98,8 +95,7 @@ const UserSchema = new mongoose.Schema(
 		],
 		tags: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Tag',
+				type: String,
 			},
 		],
 	},

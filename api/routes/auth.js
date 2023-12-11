@@ -20,6 +20,7 @@ router.post('/register', async (req, res) => {
 			birth: req.body.birth,
 			token: req.body.token,
 			userId: req.body.userId,
+			tags: req.body.tags,
 		})
 		// save user and respond
 		const user = await newUser.save()

@@ -1294,29 +1294,6 @@
     width: calc(100% - 20px);
 }
 
-.profileTag {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 8px;
-    border-radius: 32px;
-    border: 1px solid #cfd9de;
-    width: fit-content;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.profileTag:hover {
-    background-color: #F7F9F9;
-}
-
-.profileTagTitle {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 20px;
-    color: var(--black);
-}
-
 .profileTagsList {
     width: 560px;
     display: flex;

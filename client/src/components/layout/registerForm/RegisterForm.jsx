@@ -4,18 +4,18 @@ import './registerForm.css'
 
 import { Link, useNavigate } from 'react-router-dom'
 
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useOutsideClick } from '../../../utils/useOutsideClick'
 
 import emailjs from '@emailjs/browser'
 
-import { UserContext } from '../../../context/UserContext'
-
 import { useToken } from '../../../utils/useToken'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import moment from 'moment'
 import Input from '../../input/Input'
+import TagItem from '../../tagItem/TagItem'
+import { tags } from './../../../helpers/tags'
 
 const RegisterForm = ({ activeForm, setActiveForm }) => {
 	// declaring variable that helps to get images from folder directly without importing
@@ -34,8 +34,6 @@ const RegisterForm = ({ activeForm, setActiveForm }) => {
 	}
 
 	// user data states
-
-	const { user, setUser } = useContext(UserContext)
 	const [userInStorage, setUserInStorage] = useLocalStorage('user')
 
 	// active stage
@@ -197,8 +195,6 @@ const RegisterForm = ({ activeForm, setActiveForm }) => {
 
 	const [incorrectCode, setIncorrectCode] = useState(false)
 
-	const [hindPassword, setHindPassword] = useState(true)
-
 	const verifyChecking = () => {
 		if (verificationCode === inputVerify.value) {
 			setActiveBlock('password')
@@ -213,9 +209,7 @@ const RegisterForm = ({ activeForm, setActiveForm }) => {
 
 	const token = useToken()
 
-	// register new user
-
-	const registerUser = async () => {
+	const checkUserId = async () => {
 		try {
 			const dbHasUserId = await axios.get(`/users/findById/${inputId.value}`)
 			if (dbHasUserId.data?.userId) {
@@ -229,33 +223,42 @@ const RegisterForm = ({ activeForm, setActiveForm }) => {
 					...prev,
 					error: false,
 				}))
+				setActiveBlock('tags')
 			}
+		} catch (err) {
+			setActiveBlock('tags')
+		}
+	}
+
+	// register new user
+
+	const registerUser = async () => {
+		try {
+			const userData = {
+				username: inputName.value,
+				email: inputEmail.value,
+				password: inputPassword.value,
+				birth: day + '.' + month + '.' + year,
+				token: token,
+				userId: `@${inputId.value}`,
+				tags: chosenTags,
+			}
+
+			await axios.post('/auth/register', userData)
+
+			setUserInStorage(userData?.token)
+			setTimeout(() => {
+				navigate('/')
+			}, 1000)
+			setTimeout(() => {
+				document.location.reload()
+			}, 1001)
 		} catch (err) {
 			console.log(err)
 		}
-		if (inputId.hasValue && !inputId.error) {
-			try {
-				const userData = {
-					username: inputName.value,
-					email: inputEmail.value,
-					password: inputPassword.value,
-					birth: day + '.' + month + '.' + year,
-					token: token,
-					userId: `@${inputId.value}`,
-				}
-				await axios.post('/auth/register', userData)
-				setUserInStorage(userData?.token)
-				setTimeout(() => {
-					navigate('/')
-				}, 1000)
-				setTimeout(() => {
-					document.location.reload()
-				}, 1001)
-			} catch (err) {
-				console.log(err)
-			}
-		}
 	}
+
+	const [chosenTags, setChosenTags] = useState([])
 
 	return (
 		<div className={activeForm ? 'registerForm active' : 'registerForm'}>
@@ -768,9 +771,44 @@ const RegisterForm = ({ activeForm, setActiveForm }) => {
 							style={{ marginTop: '350px' }}
 							disabled={inputId.hasValue && !inputId.error ? false : true}
 							type='submit'
-							onClick={registerUser}
+							onClick={() => checkUserId()}
 						>
 							Next
+						</button>
+					</div>
+				</div>
+				<div
+					className='formMainBlock'
+					style={{ display: activeBlock === 'tags' ? 'block' : 'none' }}
+				>
+					<div className='formBlockTop'>
+						<img className='logoImg' src={PF + 'logo/logo.png'} alt='' />
+					</div>
+					<div className='registerFormBlockContainerStep'>
+						<h1 className='formTitle' style={{ textAlign: 'left' }}>
+							Choose your tags (optional)
+						</h1>
+						<p className='formText' style={{ marginTop: '0px' }}>
+							Choose tags that interest you to customize your experience on
+							Twitter.
+						</p>
+						<div className='profileTagsList'>
+							{tags.map((tag, index) => (
+								<TagItem
+									key={index}
+									tag={tag}
+									chosenTags={chosenTags}
+									setChosenTags={setChosenTags}
+								/>
+							))}
+						</div>
+						<button
+							className={'submitBtn'}
+							style={{ marginTop: '200px' }}
+							type='submit'
+							onClick={registerUser}
+						>
+							Register
 						</button>
 					</div>
 				</div>
