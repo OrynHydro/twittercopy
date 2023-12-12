@@ -3,20 +3,13 @@
 import './profile.css'
 
 import {
-	Sidebar,
-	TwitterBlue,
-	LogoutForm,
-	LoginForm,
 	Actual,
 	WhoToFollow,
-	VerifiedOrganizations,
-	TwitterCircle,
-	TwitterProfessionals,
 	PostsLoader,
 	Input,
 	Layout,
 } from '../../../components/index'
-import { useEffect, useState, useContext, useRef } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -48,6 +41,8 @@ import { ProfileListsMembership } from '../../../components/lists/profile-lists/
 import PostPage from '../../../components/posts/postPage/PostPage'
 import CreateListModal from '../../../components/lists/createListModal/CreateListModal'
 import { CiHashtag } from 'react-icons/ci'
+import { tags } from '../../../helpers/tags'
+import TagItem from '../../../components/tagItem/TagItem'
 
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
@@ -585,6 +580,45 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			console.log(error)
 		}
 		setLoadingPosts(false)
+	}
+
+	const [userTags, setUserTags] = useState(user?.tags || [])
+	const [chosenTags, setChosenTags] = useState([])
+	const [areEqual, setAreEqual] = useState(true)
+
+	useEffect(() => {
+		setAreEqual(areArraysEqual(userTags, chosenTags))
+	}, [userTags, chosenTags])
+
+	useEffect(() => {
+		if (user?.tags.length > 0 && userTags.length === 0) {
+			setUserTags(user?.tags)
+			setChosenTags(user?.tags)
+		}
+	}, [user, userTags])
+
+	function areArraysEqual(array1, array2) {
+		if (array1.length !== array2.length) {
+			return false
+		}
+
+		const sortedArray1 = array1.slice().sort()
+		const sortedArray2 = array2.slice().sort()
+
+		return sortedArray1.every(
+			(element, index) => element === sortedArray2[index]
+		)
+	}
+
+	const editTags = async () => {
+		try {
+			await axios.put(`/users/${user?._id}/tags`, {
+				tags: chosenTags,
+			})
+			setUserTags(chosenTags)
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	return (
@@ -1247,44 +1281,26 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									with like-minded individuals using these convenient labels.
 								</span>
 								<div className='profileTagsList'>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
-									<div className='profileTag'>
-										<CiHashtag fontSize={20} />
-										<span className='profileTagTitle'>Movies</span>
-									</div>
+									{tags.map((tag, index) => (
+										<TagItem
+											key={index}
+											tag={tag}
+											chosenTags={chosenTags}
+											setChosenTags={setChosenTags}
+										/>
+									))}
 								</div>
-								<button className='profileTagsEditButton'>Edit tags</button>
+								<button
+									className={
+										areEqual
+											? 'profileTagsEditButton disabled'
+											: 'profileTagsEditButton'
+									}
+									disabled={areEqual}
+									onClick={() => editTags()}
+								>
+									Edit tags
+								</button>
 							</div>
 						</div>
 						<div

@@ -9,7 +9,6 @@ const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 
 // update user
-
 router.put('/:userId/update', async (req, res) => {
 	if (req.body.password) {
 		try {
@@ -19,6 +18,7 @@ router.put('/:userId/update', async (req, res) => {
 			res.status(500).json(err)
 		}
 	}
+	console.log(req.body)
 	try {
 		await User.findOneAndUpdate(
 			{ userId: req.params.userId },
@@ -512,6 +512,22 @@ router.get('/bookmarks/:userDbId', async (req, res) => {
 		res.status(200).json(bookmarks)
 	} catch (error) {
 		res.status(500).json(error)
+	}
+})
+
+// change user tags
+router.put('/:userDbId/tags', async (req, res) => {
+	try {
+		await User.findByIdAndUpdate(
+			req.params.userDbId,
+			{
+				$set: { tags: req.body.tags },
+			},
+			{ new: true }
+		)
+		res.status(200).json('Account has been updated')
+	} catch (err) {
+		res.status(500).json(err)
 	}
 })
 

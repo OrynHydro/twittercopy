@@ -1317,3 +1317,8 @@
 .profileTagsEditButton:hover {
     background-color: #272C30;
 }
+
+.profileTagsEditButton.disabled {
+    background-color: #87898c;
+    cursor: default;
+}
