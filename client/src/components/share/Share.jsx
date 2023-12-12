@@ -16,6 +16,9 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
+import { RxCross2 } from 'react-icons/rx'
+import TagItem from '../tagItem/TagItem'
+import { tags } from '../../helpers/tags'
 
 const Share = ({
 	activeEdit,
@@ -113,6 +116,7 @@ const Share = ({
 						img: filesIdName || [],
 						user: user,
 						originalPost: originalPost?._id,
+						tags: chosenTags,
 					})
 					.then(async newPost => {
 						if (originalPost) {
@@ -195,6 +199,10 @@ const Share = ({
 		if (inputValue === text && textColor === 'var(--black)')
 			setTextColor('var(--blue)')
 	}, [inputValue, text, textColor])
+
+	const [chosenTags, setChosenTags] = useState([])
+
+	const [activeTagsModal, setActiveTagsModal] = useState(false)
 
 	return (
 		<div className={activeShareModal && 'shareModal'}>
@@ -405,6 +413,7 @@ const Share = ({
 									}
 									alt='img'
 								/>
+
 								<span>
 									{activeSecondEveryone
 										? 'Everyone can reply'
@@ -566,6 +575,57 @@ const Share = ({
 								}
 								style={{ display: postPage && 'none' }}
 							/>
+							<div
+								className='shareTagsBtn'
+								style={{
+									display: !activeInput && 'none',
+								}}
+								onClick={() => setActiveTagsModal(true)}
+							>
+								Tags ({chosenTags.length})
+							</div>
+							<div
+								className={
+									activeTagsModal ? 'shareTagsModal active' : 'shareTagsModal'
+								}
+								onClick={() => setActiveTagsModal(true)}
+							>
+								<div className='shareTagsModalBlock'>
+									<div className='shareTagsModalContainer'>
+										<div className='shareTagsModalTop'>
+											<h1 className='shareTagsModalTitle'>
+												Choose tags for your tweet
+											</h1>
+											<div
+												className='shareTagsModalCrossBlock'
+												onClick={() => setActiveTagsModal(false)}
+											>
+												<RxCross2 fontSize={20} strokeWidth={0.5} />
+											</div>
+										</div>
+										<div className='profileTagsList'>
+											{tags.map((tag, index) => (
+												<TagItem
+													key={index}
+													tag={tag}
+													chosenTags={chosenTags}
+													setChosenTags={setChosenTags}
+												/>
+											))}
+										</div>
+										<div
+											className='shareTagsModalBtn'
+											onClick={() => setActiveTagsModal(false)}
+										>
+											Confirm
+										</div>
+									</div>
+								</div>
+								<div
+									className='overlay'
+									onClick={() => setActiveTagsModal(false)}
+								/>
+							</div>
 							{/* bottom icons */}
 							<div
 								className='homePostBlockIcons'
@@ -721,6 +781,9 @@ const Share = ({
 										alt='chevron'
 									/>
 								</div>
+								<button className='shareTagsBtn'>
+									Tags ({chosenTags.length})
+								</button>
 								{/* modal block 1 */}
 								<div
 									className={
