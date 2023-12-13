@@ -15,16 +15,12 @@ import { Posts } from './../../../components/index'
 import { UserContext } from '../../../context/UserContext'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import axios from 'axios'
+import { FaRegFaceSadTear } from 'react-icons/fa6'
 
 const Home = ({ isLoading, setIsLoading }) => {
 	// declaring variable that helps to get images from folder directly without importing
 
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
-
-	// declaring switch menu states
-
-	const [activeForYou, setActiveForYou] = useState(true)
-	const [activeFollowing, setActiveFollowing] = useState(false)
 	// declaring states of custom input field
 
 	const [activeEdit, setActiveEdit] = useState(false)
@@ -50,6 +46,8 @@ const Home = ({ isLoading, setIsLoading }) => {
 	const [userPosts, setUserPosts] = useState([])
 	const [loadingPosts, setLoadingPosts] = useState(true)
 
+	const [followingPosts, setFollowingPosts] = useState([])
+
 	// fetches user from local storage
 
 	useEffect(() => {
@@ -62,21 +60,45 @@ const Home = ({ isLoading, setIsLoading }) => {
 
 	// fetches timeline from database
 
-	useEffect(() => {
-		const getTimeline = async () => {
-			try {
-				if (!user) return
-				const timeline = await axios.get(
-					`/posts/timeline/${user?.userId.split('@')[1]}`
-				)
-				setUserPosts(timeline.data)
-				setLoadingPosts(false)
-			} catch (err) {
-				console.log(err)
-			}
+	const getTimeline = async () => {
+		try {
+			if (!user) return
+			setLoadingPosts(true)
+			const timeline = await axios.get(`/posts/timeline/${user?._id}`)
+			setUserPosts(timeline.data)
+			setLoadingPosts(false)
+		} catch (err) {
+			console.log(err)
 		}
-		userPosts.length === 0 && getTimeline()
-	}, [user, user?.userId])
+	}
+
+	const getFollowingPosts = async () => {
+		try {
+			if (!user) return
+			setLoadingPosts(true)
+			const followingPosts = await axios.get(`/posts/followings/${user?._id}`)
+			setFollowingPosts(followingPosts.data)
+			setLoadingPosts(false)
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	const [activeSwitch, setActiveSwitch] = useState('foryou')
+
+	useEffect(() => {
+		if (user && activeSwitch === 'foryou') {
+			getTimeline()
+		} else if (user && activeSwitch === 'following') {
+			getFollowingPosts()
+		}
+	}, [user, activeSwitch])
+
+	const [activeFollowBtn, setActiveFollowBtn] = useState('Following')
+
+	const [unfollow, setUnfollow] = useState(false)
+
+	console.log(followingPosts)
 
 	return (
 		<Layout
@@ -91,23 +113,21 @@ const Home = ({ isLoading, setIsLoading }) => {
 					<div className='homeTopbarBlock'>
 						<div
 							className={
-								activeForYou ? 'homeTopbarItem active' : 'homeTopbarItem'
+								activeSwitch === 'foryou'
+									? 'homeTopbarItem active'
+									: 'homeTopbarItem'
 							}
-							onClick={() => {
-								setActiveFollowing(false)
-								setActiveForYou(true)
-							}}
+							onClick={() => setActiveSwitch('foryou')}
 						>
 							For you
 						</div>
 						<div
 							className={
-								activeFollowing ? 'homeTopbarItem active' : 'homeTopbarItem'
+								activeSwitch === 'following'
+									? 'homeTopbarItem active'
+									: 'homeTopbarItem'
 							}
-							onClick={() => {
-								setActiveFollowing(true)
-								setActiveForYou(false)
-							}}
+							onClick={() => setActiveSwitch('following')}
 						>
 							Following
 						</div>
@@ -139,16 +159,55 @@ const Home = ({ isLoading, setIsLoading }) => {
 				>
 					{loadingPosts ? (
 						<PostsLoader />
-					) : (
-						userPosts.map((post, index) => (
+					) : activeSwitch === 'foryou' ? (
+						Array.isArray(userPosts) ? (
+							userPosts.map((post, index) => (
+								<Posts
+									key={index}
+									post={post}
+									more={PF + 'icon/utility/moreHorizontal.svg'}
+									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+									currentUser={user}
+									isUserPosts={post.userId === user?._id ? true : false}
+									activeFollowBtn={activeFollowBtn}
+									setActiveFollowBtn={setActiveFollowBtn}
+									unfollow={unfollow}
+									setUnfollow={setUnfollow}
+								/>
+							))
+						) : (
+							<div className='noPosts'>
+								<FaRegFaceSadTear fontSize={48} color='var(--gray)' />
+								<p className='noPostsMessage'>
+									Oops! No tweets to display. Try selecting more tags that match
+									your interests, so we can find tweets for you.
+								</p>
+							</div>
+						)
+					) : activeSwitch === 'following' ? (
+						followingPosts.map((post, index) => (
 							<Posts
 								key={index}
 								post={post}
 								more={PF + 'icon/utility/moreHorizontal.svg'}
 								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
 								currentUser={user}
+								isUserPosts={post.userId === user?._id ? true : false}
+								activeFollowBtn={activeFollowBtn}
+								setActiveFollowBtn={setActiveFollowBtn}
+								unfollow={unfollow}
+								setUnfollow={setUnfollow}
+								retweetedBy={post.retweetedBy}
 							/>
 						))
+					) : (
+						<div className='noPosts'>
+							<FaRegFaceSadTear fontSize={48} color='var(--gray)' />
+							<p className='noPostsMessage'>
+								Oops! No posts to display. Try following other users to see
+								their posts.
+							</p>
+						</div>
 					)}
 				</div>
 			</div>

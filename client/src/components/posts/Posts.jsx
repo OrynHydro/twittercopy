@@ -46,7 +46,7 @@ const Posts = ({
 	listPage,
 	noPin,
 	notification,
-	isRetweet,
+	retweetedBy,
 }) => {
 	// declaring state of more icon
 
@@ -291,10 +291,13 @@ const Posts = ({
 						<span>Pinned</span>
 					</div>
 				) : (
-					isRetweet && (
+					retweetedBy && (
 						<div className='pinnedBlock'>
 							<FaRetweet color='#536471' fontSize={16} />
-							<span>Retweeted</span>
+							<span>
+								{currentUser.username === retweetedBy ? 'You' : retweetedBy}{' '}
+								retweeted
+							</span>
 						</div>
 					)
 				)}

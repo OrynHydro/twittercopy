@@ -64,3 +64,17 @@
     background-color: var(--blue);
     border-radius: 9999px;
 }
+
+
+
+.noPosts {
+    text-align: center;
+    margin-top: 20px;
+    height: 1405px;
+}
+
+.noPostsText {
+    font-size: 18px;
+    color: var(--gray);
+    margin-top: 10px;
+}

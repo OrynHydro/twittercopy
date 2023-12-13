@@ -1337,7 +1337,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 											setActiveFollowBtn={setActiveFollowBtn}
 											unfollow={unfollow}
 											setUnfollow={setUnfollow}
-											isRetweet={user.retweets.includes(post._id)}
+											retweetedBy={
+												anotherUser.retweets.includes(post._id) &&
+												anotherUser.username
+											}
 										/>
 									)
 							)
@@ -1354,7 +1357,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									setActiveFollowBtn={setActiveFollowBtn}
 									unfollow={unfollow}
 									setUnfollow={setUnfollow}
-									isRetweet={user.retweets.includes(post._id)}
+									retweetedBy={
+										anotherUser.retweets.includes(post._id) &&
+										anotherUser.username
+									}
 								/>
 							))
 						) : activePosts === 'replies' && replies.length !== 0 ? (
@@ -1375,7 +1381,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 												setActiveFollowBtn={setActiveFollowBtn}
 												unfollow={unfollow}
 												setUnfollow={setUnfollow}
-												isRetweet={user.retweets.includes(post._id)}
+												retweetedBy={
+													anotherUser.retweets.includes(post._id) &&
+													anotherUser.username
+												}
 											/>
 											<hr className='postPageHr' />
 										</>
@@ -1395,7 +1404,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 												unfollow={unfollow}
 												setUnfollow={setUnfollow}
 												isReply={'original'}
-												isRetweet={user.retweets.includes(post._id)}
+												retweetedBy={
+													anotherUser.retweets.includes(post._id) &&
+													anotherUser.username
+												}
 											/>
 											{post.replies.map(
 												(reply, index2) =>
@@ -1418,7 +1430,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 																unfollow={unfollow}
 																setUnfollow={setUnfollow}
 																isReply={'reply'}
-																isRetweet={user.retweets.includes(post._id)}
+																retweetedBy={
+																	anotherUser.retweets.includes(post._id) &&
+																	anotherUser.username
+																}
 															/>
 														</div>
 													)
@@ -1446,7 +1461,10 @@ const Profile = ({ isLoading, setIsLoading }) => {
 									setActiveFollowBtn={setActiveFollowBtn}
 									unfollow={unfollow}
 									setUnfollow={setUnfollow}
-									isRetweet={user.retweets.includes(post._id)}
+									retweetedBy={
+										anotherUser.retweets.includes(post._id) &&
+										anotherUser.username
+									}
 								/>
 							))
 						)}

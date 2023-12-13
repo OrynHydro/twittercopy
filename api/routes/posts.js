@@ -93,23 +93,84 @@ router.get('/allUserPosts/:userId', async (req, res) => {
 	}
 })
 
-// get timeline
-router.get('/timeline/:userId', async (req, res) => {
+// get followings' posts
+router.get('/followings/:userDbId', async (req, res) => {
 	try {
-		const user = await User.findOne({ userId: '@' + req.params.userId })
+		const user = await User.findById(req.params.userDbId)
 
 		const followingIds = user.following
+
+		const followingUsers = await User.find({
+			_id: { $in: followingIds },
+		})
+			.populate('retweets')
+			.populate({
+				path: 'retweets',
+				populate: { path: 'user' },
+			})
 
 		const followingPosts = await Post.find({
 			userId: { $in: followingIds },
 			originalPost: null,
+		}).populate('user')
+
+		const retweets = followingUsers.map(user => {
+			const retweetsWithIsRetweet = user.retweets.map(retweet => ({
+				...retweet.toObject(),
+				retweetedBy: user.username,
+			}))
+			return retweetsWithIsRetweet
+		})
+
+		res.status(200).json(followingPosts.concat(retweets[0]))
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// get timeline
+router.get('/timeline/:userDbId', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.userDbId)
+
+		const followingIds = user.following
+
+		const followingUsers = await User.find({
+			_id: { $in: followingIds },
+		})
+			.populate('retweets')
+			.populate({
+				path: 'retweets',
+				populate: { path: 'user' },
+			})
+
+		const posts = await Post.find({
+			tags: { $elemMatch: { $in: user.tags } },
+			userId: { $ne: user._id },
 		})
 			.populate('user')
 			.sort({ createdAt: -1 })
 
-		res.status(200).json(followingPosts)
-	} catch (err) {
-		res.status(500).json(err)
+		if (posts.length === 0) {
+			return res.status(200).json('No posts found')
+		}
+
+		const postsWithRetweetedBy = posts.map(post => {
+			const retweetedBy = followingUsers
+				.filter(user =>
+					user.retweets.some(retweet => retweet._id.equals(post._id))
+				)
+				.map(user => user.username)
+
+			return {
+				...post.toObject(),
+				retweetedBy: retweetedBy.length > 0 ? retweetedBy : undefined,
+			}
+		})
+
+		res.status(200).json(postsWithRetweetedBy)
+	} catch (error) {
+		res.status(500).json(error)
 	}
 })
 
