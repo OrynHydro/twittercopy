@@ -14,7 +14,7 @@ const NotificationSchema = new mongoose.Schema(
 		},
 		type: {
 			type: String,
-			enum: ['login', 'mention', 'follow', 'like', 'reply', 'retweet'],
+			enum: ['login', 'follow', 'like', 'reply', 'retweet'],
 			required: true,
 		},
 		perused: {
@@ -31,6 +31,11 @@ const NotificationSchema = new mongoose.Schema(
 		},
 	},
 	{ timestamps: true }
+)
+
+NotificationSchema.index(
+	{ createdAt: 1 },
+	{ expireAfterSeconds: 7 * 24 * 60 * 60 }
 )
 
 module.exports = mongoose.model('Notification', NotificationSchema)
