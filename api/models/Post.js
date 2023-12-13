@@ -53,8 +53,7 @@ const PostSchema = new mongoose.Schema(
 		},
 		tags: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Tag',
+				type: String,
 			},
 		],
 	},

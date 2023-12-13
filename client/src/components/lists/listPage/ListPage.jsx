@@ -19,6 +19,8 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useOutsideClick } from '../../../utils/useOutsideClick'
 import { RxCrossCircled } from 'react-icons/rx'
 import { listSharePopup } from '../../../helpers/listSharePopup'
+import TagItem from '../../tags/tagItem/TagItem'
+import { tags } from '../../../helpers/tags'
 
 const ListPage = ({ isLoading, setIsLoading }) => {
 	// user data states
@@ -249,6 +251,45 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 	}
 
 	const [activeAlert, setActiveAlert] = useState(false)
+
+	const [listTags, setListTags] = useState(list?.tags || [])
+	const [chosenTags, setChosenTags] = useState([])
+	const [areEqual, setAreEqual] = useState(true)
+
+	useEffect(() => {
+		setAreEqual(areArraysEqual(listTags, chosenTags))
+	}, [listTags, chosenTags])
+
+	useEffect(() => {
+		if (list?.tags.length > 0 && listTags.length === 0) {
+			setListTags(list?.tags)
+			setChosenTags(list?.tags)
+		}
+	}, [list, listTags])
+
+	function areArraysEqual(array1, array2) {
+		if (array1.length !== array2.length) {
+			return false
+		}
+
+		const sortedArray1 = array1.slice().sort()
+		const sortedArray2 = array2.slice().sort()
+
+		return sortedArray1.every(
+			(element, index) => element === sortedArray2[index]
+		)
+	}
+
+	const editTags = async () => {
+		try {
+			await axios.put(`/lists/${list?._id}/tags`, {
+				tags: chosenTags,
+			})
+			setListTags(chosenTags)
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	return (
 		<Layout
@@ -501,120 +542,152 @@ const ListPage = ({ isLoading, setIsLoading }) => {
 										Done
 									</button>
 								</div>
-								{/* list's cover */}
-								<div
-									className='editProfileBackgroundBlock'
-									style={{ position: 'relative' }}
-								>
-									{currentCover === undefined &&
-									!listCoverArray.includes(list?.coverPicture) ? (
-										<div className='currentCover'>
-											<img
-												src={PF + listCoverArray[randomCover]}
-												alt=''
-												className='coverImg'
-											/>
-											<div className='currentCoverOverlay'></div>
-										</div>
-									) : currentCover !== undefined ? (
-										<div className='currentCover'>
-											<img
-												src={PF + 'storage/' + currentCover}
-												alt=''
-												className='coverImg'
-											/>
-											<div className='currentCoverOverlay'></div>
-										</div>
-									) : (
-										list?.coverPicture && (
+								<div className='addListContent'>
+									{/* list's cover */}
+									<div
+										className='editProfileBackgroundBlock'
+										style={{ position: 'relative' }}
+									>
+										{currentCover === undefined &&
+										!listCoverArray.includes(list?.coverPicture) ? (
 											<div className='currentCover'>
 												<img
-													src={PF + 'storage/' + list?.coverPicture}
+													src={PF + listCoverArray[randomCover]}
 													alt=''
 													className='coverImg'
 												/>
 												<div className='currentCoverOverlay'></div>
 											</div>
-										)
-									)}
-									<div className='editProfileBackgroundAddPhotoIcons'>
-										<label
-											htmlFor='userCover'
-											className='editProfileBackgroundAddPhotoBlock'
-										>
-											<img src={PF + 'icon/common/camera.svg'} alt='' />
-											<input
-												type='file'
-												hidden
-												id='userCover'
-												onChange={e => changeListCover(e)}
-											/>
-										</label>
-										{currentCover === undefined ? (
-											false
-										) : !listCoverArray.includes(currentCover) &&
-										  !currentCover.match('undefined') ? (
-											<div
-												className='editProfileBackgroundAddPhotoBlock'
-												onClick={() => setCurrentCover()}
-											>
-												<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+										) : currentCover !== undefined ? (
+											<div className='currentCover'>
+												<img
+													src={PF + 'storage/' + currentCover}
+													alt=''
+													className='coverImg'
+												/>
+												<div className='currentCoverOverlay'></div>
 											</div>
 										) : (
-											!listCoverArray.includes(list?.coverPicture) && (
-												<div
-													className='editProfileBackgroundAddPhotoBlock'
-													onClick={() => {
-														setCurrentCover('none')
-													}}
-												>
-													<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+											list?.coverPicture && (
+												<div className='currentCover'>
+													<img
+														src={PF + 'storage/' + list?.coverPicture}
+														alt=''
+														className='coverImg'
+													/>
+													<div className='currentCoverOverlay'></div>
 												</div>
 											)
 										)}
-									</div>
-								</div>
-								{/* list's name and desc */}
-								<div className='addListForm listPageForm'>
-									<div className='addListFormContainer'>
-										<Input
-											inputState={inputName}
-											setInputState={setInputName}
-										/>
-
-										<Input
-											inputState={inputDesc}
-											setInputState={setInputDesc}
-										/>
-
-										<div className='addListRadioInputBlock'>
-											<div className='addListRadioInputBlockTextBlock'>
-												<span className='addListRadioInputBlockText'>
-													Make private
-												</span>
-												<span className='addListRadioInputBlockAddition'>
-													When you make a List private, only you can see it.
-												</span>
-											</div>
-											<div className='checkboxBlock'>
+										<div className='editProfileBackgroundAddPhotoIcons'>
+											<label
+												htmlFor='userCover'
+												className='editProfileBackgroundAddPhotoBlock'
+											>
+												<img src={PF + 'icon/common/camera.svg'} alt='' />
 												<input
-													type='checkbox'
-													defaultChecked={isChecked}
-													onClick={() => setIsChecked(!isChecked)}
+													type='file'
+													hidden
+													id='userCover'
+													onChange={e => changeListCover(e)}
 												/>
-											</div>
+											</label>
+											{currentCover === undefined ? (
+												false
+											) : !listCoverArray.includes(currentCover) &&
+											  !currentCover.match('undefined') ? (
+												<div
+													className='editProfileBackgroundAddPhotoBlock'
+													onClick={() => setCurrentCover()}
+												>
+													<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+												</div>
+											) : (
+												!listCoverArray.includes(list?.coverPicture) && (
+													<div
+														className='editProfileBackgroundAddPhotoBlock'
+														onClick={() => {
+															setCurrentCover('none')
+														}}
+													>
+														<img src={PF + 'icon/utility/xWhite.svg'} alt='' />
+													</div>
+												)
+											)}
 										</div>
 									</div>
-									<hr className='postPageHr listPageHr' />
-									<div className='manageMembersBlock'>
-										<p>Manage members</p>
-										<img src={PF + 'icon/utility/chevronRight.svg'} alt='' />
-									</div>
-									<div
-										className='deleteListBlock'
-										onClick={() => setDeleteListModal(true)}
-									>
-										Delete List
+									{/* list's name and desc */}
+									<div className='addListForm listPageForm'>
+										<div className='addListFormContainer'>
+											<Input
+												inputState={inputName}
+												setInputState={setInputName}
+											/>
+
+											<Input
+												inputState={inputDesc}
+												setInputState={setInputDesc}
+											/>
+
+											<div className='addListRadioInputBlock'>
+												<div className='addListRadioInputBlockTextBlock'>
+													<div className='profileTags'>
+														<h2 className='profileTagsTitle'>Tags</h2>
+														<span className='profileTagsDesc'>
+															Tags help you find similar users, tweets, and
+															communities based on your interests. Easily
+															explore content and connect with like-minded
+															individuals using these convenient labels.
+														</span>
+														<div className='profileTagsList'>
+															{tags.map((tag, index) => (
+																<TagItem
+																	key={index}
+																	tag={tag}
+																	chosenTags={chosenTags}
+																	setChosenTags={setChosenTags}
+																/>
+															))}
+														</div>
+														<button
+															className={
+																areEqual
+																	? 'profileTagsEditButton disabled'
+																	: 'profileTagsEditButton'
+															}
+															disabled={areEqual}
+															onClick={() => editTags()}
+														>
+															Edit tags
+														</button>
+													</div>
+													<span className='addListRadioInputBlockText'>
+														Make private
+													</span>
+													<span className='addListRadioInputBlockAddition'>
+														When you make a List private, only you can see it.
+													</span>
+												</div>
+												<div className='checkboxBlock'>
+													<input
+														type='checkbox'
+														defaultChecked={isChecked}
+														onClick={() => setIsChecked(!isChecked)}
+													/>
+												</div>
+											</div>
+										</div>
+										<hr className='postPageHr listPageHr' />
+										<div className='manageMembersBlock'>
+											<p>Manage members</p>
+											<img src={PF + 'icon/utility/chevronRight.svg'} alt='' />
+										</div>
+										<div
+											className='deleteListBlock'
+											onClick={() => setDeleteListModal(true)}
+										>
+											Delete List
+										</div>
 									</div>
 								</div>
 							</div>

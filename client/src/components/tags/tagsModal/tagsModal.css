@@ -1,0 +1,99 @@
+.shareTagsModal {
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: none;
+	z-index: 100000;
+}
+
+.shareTagsModal.active {
+	display: flex;
+	align-items: center;
+}
+
+.shareTagsModal.active.tagsModalShare {
+	align-items: flex-start;
+}
+
+.shareTagsModal.active.tagsModalShare .shareTagsModalBlock {
+	margin-top: 107px;
+}
+
+.shareTagsModal .overlay {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.4);
+	z-index: 100000;
+}
+
+.shareTagsModalBlock {
+	position: relative;
+	z-index: 100001;
+	background-color: #fff;
+	margin: 0 auto;
+	width: 600px;
+	height: 334px;
+	border-radius: 16px;
+}
+
+.shareTagsModalContainer {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.shareTagsModalTop {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #EFF3F4;
+	padding-bottom: 10px;
+}
+
+.shareTagsModalTitle {
+	font-size: 31px;
+	font-weight: 700;
+	line-height: 24px;
+	color: var(--black);
+}
+
+.shareTagsModalCrossBlock,
+.shareTagsModalBack {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.2s ease;
+}
+
+.shareTagsModalCrossBlock:hover,
+.shareTagsModalBack:hover {
+	background-color: #E7E7E8;
+}
+
+.shareTagsModalBtn {
+	background-color: var(--black);
+	color: #fff;
+	padding: 16px 32px;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 24px;
+	text-align: center;
+	border-radius: 32px;
+	cursor: pointer;
+	position: relative;
+	top: -15px;
+}
+
+.shareTagsModalBtn:hover {
+	background-color: #1e1e1e;
+}

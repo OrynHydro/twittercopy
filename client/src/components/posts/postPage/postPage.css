@@ -60,6 +60,9 @@
 	line-height: 20px;
 	color: var(--gray);
 	margin: 15px 2px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .postPageTime:hover {
@@ -93,4 +96,23 @@
 
 .homePost.postPagePost {
 	cursor: default;
+}
+
+
+.postPageTagsBtn {
+	width: fit-content;
+	padding: 4px 12px;
+	background-color: var(--gray);
+	color: #fff;
+	border: none;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: bold;
+	transition: 0.2s ease;
+	margin-right: 8px;
+}
+
+.postPageTagsBtn:hover {
+	background-color: #444b52;
 }

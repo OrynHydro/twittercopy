@@ -525,7 +525,7 @@ router.put('/:userDbId/tags', async (req, res) => {
 			},
 			{ new: true }
 		)
-		res.status(200).json('Account has been updated')
+		res.status(200).json('Tags have been updated')
 	} catch (err) {
 		res.status(500).json(err)
 	}

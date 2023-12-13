@@ -363,4 +363,20 @@ router.get('/findByText', async (req, res) => {
 	res.status(200).json(foundLists)
 })
 
+// change list tags
+router.put('/:listId/tags', async (req, res) => {
+	try {
+		await List.findByIdAndUpdate(
+			req.params.listId,
+			{
+				$set: { tags: req.body.tags },
+			},
+			{ new: true }
+		)
+		res.status(200).json('Tags have been updated')
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
 module.exports = router

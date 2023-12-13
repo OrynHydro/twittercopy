@@ -24,3 +24,11 @@
 .profileTag.chosen {
 	background-color: rgb(182, 255, 213);
 }
+
+.profileTag.postPage {
+	cursor: default;
+}
+
+.profileTag.postPage:hover {
+	background-color: #fff;
+}

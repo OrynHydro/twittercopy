@@ -29,6 +29,7 @@ import 'react-html5video/dist/styles.css'
 import { BsPinFill } from 'react-icons/bs'
 import AddUserModal from '../lists/addUserModal/AddUserModal'
 import { FaRetweet } from 'react-icons/fa6'
+import TagItem from '../tags/tagItem/TagItem'
 
 const Posts = ({
 	post,
@@ -259,6 +260,8 @@ const Posts = ({
 
 	const [activeAddUser, setActiveAddUser] = useState(false)
 
+	const [activeTagsBlock, setActiveTagsBlock] = useState(false)
+
 	return (
 		<Link
 			className={
@@ -469,16 +472,34 @@ const Posts = ({
 					)}
 				</div>
 				{postPage && (
-					<div className='postPageData'>
-						<span className='postPageTime'>
-							{moment(post.createdAt).format('h:mm A')} ·{' '}
-							{moment(post.createdAt).format('MMM d, yyyy')}
-						</span>{' '}
-						·{' '}
-						<span className='postPageViews'>
-							<strong>{post.views}</strong> Views
-						</span>
-					</div>
+					<>
+						<div className='postPageData'>
+							<div className='postPageDataLeft'>
+								<span className='postPageTime'>
+									{moment(post.createdAt).format('h:mm A')} ·{' '}
+									{moment(post.createdAt).format('MMM d, yyyy')}
+								</span>{' '}
+								·{' '}
+								<span className='postPageViews'>
+									<strong>{post.views}</strong> Views
+								</span>
+							</div>
+
+							<button
+								className='postPageTagsBtn'
+								onClick={() => setActiveTagsBlock(!activeTagsBlock)}
+							>
+								Tags ({post.tags.length})
+							</button>
+						</div>
+						{activeTagsBlock && (
+							<div className='profileTagsList'>
+								{post?.tags.map((tag, index) => (
+									<TagItem key={index} tag={tag} postPage />
+								))}
+							</div>
+						)}
+					</>
 				)}
 
 				{postPage && <hr className='postPageHr' />}

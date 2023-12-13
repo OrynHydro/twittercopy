@@ -14,7 +14,7 @@ import { useToken } from '../../../utils/useToken'
 import { useLocalStorage } from '../../../utils/useLocalStorage'
 import moment from 'moment'
 import Input from '../../input/Input'
-import TagItem from '../../tagItem/TagItem'
+import TagItem from '../../tags/tagItem/TagItem'
 import { tags } from './../../../helpers/tags'
 
 const RegisterForm = ({ activeForm, setActiveForm }) => {

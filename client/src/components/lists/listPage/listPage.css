@@ -98,7 +98,6 @@
 	transition: 0.2s ease;
 	color: #f4212e;
 	border-bottom-left-radius: 16px;
-	border-bottom-right-radius: 16px;
 }
 
 .deleteListBlock:hover {
@@ -111,6 +110,18 @@
 
 .addListBlock.active .editProfileBackgroundAddPhotoIcons {
 	top: 80px;
+}
+
+.addListContent {
+	overflow: hidden;
+	overflow-y: scroll;
+	height: 598px;
+}
+
+.addListContent .profileTags {
+	top: 0;
+	margin-left: 0;
+	margin-bottom: 20px;
 }
 
 .deleteListModal {

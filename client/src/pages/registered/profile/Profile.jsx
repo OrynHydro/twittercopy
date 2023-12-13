@@ -40,9 +40,8 @@ import { ProfileLists } from '../../../components/lists/profile-lists/ProfileLis
 import { ProfileListsMembership } from '../../../components/lists/profile-lists/ProfileListsMembership'
 import PostPage from '../../../components/posts/postPage/PostPage'
 import CreateListModal from '../../../components/lists/createListModal/CreateListModal'
-import { CiHashtag } from 'react-icons/ci'
 import { tags } from '../../../helpers/tags'
-import TagItem from '../../../components/tagItem/TagItem'
+import TagItem from '../../../components/tags/tagItem/TagItem'
 
 const Profile = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
