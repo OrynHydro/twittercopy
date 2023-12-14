@@ -1511,7 +1511,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 				setActiveAddList={setActiveAddList}
 			/>
 			<div>
-				<Actual registered />
+				<Actual registered user={user} />
 				<WhoToFollow />
 			</div>
 		</Layout>

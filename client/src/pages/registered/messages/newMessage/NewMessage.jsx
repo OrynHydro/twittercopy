@@ -4,7 +4,7 @@ import axios from 'axios'
 import { PostsLoader } from './../../../../components/index'
 import { PiUsersThreeDuotone } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
-import UserItem from '../userItem/UserItem'
+import UserItem from '../../../../components/user/userItem/UserItem'
 
 const NewMessage = ({ activeModal, setActiveModal, user, userChats }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER

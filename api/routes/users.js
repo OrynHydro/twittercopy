@@ -350,20 +350,28 @@ router.get('/findByText/:userDbId', async (req, res) => {
 	const searchText = req.query.text
 	const userDbId = req.params.userDbId
 
-	const foundUsers = await User.find({
-		username: { $regex: new RegExp(searchText, 'i') },
-		_id: { $ne: userDbId },
-	}).exec()
+	const query = {
+		$or: [
+			{
+				username: { $regex: new RegExp(searchText, 'i') },
+			},
+			{
+				userId: { $regex: new RegExp(searchText, 'i') },
+			},
+		],
+	}
+
+	if (userDbId) {
+		query._id = { $ne: userDbId }
+	}
+
+	const foundUsers = await User.find(query).exec()
 
 	if (foundUsers.length === 0) {
 		return res.status(200).json('No matches')
 	}
 
-	// for (const user of foundUsers) {
-	// 	await user.populate('creator followers')
-	// }
-
-	res.status(200).json(foundUsers)
+	res.status(200).json(searchText ? foundUsers : [])
 })
 
 // find user's chats with people
