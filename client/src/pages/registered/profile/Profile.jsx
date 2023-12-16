@@ -1512,7 +1512,7 @@ const Profile = ({ isLoading, setIsLoading }) => {
 			/>
 			<div>
 				<Actual registered user={user} />
-				<WhoToFollow />
+				<WhoToFollow user={user} />
 			</div>
 		</Layout>
 	)

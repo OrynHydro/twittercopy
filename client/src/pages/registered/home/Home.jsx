@@ -77,7 +77,9 @@ const Home = ({ isLoading, setIsLoading }) => {
 			if (!user) return
 			setLoadingPosts(true)
 			const followingPosts = await axios.get(`/posts/followings/${user?._id}`)
-			setFollowingPosts(followingPosts.data)
+			setFollowingPosts(
+				followingPosts.data[0] === null ? 'No matches' : followingPosts.data
+			)
 			setLoadingPosts(false)
 		} catch (err) {
 			console.log(err)
@@ -182,37 +184,40 @@ const Home = ({ isLoading, setIsLoading }) => {
 								</p>
 							</div>
 						)
-					) : activeSwitch === 'following' ? (
-						followingPosts.map((post, index) => (
-							<Posts
-								key={index}
-								post={post}
-								more={PF + 'icon/utility/moreHorizontal.svg'}
-								moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
-								currentUser={user}
-								isUserPosts={post.userId === user?._id ? true : false}
-								activeFollowBtn={activeFollowBtn}
-								setActiveFollowBtn={setActiveFollowBtn}
-								unfollow={unfollow}
-								setUnfollow={setUnfollow}
-								retweetedBy={post.retweetedBy}
-							/>
-						))
 					) : (
-						<div className='noPosts'>
-							<FaRegFaceSadTear fontSize={48} color='var(--gray)' />
-							<p className='noPostsMessage'>
-								Oops! No posts to display. Try following other users to see
-								their posts.
-							</p>
-						</div>
+						activeSwitch === 'following' &&
+						(Array.isArray(followingPosts) ? (
+							followingPosts.map((post, index) => (
+								<Posts
+									key={index}
+									post={post}
+									more={PF + 'icon/utility/moreHorizontal.svg'}
+									moreActive={PF + 'icon/utility/moreHorizontalActive.svg'}
+									currentUser={user}
+									isUserPosts={post.userId === user?._id ? true : false}
+									activeFollowBtn={activeFollowBtn}
+									setActiveFollowBtn={setActiveFollowBtn}
+									unfollow={unfollow}
+									setUnfollow={setUnfollow}
+									retweetedBy={post.retweetedBy}
+								/>
+							))
+						) : (
+							<div className='noPosts'>
+								<FaRegFaceSadTear fontSize={48} color='var(--gray)' />
+								<p className='noPostsMessage'>
+									Oops! No posts to display. Try following other users to see
+									their posts.
+								</p>
+							</div>
+						))
 					)}
 				</div>
 			</div>
 			{/* rightbar with trends  */}
 			<div>
 				<Actual registered user={user} />
-				<WhoToFollow />
+				<WhoToFollow user={user} />
 			</div>
 		</Layout>
 	)

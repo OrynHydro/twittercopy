@@ -23,7 +23,7 @@ import 'swiper/css/navigation'
 
 import { useInView } from 'react-intersection-observer'
 import { useOutsideClick } from '../../utils/useOutsideClick'
-import UserPopup from '../userPopup/UserPopup'
+import UserPopup from '../user/userPopup/UserPopup'
 import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
 import { BsPinFill } from 'react-icons/bs'

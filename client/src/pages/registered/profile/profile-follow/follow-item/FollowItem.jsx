@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { UserPopup } from '../../../../../components'
+import UserPopup from './../../../../../components/user/userPopup/UserPopup'
 
 export const FollowItem = ({
 	username,
@@ -88,8 +88,15 @@ export const FollowItem = ({
 					<h2 className='followingBlockUsername'>{username}</h2>
 					<p className='followingBlockUserId'>
 						{userId + ' '}
-						{currentUser.followers.includes(userDbId) && (
+						{currentUser.followers.includes(userDbId) &&
+						currentUser.following.includes(userDbId) ? (
+							<span className='followsYou'>You follow each other</span>
+						) : currentUser.followers.includes(userDbId) ? (
 							<span className='followsYou'>Follows you</span>
+						) : (
+							currentUser.following.includes(userDbId) && (
+								<span className='followsYou'>You follow</span>
+							)
 						)}
 					</p>
 					<p className='followingBlockBio'>{bio}</p>

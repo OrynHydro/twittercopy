@@ -12,7 +12,6 @@ const UserItem = ({
 	user,
 	isLink,
 }) => {
-	console.log(user)
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	return (
 		<Link

@@ -74,7 +74,7 @@ const NotFound = ({ isLoading, setIsLoading }) => {
 			{/* rightbar with trends */}
 			<div>
 				<Actual registered user={user} />
-				<WhoToFollow />
+				<WhoToFollow user={user} />
 			</div>
 		</Layout>
 	)

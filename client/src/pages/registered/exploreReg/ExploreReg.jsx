@@ -34,7 +34,7 @@ const ExploreReg = ({ isLoading, setIsLoading }) => {
 			userInStorage={userInStorage}
 		>
 			<Actual user={user} />
-			<WhoToFollow maxWidth />
+			<WhoToFollow maxWidth user={user} />
 		</Layout>
 	)
 }

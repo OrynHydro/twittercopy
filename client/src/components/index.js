@@ -18,7 +18,6 @@ export { default as TwitterCircle } from './layout/twitterCircle/TwitterCircle.j
 export { default as TwitterProfessionals } from './layout/twitterProfessionals/TwitterProfessionals.jsx'
 export { default as Loading } from './loading/Loading.jsx'
 export { default as PostsLoader } from './posts/postsLoader/PostsLoader.jsx'
-export { default as UserPopup } from './userPopup/UserPopup.jsx'
 export { default as Input } from './input/Input.jsx'
 export { default as Layout } from './layout/Layout.jsx'
 export { default as ListPage } from './lists/listPage/ListPage.jsx'

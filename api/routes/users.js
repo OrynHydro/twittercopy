@@ -539,4 +539,40 @@ router.put('/:userDbId/tags', async (req, res) => {
 	}
 })
 
+// other user recommendations by tags
+router.get('/:userDbId/recommendations', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.userDbId)
+
+		const followingUsers = await User.find({ _id: { $in: user.following } })
+
+		const recommendations = await User.find({
+			$and: [
+				{ _id: { $ne: user._id, $nin: user.following } },
+				{
+					$or: [
+						{ tags: { $elemMatch: { $in: user.tags } } },
+						{
+							followers: {
+								$elemMatch: { $in: followingUsers?.following || [] },
+							},
+						},
+					],
+				},
+			],
+		})
+
+		recommendations.sort((a, b) => {
+			const tagsA = a.tags.filter(tag => user.tags.includes(tag))
+			const tagsB = b.tags.filter(tag => user.tags.includes(tag))
+
+			return tagsB.length - tagsA.length
+		})
+
+		res.status(200).json(recommendations)
+	} catch (error) {
+		res.status(500).json(error)
+	}
+})
+
 module.exports = router

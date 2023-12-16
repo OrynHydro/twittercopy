@@ -31,6 +31,7 @@
     align-items: center;
     gap: 10px;
     width: 100%;
+    justify-content: space-between;
 }
 
 .whoToFollowItem:hover {
@@ -41,6 +42,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .whoToFollowUsername,
@@ -121,4 +123,47 @@
     position: relative;
     top: 3px;
     color: #37A6F1;
+}
+
+
+
+.whoToFollowUser {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+
+
+.followingBlockRight button {
+    padding: 8px 16px;
+    border: 1px solid #cfd9de;
+    border-radius: 32px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--black);
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.followingBlockRight button:hover {
+    background-color: #F7E1E3;
+}
+
+.followingBlockRight button {
+    width: 100px;
+}
+
+.followingBlockRight.unfollowBtn button {
+    color: #F4212E;
+}
+.followingBlockRight.followUserBtn button {
+    width: 78px;
+    color: #fff;
+    background-color: var(--black);
+}
+
+.followingBlockRight.followUserBtn button:hover {
+    background-color: #272C30;
 }
