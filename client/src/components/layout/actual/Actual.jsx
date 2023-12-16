@@ -5,7 +5,7 @@ import { PostsLoader, Trends } from './../../index'
 
 import { trends } from '../../../helpers/trends'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useOutsideClick } from '../../../utils/useOutsideClick'
 import axios from 'axios'
 import UserItem from '../../user/userItem/UserItem'
@@ -47,6 +47,21 @@ const Actual = ({ registered, position, user }) => {
 
 		setIsSearching(false)
 	}
+
+	const [trendTags, setTrendTags] = useState([])
+
+	const fetchTrendTags = async () => {
+		try {
+			const res = await axios.get('/users/trendTags')
+			setTrendTags(res.data)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	useEffect(() => {
+		fetchTrendTags()
+	}, [])
 
 	return (
 		<div
@@ -127,16 +142,8 @@ const Actual = ({ registered, position, user }) => {
 			</div>
 			<div className='actualContainer'>
 				<h1 className='actualTitle'>Trends for you</h1>
-				{trends.map(item => (
-					<Trends
-						key={item.id}
-						preTitle={item.preTitle}
-						title={item.title}
-						img={item.img}
-						imgActive={item.imgActive}
-						tweets={item.tweets}
-						registered
-					/>
+				{trendTags.map((item, index) => (
+					<Trends key={index} title={item.tag} tweets={item.count} registered />
 				))}
 				<div
 					className={

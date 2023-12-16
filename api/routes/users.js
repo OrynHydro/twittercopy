@@ -575,4 +575,35 @@ router.get('/:userDbId/recommendations', async (req, res) => {
 	}
 })
 
+// trend tags for user
+router.get('/trendTags', async (req, res) => {
+	try {
+		const oneWeekAgo = new Date()
+		oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+
+		const recentPosts = await Post.find({
+			createdAt: { $gte: oneWeekAgo },
+		})
+
+		const tagCount = {}
+
+		recentPosts.forEach(post => {
+			post.tags.forEach(tag => {
+				tagCount[tag] = (tagCount[tag] || 0) + 1
+			})
+		})
+
+		const userTags = Object.keys(tagCount).map(tag => ({
+			tag,
+			count: tagCount[tag],
+		}))
+
+		userTags.sort((a, b) => b.count - a.count)
+
+		res.status(200).json(userTags)
+	} catch (error) {
+		res.status(500).json(error)
+	}
+})
+
 module.exports = router
