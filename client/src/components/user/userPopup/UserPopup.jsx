@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import './userPopup.css'
+import { useEffect } from 'react'
 
 const UserPopup = ({
 	modalText,
@@ -7,14 +8,17 @@ const UserPopup = ({
 	userDbId,
 	currentUser,
 	followUser,
-	userId,
-	username,
-	following,
-	followers,
-	profilePicture,
 	openModal,
+	item,
 }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
+	useEffect(() => {
+		if (currentUser?.following.includes(item?._id)) {
+			setModalText('Following')
+		} else {
+			setModalText('Follow')
+		}
+	}, [currentUser?.following, item?._id])
 	return (
 		<div
 			className='followingBlockModal'
@@ -26,20 +30,20 @@ const UserPopup = ({
 		>
 			<div
 				className='followingBlockModalTop'
-				style={{ width: userDbId === currentUser?._id && '264px' }}
+				style={{ width: item?._id === currentUser?._id && '264px' }}
 			>
-				<Link to={`/${userId}`} className='followingBlockUserAvaBlock'>
+				<Link to={`/${item?.userId}`} className='followingBlockUserAvaBlock'>
 					<img
 						src={
-							profilePicture
-								? PF + 'storage/' + profilePicture
+							item?.profilePicture
+								? PF + 'storage/' + item?.profilePicture
 								: PF + 'icon/noAvatar.png'
 						}
 						alt=''
 					/>
 					<div className='overlay'></div>
 				</Link>
-				{userDbId !== currentUser?._id && (
+				{item?._id !== currentUser?._id && (
 					<div
 						className={
 							modalText === 'Unfollow'
@@ -55,28 +59,28 @@ const UserPopup = ({
 							modalText !== 'Follow' && setModalText('Following')
 						}}
 					>
-						<button onClick={e => followUser(e)}>{modalText}</button>
+						<button onClick={e => followUser(e, item)}>{modalText}</button>
 					</div>
 				)}
 			</div>
 			<div className='followingBlockModalUserData'>
-				<Link to={`/${userId}`}>
-					<h2>{username}</h2>
+				<Link to={`/${item?.userId}`}>
+					<h2>{item?.username}</h2>
 				</Link>
-				<Link to={`/${userId}`}>
-					<p>{userId}</p>
+				<Link to={`/${item?.userId}`}>
+					<p>{item?.userId}</p>
 				</Link>
 			</div>
 			<div className='followingBlockModalFollow'>
-				<Link to={`/${userId}/following`}>
+				<Link to={`/${item?.userId}/following`}>
 					<span className='followingBlockModalFollowItem'>
-						<strong>{following?.length}</strong> Following
+						<strong>{item?.following?.length}</strong> Following
 					</span>
 				</Link>
 
-				<Link to={`/${userId}/followers`}>
+				<Link to={`/${item?.userId}/followers`}>
 					<span className='followingBlockModalFollowItem'>
-						<strong>{followers?.length}</strong> Followers
+						<strong>{item?.followers?.length}</strong> Followers
 					</span>
 				</Link>
 			</div>

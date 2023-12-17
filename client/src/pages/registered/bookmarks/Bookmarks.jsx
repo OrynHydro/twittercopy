@@ -60,8 +60,6 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 
 	const more = useOutsideClick(() => setActiveMore(false))
 
-	console.log(bookmarks)
-
 	const removeBookmarks = async () => {
 		setActiveMore(false)
 		try {
@@ -135,7 +133,7 @@ const Bookmarks = ({ isLoading, setIsLoading }) => {
 			{/* rightbar with trends */}
 			<div>
 				<Actual registered user={user} />
-				<WhoToFollow />
+				<WhoToFollow user={user} />
 			</div>
 		</Layout>
 	)

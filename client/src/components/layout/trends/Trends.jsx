@@ -4,6 +4,7 @@ import './trends.css'
 
 import { useState } from 'react'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 const Trends = ({ title, tweets, registered }) => {
 	// declaring state of item that can be hovered to change its appearance
@@ -28,7 +29,10 @@ const Trends = ({ title, tweets, registered }) => {
 
 	return (
 		<>
-			<div className={registered ? 'trends registered' : 'trends'}>
+			<Link
+				to={'/search?q=' + title}
+				className={registered ? 'trends registered' : 'trends'}
+			>
 				<div className='trendsItem'>
 					<div className='trendsItemTitle'>
 						<div
@@ -51,7 +55,7 @@ const Trends = ({ title, tweets, registered }) => {
 						{formatNumber(tweets)} Tweets
 					</span>
 				</div>
-			</div>
+			</Link>
 		</>
 	)
 }

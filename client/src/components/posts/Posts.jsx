@@ -202,33 +202,30 @@ const Posts = ({
 		}
 	}, [currentUser?.following, post?.user?._id])
 
-	const followUser = async e => {
+	const followUser = async (e, item) => {
 		e.preventDefault()
-		if (currentUser?.following.includes(post?.user?._id)) {
+		if (currentUser?.following.includes(item?._id)) {
 			try {
-				await axios.put(`/users/${post?.user?._id}/unfollow`, {
+				await axios.put(`/users/${item?._id}/unfollow`, {
 					userId: currentUser._id,
 				})
 				setModalText('Follow')
 				currentUser.following.splice(
-					currentUser.following.indexOf(post?.user?._id),
+					currentUser.following.indexOf(item?._id),
 					1
 				)
-				post?.user?.followers.splice(
-					post?.user?.followers.indexOf(post?.user?._id),
-					1
-				)
+				item?.followers.splice(item?.followers.indexOf(item?._id), 1)
 			} catch (err) {
 				console.log(err)
 			}
-		} else if (!currentUser?.following.includes(post?.user?._id)) {
+		} else if (!currentUser?.following.includes(item?._id)) {
 			try {
-				await axios.put(`/users/${post?.user?._id}/follow`, {
+				await axios.put(`/users/${item?._id}/follow`, {
 					userId: currentUser._id,
 				})
 				setModalText('Following')
-				currentUser.following.push(post?.user?._id)
-				post?.user?.followers.push(currentUser._id)
+				currentUser.following.push(item?._id)
+				item?.followers.push(currentUser._id)
 			} catch (err) {
 				console.log(err)
 			}
@@ -378,14 +375,9 @@ const Posts = ({
 							<UserPopup
 								modalText={modalText}
 								setModalText={setModalText}
-								userDbId={post?.user?._id}
+								item={post?.user}
 								currentUser={currentUser}
 								followUser={followUser}
-								userId={post?.user?.userId}
-								username={post?.user?.username}
-								followers={post?.user?.followers}
-								following={post?.user?.following}
-								profilePicture={post?.user?.profilePicture}
 								openModal={openModal}
 							/>
 						</div>

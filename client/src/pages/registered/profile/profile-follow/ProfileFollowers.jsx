@@ -1,7 +1,7 @@
 // followers and followings pages inside of profile
 
 import { useState } from 'react'
-import { FollowItem } from './follow-item/FollowItem'
+import { UserFollowItem } from '../../../../components/user/userFollowItem/FollowItem'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { PostsLoader } from '../../../../components'
@@ -34,17 +34,7 @@ export const ProfileFollowers = ({ user, anotherUser }) => {
 			<div className='followingBlock'>
 				{userFollowers.length !== 0 ? (
 					userFollowers.map((follower, id) => (
-						<FollowItem
-							username={follower.username}
-							userId={follower.userId}
-							userDbId={follower._id}
-							profilePicture={follower.profilePicture}
-							key={id}
-							bio={follower.bio}
-							followers={follower.followers}
-							following={follower.following}
-							currentUser={user}
-						/>
+						<UserFollowItem item={follower} key={id} currentUser={user} />
 					))
 				) : (
 					<PostsLoader />

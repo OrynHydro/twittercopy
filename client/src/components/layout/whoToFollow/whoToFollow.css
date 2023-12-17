@@ -103,26 +103,24 @@
 
 
 .showMoreBlock {
+    display: inline-block;
+    width: 100%;
+    padding: 16px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
     transition: 0.2s ease;
-    padding: 15px;
-    position: relative;
-}
-
-.showMoreBlock:hover {
-    background-color: #F7F7F7;
     cursor: pointer;
 }
 
-.showMoreBlock:hover{
-    background-color: #EFF1F1;
+.showMoreBlock span {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--blue);
 }
 
-.showMoreBlock {
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-    position: relative;
-    top: 3px;
-    color: #37A6F1;
+.showMoreBlock:hover {
+    background-color: #EFF1F1;
 }
 
 
@@ -166,4 +164,14 @@
 
 .followingBlockRight.followUserBtn button:hover {
     background-color: #272C30;
+}
+
+
+.noUsers {
+    font-size: 18px;
+    color: #555;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    text-align: center;
 }

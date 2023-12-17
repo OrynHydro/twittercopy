@@ -1,15 +1,14 @@
 // importing css file, component, react hook and presets file
 
 import './actual.css'
-import { PostsLoader, Trends } from './../../index'
-
-import { trends } from '../../../helpers/trends'
+import { Trends } from './../../index'
 
 import { useEffect, useState } from 'react'
 import { useOutsideClick } from '../../../utils/useOutsideClick'
 import axios from 'axios'
 import UserItem from '../../user/userItem/UserItem'
 import { GoXCircleFill } from 'react-icons/go'
+import { useNavigate } from 'react-router-dom'
 
 const Actual = ({ registered, position, user }) => {
 	// declaring state for searchbar
@@ -27,6 +26,8 @@ const Actual = ({ registered, position, user }) => {
 	const [isSearching, setIsSearching] = useState(false)
 
 	const [searchResults, setSearchResults] = useState([])
+
+	const [isLoading, setIsLoading] = useState(false)
 
 	const handleInputChange = async e => {
 		setIsSearching(true)
@@ -51,17 +52,28 @@ const Actual = ({ registered, position, user }) => {
 	const [trendTags, setTrendTags] = useState([])
 
 	const fetchTrendTags = async () => {
+		setIsLoading(true)
 		try {
 			const res = await axios.get('/users/trendTags')
 			setTrendTags(res.data)
 		} catch (error) {
 			console.log(error)
 		}
+		setIsLoading(false)
 	}
 
 	useEffect(() => {
 		fetchTrendTags()
 	}, [])
+
+	const navigate = useNavigate()
+
+	const handleKeyDown = e => {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault()
+			navigate('/search?q=' + text)
+		}
+	}
 
 	return (
 		<div
@@ -91,6 +103,7 @@ const Actual = ({ registered, position, user }) => {
 								: 'actualSearchBlockFormInput'
 						}
 						onChange={e => handleInputChange(e)}
+						onKeyDown={handleKeyDown}
 						value={text}
 					/>
 
@@ -142,9 +155,18 @@ const Actual = ({ registered, position, user }) => {
 			</div>
 			<div className='actualContainer'>
 				<h1 className='actualTitle'>Trends for you</h1>
-				{trendTags.map((item, index) => (
-					<Trends key={index} title={item.tag} tweets={item.count} registered />
-				))}
+				{isLoading ? (
+					<div className='loader'></div>
+				) : (
+					trendTags.map((item, index) => (
+						<Trends
+							key={index}
+							title={item.tag}
+							tweets={item.count}
+							registered
+						/>
+					))
+				)}
 				<div
 					className={
 						registered

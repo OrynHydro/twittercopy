@@ -5,15 +5,26 @@ import './whoToFollow.css'
 import { Footer } from './../../index'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import UserPopupFollow from './userPopupFollow/UserPopupFollow'
+import UserPopup from '../../user/userPopup/UserPopup'
+import { Link } from 'react-router-dom'
+import { UserFollowItem } from '../../user/userFollowItem/FollowItem'
 
 const WhoToFollow = ({ maxWidth, user }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
+	const [isLoading, setIsLoading] = useState(false)
+
 	const [recommended, setRecommended] = useState([])
+
 	const findRecommended = async () => {
-		const res = await axios.get(`/users/${user._id}/recommendations`)
-		setRecommended(res.data.slice(0, 3))
+		try {
+			setIsLoading(true)
+			const res = await axios.get(`/users/${user._id}/recommendations`)
+			setRecommended(res.data.slice(0, 3))
+			setIsLoading(false)
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	useEffect(() => {
@@ -59,58 +70,20 @@ const WhoToFollow = ({ maxWidth, user }) => {
 			<div className='whoToFollowBlock'>
 				<h1 className='whoToFollowTitle'>Who to follow</h1>
 				{/* preset for different users */}
-				{recommended.map((item, index) => (
-					<div className='whoToFollowItem' key={index}>
-						<div
-							className='whoToFollowUser'
-							onMouseOver={() => setActivePopup(true)}
-							onMouseOut={() => setActivePopup(false)}
-						>
-							<div className='whoToFollowImgBlock'>
-								<img
-									className='whoToFollowUserImg'
-									src={
-										item?.profilePicture
-											? PF + 'storage/' + item.profilePicture
-											: PF + 'icon/noAvatar.png'
-									}
-								/>
-								<div className='imgBlockOverlay'></div>
-							</div>
-							<div className='whoToFollowUserData'>
-								<span className='whoToFollowUsername'>{item?.username}</span>
-								<p className='whoToFollowUserId'>{item?.userId}</p>
-							</div>
-							<UserPopupFollow
-								user={user}
-								item={item}
-								activePopup={activePopup}
-								modalText={modalText}
-								setModalText={setModalText}
-								followUser={followUser}
-							/>
-						</div>
-
-						<div
-							className={
-								modalText === 'Unfollow'
-									? 'followingBlockRight unfollowBtn'
-									: modalText === 'Follow'
-									? 'followingBlockRight followUserBtn'
-									: 'followingBlockRight'
-							}
-							onMouseOver={() => {
-								modalText !== 'Follow' && setModalText('Unfollow')
-							}}
-							onMouseOut={() => {
-								modalText !== 'Follow' && setModalText('Following')
-							}}
-						>
-							<button onClick={e => followUser(e, item)}>{modalText}</button>
-						</div>
-					</div>
-				))}
-				<div className='showMoreBlock'>Show more</div>
+				{isLoading ? (
+					<div className='loader'></div>
+				) : recommended.length > 0 ? (
+					<>
+						{recommended.map((item, index) => (
+							<UserFollowItem item={item} key={index} currentUser={user} />
+						))}
+						<Link className='showMoreBlock' to={'/connect_people'}>
+							<span>Show more</span>
+						</Link>
+					</>
+				) : (
+					<div className='noUsers'>There are no users to follow</div>
+				)}
 			</div>
 			<Footer />
 		</div>

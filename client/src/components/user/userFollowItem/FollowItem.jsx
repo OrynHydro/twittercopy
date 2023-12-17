@@ -1,63 +1,55 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import UserPopup from './../../../../../components/user/userPopup/UserPopup'
+import UserPopup from '../userPopup/UserPopup'
 
-export const FollowItem = ({
-	username,
-	userId,
-	userDbId,
-	profilePicture,
-	bio,
-	followers,
-	following,
-	currentUser,
-}) => {
+export const UserFollowItem = ({ currentUser, item }) => {
 	// declaring variable that helps to get images from folder directly without importing
 
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
 	const [text, setText] = useState(
-		!currentUser?.following.includes(userId) ? 'Following' : 'Follow'
+		!currentUser?.following.includes(item?.userId) ? 'Following' : 'Follow'
 	)
 	const [openModal, setOpenModal] = useState(false)
 	const [modalText, setModalText] = useState(
-		!currentUser?.following.includes(userId) ? 'Following' : 'Follow'
+		!currentUser?.following.includes(item?.userId) ? 'Following' : 'Follow'
 	)
 
 	useEffect(() => {
-		if (currentUser?.following.includes(userDbId)) {
+		if (currentUser?.following.includes(item?._id)) {
 			setText('Following')
-			setModalText('Following')
 		} else {
 			setText('Follow')
-			setModalText('Follow')
 		}
-	}, [currentUser?.following, userDbId])
+	}, [currentUser?.following, item?._id])
 
-	const followUser = async e => {
+	const followUser = async (e, item) => {
 		e.preventDefault()
-		if (currentUser?.following.includes(userDbId)) {
+		if (currentUser?.following.includes(item?._id)) {
 			try {
-				await axios.put(`/users/${userDbId}/unfollow`, {
+				await axios.put(`/users/${item?._id}/unfollow`, {
 					userId: currentUser._id,
 				})
-				setModalText('Follow')
 				setText('Follow')
-				currentUser.following.splice(currentUser.following.indexOf(userDbId), 1)
-				followers.splice(followers.indexOf(userDbId), 1)
+				setModalText('Follow')
+				currentUser.following.splice(
+					currentUser.following.indexOf(item?._id),
+					1
+				)
+				item?.followers.splice(item?.followers.indexOf(item?._id), 1)
 			} catch (err) {
 				console.log(err)
 			}
-		} else if (!currentUser?.following.includes(userDbId)) {
+		} else if (!currentUser?.following.includes(item?._id)) {
 			try {
-				await axios.put(`/users/${userDbId}/follow`, {
+				await axios.put(`/users/${item?._id}/follow`, {
 					userId: currentUser._id,
 				})
-				setModalText('Following')
 				setText('Following')
-				currentUser.following.push(userDbId)
-				followers.push(currentUser._id)
+				setModalText('Following')
+				currentUser.following.push(item?._id)
+				item?.followers.push(currentUser._id)
 			} catch (err) {
 				console.log(err)
 			}
@@ -65,7 +57,7 @@ export const FollowItem = ({
 	}
 
 	return (
-		<Link to={`/${userId}`} className='followingBlockItem'>
+		<Link to={`/${item?.userId}`} className='followingBlockItem'>
 			<div
 				className='followingBlockItemLeft'
 				onMouseOver={() => setOpenModal(true)}
@@ -75,8 +67,8 @@ export const FollowItem = ({
 					<img
 						className='followingBlockItemUserAva'
 						src={
-							profilePicture
-								? PF + 'storage/' + profilePicture
+							item?.profilePicture
+								? PF + 'storage/' + item?.profilePicture
 								: PF + 'icon/noAvatar.png'
 						}
 						alt=''
@@ -85,38 +77,33 @@ export const FollowItem = ({
 				</div>
 
 				<div className='followingBlockUserData'>
-					<h2 className='followingBlockUsername'>{username}</h2>
+					<h2 className='followingBlockUsername'>{item?.username}</h2>
 					<p className='followingBlockUserId'>
-						{userId + ' '}
-						{currentUser.followers.includes(userDbId) &&
-						currentUser.following.includes(userDbId) ? (
+						{item?.userId + ' '}
+						{currentUser.followers.includes(item?._id) &&
+						currentUser.following.includes(item?._id) ? (
 							<span className='followsYou'>You follow each other</span>
-						) : currentUser.followers.includes(userDbId) ? (
+						) : currentUser.followers.includes(item?._id) ? (
 							<span className='followsYou'>Follows you</span>
 						) : (
-							currentUser.following.includes(userDbId) && (
+							currentUser.following.includes(item?._id) && (
 								<span className='followsYou'>You follow</span>
 							)
 						)}
 					</p>
-					<p className='followingBlockBio'>{bio}</p>
+					<p className='followingBlockBio'>{item?.bio}</p>
 				</div>
 
 				<UserPopup
 					modalText={modalText}
 					setModalText={setModalText}
-					userDbId={userDbId}
 					currentUser={currentUser}
 					followUser={followUser}
-					userId={userId}
-					username={username}
-					followers={followers}
-					following={following}
-					profilePicture={profilePicture}
 					openModal={openModal}
+					item={item}
 				/>
 			</div>
-			{userDbId !== currentUser?._id && (
+			{item?._id !== currentUser?._id && (
 				<div
 					className={
 						text === 'Unfollow'
@@ -132,8 +119,7 @@ export const FollowItem = ({
 						text !== 'Follow' && setText('Following')
 					}}
 				>
-					<button onClick={e => followUser(e)}>{text}</button>
-					{/* {!currentUser?.following.includes(userId)} */}
+					<button onClick={e => followUser(e, item)}>{text}</button>
 				</div>
 			)}
 		</Link>

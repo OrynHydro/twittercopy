@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PostsLoader } from '../../../../components/index'
-import { FollowItem } from './follow-item/FollowItem'
+import { UserFollowItem } from '../../../../components/user/userFollowItem/FollowItem'
 
 export const ProfileFollowing = ({ user, anotherUser }) => {
 	document.title = `People following ${anotherUser?.username}`
@@ -32,17 +32,7 @@ export const ProfileFollowing = ({ user, anotherUser }) => {
 			<div className='followingBlock'>
 				{userFollowing.length !== 0 ? (
 					userFollowing.map((following, id) => (
-						<FollowItem
-							username={following.username}
-							userId={following.userId}
-							userDbId={following._id}
-							profilePicture={following.profilePicture}
-							key={id}
-							bio={following.bio}
-							followers={following.followers}
-							following={following.following}
-							currentUser={user}
-						/>
+						<UserFollowItem item={following} key={id} currentUser={user} />
 					))
 				) : (
 					<PostsLoader />
