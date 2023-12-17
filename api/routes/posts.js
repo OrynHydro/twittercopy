@@ -228,4 +228,40 @@ router.put('/:postId/retweet', async (req, res) => {
 	}
 })
 
+// search latest posts
+router.get('/search/latest', async (req, res) => {
+	try {
+		const posts = await Post.find({
+			desc: { $regex: new RegExp(req.query.text, 'i') },
+		})
+			.populate('user')
+			.sort({ createdAt: -1 })
+
+		if (posts.length === 0) {
+			return res.status(200).json('No matches')
+		}
+		res.status(200).json(posts)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
+// search posts with media
+router.get('/search/media', async (req, res) => {
+	try {
+		const posts = await Post.find({
+			desc: { $regex: new RegExp(req.query.text, 'i') },
+			img: { $ne: [] },
+		}).populate('user')
+
+		if (posts.length === 0) {
+			return res.status(200).json('No matches')
+		}
+
+		res.status(200).json(posts)
+	} catch (err) {
+		res.status(500).json(err)
+	}
+})
+
 module.exports = router

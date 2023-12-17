@@ -8,9 +8,9 @@ import { useOutsideClick } from '../../../utils/useOutsideClick'
 import axios from 'axios'
 import UserItem from '../../user/userItem/UserItem'
 import { GoXCircleFill } from 'react-icons/go'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-const Actual = ({ registered, position, user }) => {
+const Actual = ({ registered, position, user, noSearch }) => {
 	// declaring state for searchbar
 
 	const [active, setActive] = useState(false)
@@ -80,79 +80,97 @@ const Actual = ({ registered, position, user }) => {
 			className={registered ? 'actual registered' : 'actual'}
 			style={{ left: position ? '15px' : null }}
 		>
-			<div className='actualSearchBlock'>
-				<form
-					className='actualSearchBlockForm'
-					onFocus={() => setActive(true)}
-					ref={searchPopup}
-				>
-					<img
-						src={
-							active
-								? PF + 'icon/utility/searchActive.svg'
-								: PF + 'icon/utility/search.svg'
-						}
-						alt=''
-						className='searchIcon'
-					/>
-					<input
-						placeholder='Search'
-						className={
-							active
-								? 'actualSearchBlockFormInput active'
-								: 'actualSearchBlockFormInput'
-						}
-						onChange={e => handleInputChange(e)}
-						onKeyDown={handleKeyDown}
-						value={text}
-					/>
-
-					<GoXCircleFill
-						className={registered ? 'crossCircle registered' : 'crossCircle'}
-						onClick={() => {
-							setText('')
-							setSearchResults([])
-						}}
-						style={{ display: text ? 'block' : 'none' }}
-						fontSize={22}
-						color='var(--blue)'
-					/>
-
-					<div
-						className={
-							(text.length === 0 || searchResults === 'No matches') && active
-								? 'actualSearchPopup active noText'
-								: text.length > 0 && Array.isArray(searchResults) && active
-								? 'actualSearchPopup active'
-								: 'actualSearchPopup noText'
-						}
-						style={{ left: registered ? '-20px' : null }}
+			{!noSearch && (
+				<div className='actualSearchBlock'>
+					<form
+						className='actualSearchBlockForm'
+						onFocus={() => setActive(true)}
+						ref={searchPopup}
 					>
-						{isSearching ? (
-							<div className='loader'></div>
-						) : searchResults === 'No matches' ? (
-							<p>No matches for "{text}"</p>
-						) : searchResults.length > 0 ? (
-							searchResults.map((item, index) => (
-								<UserItem key={index} item={item} isLink user={user} />
-							))
-						) : (
-							<p>Try searching for people, lists, or keywords</p>
+						<img
+							src={
+								active
+									? PF + 'icon/utility/searchActive.svg'
+									: PF + 'icon/utility/search.svg'
+							}
+							alt=''
+							className='searchIcon'
+						/>
+						<input
+							placeholder='Search'
+							className={
+								active
+									? 'actualSearchBlockFormInput active'
+									: 'actualSearchBlockFormInput'
+							}
+							onChange={e => handleInputChange(e)}
+							onKeyDown={handleKeyDown}
+							value={text}
+						/>
+
+						{active && (
+							<GoXCircleFill
+								className={
+									registered ? 'crossCircle registered' : 'crossCircle'
+								}
+								onClick={() => {
+									setText('')
+									setSearchResults([])
+								}}
+								style={{ display: text ? 'block' : 'none' }}
+								fontSize={22}
+								color='var(--blue)'
+							/>
 						)}
+
+						<div
+							className={
+								(text.length === 0 || searchResults === 'No matches') && active
+									? 'actualSearchPopup active noText'
+									: text.length > 0 && Array.isArray(searchResults) && active
+									? 'actualSearchPopup active'
+									: 'actualSearchPopup noText'
+							}
+							style={{ left: registered ? '-20px' : null }}
+						>
+							{isSearching ? (
+								<div className='loader'></div>
+							) : searchResults === 'No matches' && registered ? (
+								<p>No matches for "{text}"</p>
+							) : searchResults === 'No matches' && !registered ? (
+								<Link to={'/search?q=' + text} className='searchFor'>
+									Search for "{text}"
+								</Link>
+							) : searchResults.length > 0 ? (
+								searchResults.map((item, index) => (
+									<>
+										{!registered && (
+											<Link to={'/search?q=' + text} className='searchFor'>
+												Search for "{text}"
+											</Link>
+										)}
+										<UserItem key={index} item={item} isLink user={user} />
+									</>
+								))
+							) : (
+								<p>Try searching for people, lists, or keywords</p>
+							)}
+						</div>
+					</form>
+					<div
+						className='actualSettingsBlock'
+						title='Settings'
+						style={{ display: registered ? 'none' : null }}
+					>
+						<img
+							className='actualSettingsImg'
+							src={PF + 'icon/common/settings.svg'}
+							alt=''
+						/>
 					</div>
-				</form>
-				<div
-					className='actualSettingsBlock'
-					title='Settings'
-					style={{ display: registered ? 'none' : null }}
-				>
-					<img
-						className='actualSettingsImg'
-						src={PF + 'icon/common/settings.svg'}
-						alt=''
-					/>
 				</div>
-			</div>
+			)}
+
 			<div className='actualContainer'>
 				<h1 className='actualTitle'>Trends for you</h1>
 				{isLoading ? (

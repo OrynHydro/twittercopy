@@ -115,6 +115,8 @@ const Sidebar = ({
 													item.link === '/settings') ||
 											  (params.userId && item.title === 'Profile') ||
 											  (item.title === 'Twitter Blue' && activeVerified) ||
+											  (item.title === 'Explore' &&
+													location.pathname === '/search') ||
 											  (item.title === 'Verified Organizations' &&
 													activeVerified)
 											? 'sidebarNavItem active'
@@ -141,6 +143,8 @@ const Sidebar = ({
 													  (params.userId && item.title === 'Profile') ||
 													  (item.title === 'Twitter Blue' &&
 															activeTwitterBlue) ||
+													  (item.title === 'Explore' &&
+															location.pathname === '/search') ||
 													  (item.title === 'Verified Organizations' &&
 															activeVerified)
 													? item.imgBold

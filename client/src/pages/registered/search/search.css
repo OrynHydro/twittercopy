@@ -1,0 +1,84 @@
+.connect .actualSearchBlockForm {
+	width: calc(100% - 24px);
+	margin: 8px 12px;
+}
+
+.connect .searchFor {
+	padding: 22px;
+	cursor: pointer;
+	transition: 0.2s ease;
+	display: inline-block;
+	width: 100%;
+	border-radius: 12px;
+	border-bottom: none;
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--black);
+}
+
+.searchSwitch {
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid #eff3f4;
+}
+
+.searchSwitchItem {
+	width: 25%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	display: inline-flex;
+	justify-content: center;
+	transition: background 0.2s ease;
+	cursor: pointer;
+	padding: 16px 0;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 20px;
+	color: var(--gray);
+	position: relative;
+}
+
+.searchSwitchItem:hover {
+	background-color: #E7E7E8;
+}
+
+.searchSwitchItem.active {
+	font-weight: 700;
+	color: var(--black);
+}
+
+.searchSwitchItem.active::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 0;
+	height: 4px;
+	width: 56px;
+	background-color: var(--blue);
+	border-radius: 9999px;
+}
+
+.searchMain .noMatches {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 5px;
+	margin: 23px 0;
+}
+
+.searchMain .noMatches h1 {
+	font-size: 31px;
+	font-weight: 800;
+	line-height: 36px;
+	color: var(--black);
+}
+
+.searchMain .noMatches p {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	color: var(--gray);
+}

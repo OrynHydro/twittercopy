@@ -25,6 +25,7 @@ import {
 	Profile,
 	NotFound,
 	Connect,
+	Search,
 } from './pages/index'
 
 import { ListPage } from './components/index'
@@ -177,6 +178,12 @@ function App() {
 								path='/connect_people'
 								element={
 									<Connect isLoading={isLoading} setIsLoading={setIsLoading} />
+								}
+							/>
+							<Route
+								path='/search'
+								element={
+									<Search isLoading={isLoading} setIsLoading={setIsLoading} />
 								}
 							/>
 						</Routes>

@@ -143,3 +143,22 @@
 .actualSearchBlockForm .crossCircle.registered {
     right: 30px;
 }
+
+.searchFor {
+    padding: 16px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    display: inline-block;
+    width: 100%;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom: 1px solid #eff3f4;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--black);
+}
+
+.searchFor:hover {
+    background-color: #F7F9F9;
+}
