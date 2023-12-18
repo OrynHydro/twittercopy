@@ -1,9 +1,11 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { BsPin, BsPinFill } from 'react-icons/bs'
+import { BsFillPlusCircleFill, BsPin, BsPinFill } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 import ListPopup from '../listPopup/ListPopup'
 import { AiOutlineCheck } from 'react-icons/ai'
+import { IoCheckmark, IoCheckmarkCircleOutline } from 'react-icons/io5'
+import { LuPlus } from 'react-icons/lu'
 
 const ListItem = ({
 	list,
@@ -15,6 +17,7 @@ const ListItem = ({
 	setChosenLists,
 	activeAddUser,
 	search,
+	followBtn,
 }) => {
 	const PF = process.env.REACT_APP_PUBLIC_FOLDER
 	const formatNumber = number => {
@@ -60,6 +63,24 @@ const ListItem = ({
 		}
 	}, [list?.creator])
 
+	const [hoverFollowBtn, setHoverFollowBtn] = useState({
+		hover: false,
+		type: list.followers.some(follower => follower._id === user._id)
+			? 'unfollow'
+			: 'follow',
+	})
+
+	const handleFollowClick = async e => {
+		e.preventDefault()
+		const res = await axios.put(`/lists/${list._id}/follow`, {
+			userDbId: user._id,
+		})
+		setHoverFollowBtn(prev => ({
+			...prev,
+			type: res.data === 'Followed' ? 'unfollow' : 'follow',
+		}))
+	}
+
 	return (
 		<Link
 			className='listItem'
@@ -103,7 +124,7 @@ const ListItem = ({
 							)}
 						</div>
 
-						{list.creator === user?._id || list?.followers?.length === 0 ? (
+						{list.creator._id === user?._id || list?.followers?.length === 0 ? (
 							<Link
 								className='listItemInfoBottom'
 								to={addUser ? false : `/${user?.userId}`}
@@ -131,20 +152,52 @@ const ListItem = ({
 							<div className='listItemInfoBottom'>
 								<div className='listItemInfoBottomSomeAva'>
 									<img
-										src={PF + 'storage/' + list.followers[0]?.profilePicture}
+										src={
+											list.followers[0]?.profilePicture
+												? PF + 'storage/' + list.followers[0]?.profilePicture
+												: PF + 'icon/noAvatar.png'
+										}
 										alt=''
 										className='listItemInfoBottomCreatorAvatar'
 									/>
-									<img
-										src={PF + 'storage/' + list.followers[1]?.profilePicture}
-										alt=''
-										className='listItemInfoBottomCreatorAvatar'
-									/>
-									<img
-										src={PF + 'storage/' + list.followers[2]?.profilePicture}
-										alt=''
-										className='listItemInfoBottomCreatorAvatar'
-									/>
+									{list.followers.length === 2 ? (
+										<img
+											src={
+												list.followers[1]?.profilePicture
+													? PF + 'storage/' + list.followers[1]?.profilePicture
+													: PF + 'icon/noAvatar.png'
+											}
+											alt=''
+											className='listItemInfoBottomCreatorAvatar'
+										/>
+									) : (
+										list.followers.length >= 3 && (
+											<>
+												<img
+													src={
+														list.followers[1]?.profilePicture
+															? PF +
+															  'storage/' +
+															  list.followers[1]?.profilePicture
+															: PF + 'icon/noAvatar.png'
+													}
+													alt=''
+													className='listItemInfoBottomCreatorAvatar'
+												/>
+												<img
+													src={
+														list.followers[2]?.profilePicture
+															? PF +
+															  'storage/' +
+															  list.followers[2]?.profilePicture
+															: PF + 'icon/noAvatar.png'
+													}
+													alt=''
+													className='listItemInfoBottomCreatorAvatar'
+												/>
+											</>
+										)
+									)}
 								</div>
 
 								<span
@@ -171,7 +224,44 @@ const ListItem = ({
 						)}
 					</div>
 				</div>
-				<div className='listItemRight' style={{ display: noPin && 'none' }}>
+				{followBtn &&
+					list.followers.some(follower => follower._id !== user._id) && (
+						<div
+							className='listItemRight'
+							onMouseOver={() =>
+								setHoverFollowBtn(prev => ({
+									...prev,
+									hover: true,
+								}))
+							}
+							onMouseOut={() =>
+								setHoverFollowBtn(prev => ({
+									...prev,
+									hover: false,
+								}))
+							}
+							onClick={e => handleFollowClick(e)}
+						>
+							{hoverFollowBtn.type === 'follow' ? (
+								<div className='listItemFollowBtn'>
+									<LuPlus fontSize={18} color='#fff' />
+								</div>
+							) : (
+								hoverFollowBtn.type === 'unfollow' && (
+									<div className='listItemFollowBtn unfollow'>
+										<IoCheckmark
+											fontSize={18}
+											color={hoverFollowBtn.hover ? '#F4212E' : 'var(--black)'}
+										/>
+									</div>
+								)
+							)}
+						</div>
+					)}
+				<div
+					className='listItemRight'
+					style={{ display: noPin || (followBtn && 'none') }}
+				>
 					{!addUser ? (
 						<div className='listItemPinBlock' onClick={e => pinList(e)}>
 							{pinned ? (

@@ -185,15 +185,18 @@ const Actual = ({ registered, position, user, noSearch }) => {
 						/>
 					))
 				)}
-				<div
-					className={
-						registered
-							? 'trendsItem showMore registered'
-							: 'trendsItem showMore'
-					}
-				>
-					Show more
-				</div>
+				{registered && (
+					<div
+						className={
+							registered
+								? 'trendsItem showMore registered'
+								: 'trendsItem showMore'
+						}
+						onClick={() => navigate('/explore')}
+					>
+						Show more
+					</div>
+				)}
 			</div>
 		</div>
 	)

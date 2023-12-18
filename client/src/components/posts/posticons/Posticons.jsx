@@ -3,6 +3,7 @@
 import axios from 'axios'
 import './posticons.css'
 import { useEffect, useState } from 'react'
+import Share from '../../share/Share'
 
 const Posticons = ({
 	icon,
@@ -17,6 +18,7 @@ const Posticons = ({
 	isLiked,
 	setIsLiked,
 	currentUser,
+	setActiveModal,
 }) => {
 	// declaring state of icons
 
@@ -119,6 +121,9 @@ const Posticons = ({
 		}
 		if (title === 'Retweet') {
 			retweetPost()
+		}
+		if (title === 'Reply') {
+			setActiveModal(true)
 		}
 		return
 	}

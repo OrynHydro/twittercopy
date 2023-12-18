@@ -17,6 +17,7 @@ import { GoXCircleFill } from 'react-icons/go'
 import { useOutsideClick } from '../../../utils/useOutsideClick'
 import { UserFollowItem } from '../../../components/user/userFollowItem/FollowItem'
 import { useNavigate } from 'react-router-dom'
+import ListItem from '../../../components/lists/listItem/ListItem'
 
 const Search = ({ isLoading, setIsLoading }) => {
 	// declaring states of modal windows
@@ -288,10 +289,14 @@ const Search = ({ isLoading, setIsLoading }) => {
 								isUserPosts={post.user._id === user?._id ? true : false}
 							/>
 						))
-					) : (
-						activeSwitchItem === 'people' &&
+					) : activeSwitchItem === 'people' ? (
 						searchPageResults.map((item, index) => (
 							<UserFollowItem item={item} key={index} currentUser={user} />
+						))
+					) : (
+						activeSwitchItem === 'lists' &&
+						searchPageResults.map((list, index) => (
+							<ListItem list={list} key={index} user={user} followBtn />
 						))
 					)}
 				</div>

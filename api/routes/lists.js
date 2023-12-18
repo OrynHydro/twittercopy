@@ -357,7 +357,7 @@ router.get('/findByText', async (req, res) => {
 	}
 
 	for (const list of foundLists) {
-		await list.populate('creator followers')
+		await list.populate('creator followers members')
 	}
 
 	res.status(200).json(foundLists)
